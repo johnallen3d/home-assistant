@@ -1,0 +1,30 @@
+id: '1763165064021'
+alias: Trigger alarm
+description: ''
+triggers:
+  - trigger: state
+    entity_id:
+      - lock.nuki_smart_lock
+    from:
+      - locked
+    to:
+      - unlocked
+conditions:
+  - condition: time
+    after: '20:00:00'
+    before: 07:00:00
+    weekday:
+      - sun
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.alarm
+mode: single

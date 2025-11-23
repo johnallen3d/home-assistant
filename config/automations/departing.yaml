@@ -1,0 +1,16 @@
+id: '1762719083752'
+alias: Departing
+description: ''
+triggers:
+  - entity_id: person.john_allen
+    zone: zone.home
+    event: leave
+    trigger: zone
+conditions: []
+actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.lights_out
+mode: single

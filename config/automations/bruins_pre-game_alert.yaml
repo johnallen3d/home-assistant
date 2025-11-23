@@ -1,0 +1,17 @@
+id: '1763742898599'
+alias: Bruins Pre-Game Alert
+description: Notify me when the Bruins are about to play (pre-game).
+triggers:
+  - entity_id: sensor.boston_bruins
+    to: PRE
+    trigger: state
+conditions: []
+actions:
+  - data:
+      title: "Bruins Game Incoming \U0001F945"
+      message: 'Bruins about to start! Opponent: {{ state_attr(''sensor.boston_bruins'', ''opponent_name'') }} Starts: {{ (state_attr(''sensor.boston_bruins'', ''date'') | as_datetime).strftime(''%-I:%M %p'') }} ({{ state_attr(''sensor.boston_bruins'', ''kickoff_in'') }}) #magic___^_^___line '
+      data:
+        push:
+          sound: default
+    action: notify.mobile_app_john_allens_iphone
+mode: single

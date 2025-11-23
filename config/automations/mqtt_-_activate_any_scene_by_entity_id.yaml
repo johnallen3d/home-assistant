@@ -1,0 +1,15 @@
+&id001
+id: mqtt_activate_any_scene
+alias: MQTT → Activate any scene (by entity_id)
+description: Publish the part after "scene." to home/scene/set
+triggers:
+  - topic: home/scene/set
+    trigger: mqtt
+conditions:
+  - condition: template
+    value_template: '{{ has_value(''scene.'' ~ trigger.payload) }}'
+actions:
+  - data:
+      entity_id: scene.{{ trigger.payload }}
+    action: scene.turn_on
+mode: queued

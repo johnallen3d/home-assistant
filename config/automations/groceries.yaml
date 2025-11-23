@@ -1,0 +1,9 @@
+id: '1763165564977'
+alias: Groceries
+description: ''
+use_blueprint:
+  path: homeassistant/notify_leaving_zone.yaml
+  input:
+    person_entity: person.john_allen
+    zone_entity: zone.tiny_teeter
+    notify_device: a7cbe0e718404be5838ec0be153c3706

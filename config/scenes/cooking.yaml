@@ -1,0 +1,47 @@
+id: '1762730794917'
+name: Cooking
+entities:
+  light.kitchen:
+    min_color_temp_kelvin: 2000
+    max_color_temp_kelvin: 6535
+    min_mireds: 153
+    max_mireds: 500
+    supported_color_modes:
+      - color_temp
+      - xy
+    color_mode: color_temp
+    brightness: 255
+    color_temp_kelvin: 5025
+    color_temp: 199
+    hs_color:
+      - 27.028
+      - 18.905
+    rgb_color:
+      - 255
+      - 229
+      - 207
+    xy_color:
+      - 0.37
+      - 0.35
+    is_hue_group: true
+    hue_scenes: []
+    hue_type: room
+    lights:
+      - Sink bulb
+      - Kitchen strip
+      - Island bulb
+    entity_id:
+      - light.island_bulb
+      - light.hue_lightstrip_plus_1
+      - light.sink_bulb
+    dynamics: false
+    icon: mdi:lightbulb-group
+    friendly_name: Kitchen
+    supported_features: 40
+    state: 'on'
+  switch.kitchen_counter_switch:
+    device_class: outlet
+    friendly_name: Kitchen counter switch
+    state: 'on'
+icon: mdi:toaster-oven
+metadata: {}

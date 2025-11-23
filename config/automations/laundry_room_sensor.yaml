@@ -1,0 +1,38 @@
+id: '1763684454462'
+alias: Laundry Room Sensor
+description: ''
+triggers:
+  - id: motion_on
+    entity_id:
+      - binary_sensor.laundry_room_sensor_motion
+    to:
+      - 'on'
+    trigger: state
+  - id: motion_off
+    entity_id:
+      - binary_sensor.laundry_room_sensor_motion
+    to:
+      - 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+    trigger: state
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: motion_on
+        sequence:
+          - target:
+              entity_id: switch.laundry_room_switch
+            action: switch.turn_on
+      - conditions:
+          - condition: trigger
+            id: motion_off
+        sequence:
+          - target:
+              entity_id: switch.laundry_room_switch
+            action: switch.turn_off
+mode: restart

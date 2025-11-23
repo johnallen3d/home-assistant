@@ -1,0 +1,85 @@
+id: '1762785763071'
+name: Working
+entities:
+  light.kitchen:
+    min_color_temp_kelvin: 2000
+    max_color_temp_kelvin: 6535
+    min_mireds: 153
+    max_mireds: 500
+    supported_color_modes:
+      - color_temp
+      - xy
+    color_mode:
+    brightness:
+    color_temp_kelvin:
+    color_temp:
+    hs_color:
+    rgb_color:
+    xy_color:
+    is_hue_group: true
+    hue_scenes: []
+    hue_type: room
+    lights:
+      - Sink bulb
+      - Kitchen strip
+      - Island bulb
+    entity_id:
+      - light.island_bulb
+      - light.hue_lightstrip_plus_1
+      - light.sink_bulb
+    dynamics: false
+    icon: mdi:lightbulb-group
+    friendly_name: Kitchen
+    supported_features: 40
+    state: 'off'
+  light.living_room_light:
+    min_color_temp_kelvin: 2127
+    max_color_temp_kelvin: 6535
+    min_mireds: 153
+    max_mireds: 470
+    supported_color_modes:
+      - color_temp
+      - hs
+      - xy
+    color_mode:
+    brightness:
+    color_temp_kelvin:
+    color_temp:
+    hs_color:
+    rgb_color:
+    xy_color:
+    friendly_name: Living Room Light
+    supported_features: 32
+    state: 'off'
+  light.bedroom_lamp:
+    min_color_temp_kelvin: 2127
+    max_color_temp_kelvin: 6535
+    min_mireds: 153
+    max_mireds: 470
+    supported_color_modes:
+      - color_temp
+      - hs
+      - xy
+    color_mode: color_temp
+    brightness: 255
+    color_temp_kelvin: 5076
+    color_temp: 197
+    hs_color:
+      - 27.087
+      - 18.221
+    rgb_color:
+      - 255
+      - 230
+      - 209
+    xy_color:
+      - 0.368
+      - 0.349
+    friendly_name: Bedroom Lamp
+    supported_features: 32
+    state: 'on'
+  switch.kitchen_counter_switch:
+    device_class: outlet
+    friendly_name: Kitchen counter switch
+    state: 'off'
+icon: mdi:laptop
+metadata: {}

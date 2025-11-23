@@ -1,45 +1,26 @@
-## Launched with Docker
+# Home Assistant
+
+## Access
+
+### Network
+
+via tailscale, hostname: `homeassistant`
+
+### SSH
 
 ```bash
-docker run \
-  --detach \
-  --name homeassistant \
-  --privileged \
-  --restart unless-stopped \
-  --env TZ=America/New_York \
-  --volume /mnt/crucial-x9/apps/homeassistant:/config \
-  --volume /run/dbus:/run/dbus:ro \
-  --network host \
-  ghcr.io/home-assistant/home-assistant:stable
+ssh root@homeassistant
 ```
 
-## Upgrade
+### CLI
+
+accessible via SSH
 
 ```bash
-docker pull ghcr.io/home-assistant/home-assistant:stable
-docker stop homeassistant
-docker rm homeassistant
-# run launch command
+ssh root@homeassistant "ha --help"
 ```
 
-## Matter Server (Docker)
+## Scripts
 
-```bash
-docker run \
-  --detach \
-  --name matter-server \
-  --privileged \
-  --restart unless-stopped \
-  --volume /mnt/crucial-x9/apps/homeassistant-matter:/data \
-  --network host \
-  ghcr.io/matter-js/python-matter-server:stable
-```
-
-## HACS
-
-```bash
-docker exec -it homeassistant bash
-wget -O - https://get.hacs.xyz | bash -
-exit
-docker restart homeassistant
-```
+- `./extract_config.sh` - downloads YAML config files (automations, scenes, configuration)
+- `./inventory.sh` - generates device/entity inventory reports

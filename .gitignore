@@ -1,0 +1,3 @@
+# Inventory contains sensitive information (IPs, MACs, credentials)
+inventory/*
+!inventory/.keep

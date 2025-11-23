@@ -1,0 +1,14 @@
+id: '1763162380504'
+alias: Potty time
+description: ''
+triggers:
+  - trigger: time
+    at: 02:30:00
+conditions: []
+actions:
+  - action: scene.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: scene.nighttime_potty
+mode: single

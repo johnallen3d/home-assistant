@@ -1,0 +1,18 @@
+id: '1762718475350'
+alias: TV Time
+description: ''
+triggers:
+  - device_id: d84fc60fb0c4792dc4298fd90634e465
+    domain: media_player
+    entity_id: 7a6841cdc2e9f7d226e5ba84e9f741e4
+    type: turned_on
+    trigger: device
+conditions: []
+actions:
+  - action: scene.turn_on
+    metadata: {}
+    data:
+      transition: 11
+    target:
+      entity_id: scene.tv_time
+mode: single

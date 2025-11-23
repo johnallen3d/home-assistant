@@ -1,0 +1,17 @@
+id: '1763082956770'
+alias: Notify unlock
+description: Send a notification to Dad's iPhone when door is unlocked
+triggers:
+  - entity_id:
+      - lock.nuki_smart_lock
+    from:
+      - locked
+    to:
+      - unlocked
+    trigger: state
+actions:
+  - data:
+      title: Cielo front door
+      message: Door unlocked
+    action: notify.mobile_app_john_allens_iphone
+mode: single
