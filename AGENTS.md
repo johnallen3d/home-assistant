@@ -39,6 +39,21 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - To reload after manual edits: `ha core restart` (no direct reload command)
 - YAML uses 2-space indentation and follows Home Assistant entity structure
 
+### Just Recipes for Home Assistant Config
+- **Sync all**: `just sync` - Run inventory and extract config
+- **Extract config**: `just config::extract` or `just config::pull` - Download config from server and split into files
+- **Upload config.yaml**: `just config::upload-config` - Upload configuration.yaml and re-sync
+- **Update automation**: `just config::update-automation config/automations/FILE.yaml` - Update specific automation on server
+- **Update multiple**: `just config::update-automations "config/automations/FILE1.yaml config/automations/FILE2.yaml"` - Update multiple automations
+- **Create helper**: `just config::create-helper NAME "Display Name" MIN MAX STEP UNIT INITIAL` - Add input_number helper to config
+  - Example: `just config::create-helper laundry_delay "Laundry Delay" 1 60 1 seconds 5`
+- **Restart HA**: `just config::restart` - Restart Home Assistant core (30s wait)
+- **Deploy config**: `just config::deploy` - Upload config and restart
+- **Check status**: `just config::status` - Show HA server info
+- **View logs**: `just config::logs` - Stream HA core logs
+- **Backup**: `just config::backup` - Backup automations.yaml on server
+- **Show info**: `just config::info` - Display config paths and file counts
+
 ## ESPHome Device: M5Stack Atom S3 (tiny-button)
 - **Device**: M5Stack Atom S3 with 128x128 LCD display (GC9107 chip, st7789v driver)
 - **Location**: 192.168.0.87

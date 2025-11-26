@@ -77,3 +77,18 @@ info:
     @echo "Server: {{server}}"
     @echo "Config path: {{config_path}}"
     @echo "Local automations: $(ls automations/*.yaml | wc -l | tr -d ' ') files"
+
+# Create a new helper (input_number) in configuration.yaml
+# Usage: just config::create-helper laundry_room_motion_delay "Laundry Room Motion Delay" 1 60 1 seconds 5
+create-helper NAME DISPLAY_NAME MIN MAX STEP UNIT INITIAL:
+    @echo "🔧 Creating helper '{{NAME}}'..."
+    @echo "  {{NAME}}:" >> configuration.yaml
+    @echo "    name: {{DISPLAY_NAME}}" >> configuration.yaml
+    @echo "    min: {{MIN}}" >> configuration.yaml
+    @echo "    max: {{MAX}}" >> configuration.yaml
+    @echo "    step: {{STEP}}" >> configuration.yaml
+    @echo "    unit_of_measurement: {{UNIT}}" >> configuration.yaml
+    @echo "    icon: mdi:timer-outline" >> configuration.yaml
+    @echo "    initial: {{INITIAL}}" >> configuration.yaml
+    @echo "✅ Helper '{{NAME}}' added to configuration.yaml"
+    @echo "⚠️  Don't forget to run 'just config::upload-config' to deploy"
