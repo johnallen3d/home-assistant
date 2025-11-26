@@ -1,4 +1,3 @@
-&id001
 id: mqtt_activate_any_scene
 alias: MQTT → Activate any scene (by entity_id)
 description: Publish the part after "scene." to home/scene/set
