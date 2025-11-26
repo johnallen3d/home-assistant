@@ -47,12 +47,18 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - **Update multiple**: `just config::update-automations "config/automations/FILE1.yaml config/automations/FILE2.yaml"` - Update multiple automations
 - **Create helper**: `just config::create-helper NAME "Display Name" MIN MAX STEP UNIT INITIAL` - Add input_number helper to config
   - Example: `just config::create-helper laundry_delay "Laundry Delay" 1 60 1 seconds 5`
+  - IMPORTANT: After creating/modifying helpers in configuration.yaml, you MUST restart HA with `just config::restart`
 - **Restart HA**: `just config::restart` - Restart Home Assistant core (30s wait)
-- **Deploy config**: `just config::deploy` - Upload config and restart
+- **Deploy config**: `just config::deploy` - Upload config and restart (use this for configuration.yaml changes)
 - **Check status**: `just config::status` - Show HA server info
 - **View logs**: `just config::logs` - Stream HA core logs
 - **Backup**: `just config::backup` - Backup automations.yaml on server
 - **Show info**: `just config::info` - Display config paths and file counts
+
+### Important Notes on Configuration Changes
+- **Automations/Scenes**: Can be updated without restart using `update-automation` (reloads automatically)
+- **configuration.yaml changes** (helpers, integrations, etc.): Require full restart with `just config::restart` or `just config::deploy`
+- **Best practice**: Use `just config::deploy` when making configuration.yaml changes to ensure restart happens
 
 ## ESPHome Device: M5Stack Atom S3 (tiny-button)
 - **Device**: M5Stack Atom S3 with 128x128 LCD display (GC9107 chip, st7789v driver)
