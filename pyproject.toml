@@ -1,0 +1,9 @@
+[project]
+name = "home-assistant"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "esphome>=2025.11.1",
+    "pyyaml>=6.0.3",
+]

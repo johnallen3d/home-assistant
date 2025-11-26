@@ -11,7 +11,7 @@ default:
 # Validate YAML configuration
 validate:
     @echo "✅ Validating configuration..."
-    uv run esphome config {{device}}
+    @cd .. && uv run esphome config esphome/{{device}}
 
 # Alias for validate
 check: validate
@@ -19,7 +19,7 @@ check: validate
 # Compile firmware without uploading
 compile:
     @echo "🔨 Compiling firmware..."
-    uv run esphome compile {{device}}
+    @cd .. && uv run esphome compile esphome/{{device}}
 
 # Alias for compile
 build: compile
@@ -27,7 +27,7 @@ build: compile
 # Upload firmware to device via OTA (over WiFi)
 upload:
     @echo "📤 Uploading to device via OTA..."
-    uv run esphome upload {{device}} --device {{device_ip}}
+    @cd .. && uv run esphome upload esphome/{{device}} --device {{device_ip}}
 
 # Alias for upload
 flash: upload
@@ -35,12 +35,12 @@ flash: upload
 # Stream logs from device
 logs:
     @echo "📋 Streaming logs from device..."
-    uv run esphome logs {{device}} --device {{device_ip}}
+    @cd .. && uv run esphome logs esphome/{{device}} --device {{device_ip}}
 
 # Full workflow: compile, upload, and stream logs
 run:
     @echo "🚀 Compile, upload, and stream logs..."
-    uv run esphome run {{device}} --device {{device_ip}}
+    @cd .. && uv run esphome run esphome/{{device}} --device {{device_ip}}
 
 # Test device connectivity
 ping:
@@ -52,11 +52,6 @@ clean:
     @echo "🧹 Cleaning build artifacts..."
     rm -rf build/
     rm -rf .esphome/
-
-# Install/update dependencies
-install:
-    @echo "📦 Installing dependencies..."
-    uv sync
 
 # Show device info
 info:

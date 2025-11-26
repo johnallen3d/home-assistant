@@ -1,0 +1,73 @@
+# Home Assistant Configuration Management
+
+# Server configuration
+server := "root@homeassistant"
+config_path := "/config"
+
+# Default recipe - show help
+default:
+    @just --list
+
+# Extract config files from HA server and split into individual files
+extract:
+    @echo "📥 Extracting configuration from Home Assistant..."
+    @./extract.sh
+
+# Alias for extract
+pull: extract
+
+# Upload configuration.yaml to HA server
+upload-config:
+    @echo "📤 Uploading configuration.yaml..."
+    @scp configuration.yaml {{server}}:{{config_path}}/configuration.yaml
+    @echo "✅ Configuration uploaded"
+
+# Update a specific automation: pull from server, update from local file, push back
+# Usage: just config::update-automation automations/bathroom_presence.yaml
+update-automation FILE:
+    @echo "🔧 Updating automation from {{FILE}}..."
+    @uv run --directory .. update_automation.py {{FILE}}
+
+# Update multiple automations at once
+# Usage: just config::update-automations "automations/bathroom_presence.yaml automations/kitchen_button.yaml"
+update-automations FILES:
+    @echo "🔧 Updating automations..."
+    @uv run --directory .. update_automation.py {{FILES}}
+
+# Alias for update-automation
+push-automation FILE: (update-automation FILE)
+
+# Restart Home Assistant core (takes ~30s)
+restart:
+    @echo "🔄 Restarting Home Assistant core..."
+    @ssh {{server}} "ha core restart" || true
+    @echo "⏳ Waiting 30s for restart..."
+    @sleep 30
+    @ssh {{server}} "ha info | head -3"
+    @echo "✅ Home Assistant restarted"
+
+# Full workflow: upload config and restart
+deploy: upload-config restart
+    @echo "✅ Configuration deployed and Home Assistant restarted"
+
+# Check HA server status
+status:
+    @echo "📊 Home Assistant status:"
+    @ssh {{server}} "ha info"
+
+# Show HA core logs
+logs:
+    @echo "📋 Streaming Home Assistant logs..."
+    @ssh {{server}} "ha core logs -f"
+
+# Backup current automations on server
+backup:
+    @echo "💾 Backing up automations..."
+    @ssh {{server}} "cp {{config_path}}/automations.yaml {{config_path}}/automations.yaml.backup"
+    @echo "✅ Backup created: automations.yaml.backup"
+
+# Show info about configuration
+info:
+    @echo "Server: {{server}}"
+    @echo "Config path: {{config_path}}"
+    @echo "Local automations: $(ls automations/*.yaml | wc -l | tr -d ' ') files"

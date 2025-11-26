@@ -14,9 +14,7 @@ triggers:
     to:
       - 'off'
     for:
-      hours: 0
-      minutes: 2
-      seconds: 0
+      minutes: "{{ states('input_number.bathroom_motion_timeout') | int }}"
     trigger: state
 actions:
   - choose:

@@ -9,3 +9,14 @@ frontend:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+# Helpers
+input_number:
+  bathroom_motion_timeout:
+    name: Bathroom Motion Timeout
+    min: 0.5
+    max: 10
+    step: 0.5
+    unit_of_measurement: minutes
+    icon: mdi:timer-outline
+    initial: 2
