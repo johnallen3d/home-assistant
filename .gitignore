@@ -2,3 +2,11 @@
 inventory/*
 !inventory/.keep
 .env
+
+# ESPHome
+esphome/secrets.yaml
+esphome/.venv/
+esphome/build/
+esphome/.esphome/
+esphome/main.py
+esphome/.gitignore

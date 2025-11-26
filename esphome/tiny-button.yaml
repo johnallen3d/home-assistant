@@ -1,0 +1,75 @@
+esphome:
+  name: tiny-button
+  friendly_name: tiny-button
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "D9uosl1DCbenDXNNn0CPGTU6pwN7AW8UBvZB0baMVs0="
+
+ota:
+  - platform: esphome
+    password: "c16025efd9d52c295b80fd9690c74d1f"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Tiny-Button Fallback Hotspot"
+    password: "uMKkAAWNCylR"
+
+captive_portal:
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 41
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: "Atom S3 Button"
+    id: atom_button
+    # Multi-click and long press support
+    on_multi_click:
+      # Single click
+      - timing:
+          - ON for at most 1s
+          - OFF for at least 0.5s
+        then:
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                device: tiny-button
+                click_type: single
+      # Double click
+      - timing:
+          - ON for at most 1s
+          - OFF for at most 0.5s
+          - ON for at most 1s
+          - OFF for at least 0.3s
+        then:
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                device: tiny-button
+                click_type: double
+      # Long press (hold for 1+ seconds)
+      - timing:
+          - ON for at least 1s
+        then:
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                device: tiny-button
+                click_type: long

@@ -1,0 +1,65 @@
+# ESPHome Development Recipes
+
+# Device configuration
+device := "tiny-button.yaml"
+device_ip := "192.168.0.87"
+
+# Default recipe - show help
+default:
+    @just --list
+
+# Validate YAML configuration
+validate:
+    @echo "✅ Validating configuration..."
+    uv run esphome config {{device}}
+
+# Alias for validate
+check: validate
+
+# Compile firmware without uploading
+compile:
+    @echo "🔨 Compiling firmware..."
+    uv run esphome compile {{device}}
+
+# Alias for compile
+build: compile
+
+# Upload firmware to device via OTA (over WiFi)
+upload:
+    @echo "📤 Uploading to device via OTA..."
+    uv run esphome upload {{device}} --device {{device_ip}}
+
+# Alias for upload
+flash: upload
+
+# Stream logs from device
+logs:
+    @echo "📋 Streaming logs from device..."
+    uv run esphome logs {{device}} --device {{device_ip}}
+
+# Full workflow: compile, upload, and stream logs
+run:
+    @echo "🚀 Compile, upload, and stream logs..."
+    uv run esphome run {{device}} --device {{device_ip}}
+
+# Test device connectivity
+ping:
+    @echo "🔍 Checking device connectivity..."
+    ping -c 3 {{device_ip}}
+
+# Clean build artifacts
+clean:
+    @echo "🧹 Cleaning build artifacts..."
+    rm -rf build/
+    rm -rf .esphome/
+
+# Install/update dependencies
+install:
+    @echo "📦 Installing dependencies..."
+    uv sync
+
+# Show device info
+info:
+    @echo "Device: {{device}}"
+    @echo "IP: {{device_ip}}"
+    @echo "Board: ESP32-S3 (Atom S3)"
