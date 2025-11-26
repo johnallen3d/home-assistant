@@ -35,6 +35,18 @@ time:
   - platform: homeassistant
     id: ha_time
 
+# Temperature sensors from Home Assistant
+sensor:
+  - platform: homeassistant
+    id: bathroom_temp
+    entity_id: sensor.bathroom_presence_sensor_temperature
+    internal: true
+  - platform: homeassistant
+    id: outdoor_temp
+    entity_id: weather.forecast_home
+    attribute: temperature
+    internal: true
+
 # SPI bus for display (correct Atom S3 pins)
 spi:
   clk_pin: GPIO17
@@ -61,9 +73,17 @@ display:
       auto time = id(ha_time).now();
 
       if (time.is_valid()) {
-        // Draw time centered on 128x128 screen (24-hour format)
-        it.strftime(64, 45, id(time_font), id(color_white), TextAlign::CENTER, "%H:%M", time);
-        it.strftime(64, 75, id(small_font), id(color_white), TextAlign::CENTER, "%a %b %d", time);
+        // Draw time at top (24-hour format)
+        it.strftime(64, 15, id(medium_font), id(color_white), TextAlign::CENTER, "%H:%M", time);
+        it.strftime(64, 35, id(tiny_font), id(color_white), TextAlign::CENTER, "%a %b %d", time);
+
+        // Draw temperatures in middle
+        if (id(bathroom_temp).has_state()) {
+          it.printf(64, 65, id(small_font), id(color_white), TextAlign::CENTER, "Inside: %.1f°F", id(bathroom_temp).state);
+        }
+        if (id(outdoor_temp).has_state()) {
+          it.printf(64, 85, id(small_font), id(color_white), TextAlign::CENTER, "Outside: %.1f°F", id(outdoor_temp).state);
+        }
       } else {
         // Show "connecting" if time not synced yet
         it.print(64, 64, id(small_font), id(color_white), TextAlign::CENTER, "Connecting...");
@@ -72,11 +92,14 @@ display:
 # Fonts for display
 font:
   - file: "gfonts://Roboto"
-    id: time_font
+    id: medium_font
     size: 32
   - file: "gfonts://Roboto"
     id: small_font
-    size: 16
+    size: 18
+  - file: "gfonts://Roboto"
+    id: tiny_font
+    size: 20
 
 # Colors
 color:
