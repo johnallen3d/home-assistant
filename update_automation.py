@@ -14,10 +14,13 @@ Usage:
 import yaml
 import sys
 import subprocess
+import os
 from pathlib import Path
 
-SERVER = "root@homeassistant"
-SERVER_PATH = "/config/automations.yaml"
+# Use environment variables from .env (loaded by justfile)
+SERVER = os.environ["HA_SERVER"]
+CONFIG_PATH = os.environ["HA_CONFIG_PATH"]
+SERVER_PATH = f"{CONFIG_PATH}/automations.yaml"
 LOCAL_TEMP = "/tmp/automations.yaml"
 
 

@@ -3,6 +3,10 @@ inventory/*
 !inventory/.keep
 .env
 
+# Config extraction temporary files (downloaded then split)
+config/automations.yaml
+config/scenes.yaml
+
 # ESPHome
 esphome/secrets.yaml
 esphome/.venv/

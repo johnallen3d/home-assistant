@@ -1,8 +1,8 @@
 # Home Assistant Configuration Management
 
-# Server configuration
-server := "root@homeassistant"
-config_path := "/config"
+# Import server config from .env (loaded by root Justfile)
+server := env_var('HA_SERVER')
+config_path := env_var('HA_CONFIG_PATH')
 
 # Default recipe - show help
 default:
@@ -16,23 +16,29 @@ extract:
 # Alias for extract
 pull: extract
 
-# Upload configuration.yaml to HA server
+# Upload configuration.yaml to HA server and re-sync
 upload-config:
     @echo "📤 Uploading configuration.yaml..."
     @scp configuration.yaml {{server}}:{{config_path}}/configuration.yaml
     @echo "✅ Configuration uploaded"
+    @echo "🔄 Re-syncing local copy..."
+    @./extract.sh
 
-# Update a specific automation: pull from server, update from local file, push back
+# Update a specific automation: pull from server, update from local file, push back, then re-sync
 # Usage: just config::update-automation automations/bathroom_presence.yaml
 update-automation FILE:
     @echo "🔧 Updating automation from {{FILE}}..."
     @uv run --directory .. update_automation.py {{FILE}}
+    @echo "🔄 Re-syncing local copy..."
+    @./extract.sh
 
 # Update multiple automations at once
 # Usage: just config::update-automations "automations/bathroom_presence.yaml automations/kitchen_button.yaml"
 update-automations FILES:
     @echo "🔧 Updating automations..."
     @uv run --directory .. update_automation.py {{FILES}}
+    @echo "🔄 Re-syncing local copy..."
+    @./extract.sh
 
 # Alias for update-automation
 push-automation FILE: (update-automation FILE)

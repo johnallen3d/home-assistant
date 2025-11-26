@@ -1,5 +1,8 @@
 # Home Assistant Management Commands
 
+# Load configuration from .env file
+set dotenv-load
+
 mod esphome
 mod config
 

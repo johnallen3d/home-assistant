@@ -6,8 +6,10 @@
 
 set -uo pipefail
 
-HA_HOST="root@homeassistant"
-CONFIG_DIR="./config"
+# Use environment variable from .env (loaded by justfile)
+HA_HOST="${HA_SERVER}"
+# Extract to current directory (config/)
+CONFIG_DIR="."
 TEMP_DIR=$(mktemp -d)
 
 echo "📥 Extracting Home Assistant configuration files..."
