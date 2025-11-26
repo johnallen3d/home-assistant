@@ -27,3 +27,20 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - Use SSH to execute HA CLI commands: `ssh root@homeassistant "ha [command]"`
 - To reload after manual edits: `ha core restart` (no direct reload command)
 - YAML uses 2-space indentation and follows Home Assistant entity structure
+
+## Category Management via Browser Automation
+- Categories are assigned via UI menu, not in YAML files
+- Category assignment is available in the three-dot menu ("Assign category")
+- Use Playwright browser automation to assign categories at scale
+- Key workflow:
+  1. Navigate to entity dashboard (`/config/automation/dashboard` or `/config/scene/dashboard`)
+  2. Click entity to open it
+  3. Click menu button (`button[aria-label="Menu"]`)
+  4. Click "Assign category" menu item
+  5. Interact with `ha-category-picker` element in dialog
+  6. Select category from dropdown
+  7. Click Save button in dialog (`ha-button:has-text("Save")` within dialog)
+- IMPORTANT: Use `force=True` for clicks as `<ha-svg-icon>` often intercepts pointer events
+- IMPORTANT: Find Save button within dialog element to avoid viewport issues
+- Categories are stored in `/config/.storage/core.category_registry` (DO NOT EDIT DIRECTLY)
+- Editing registry files directly will break Home Assistant - always use UI/API
