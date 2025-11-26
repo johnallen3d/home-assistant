@@ -6,6 +6,15 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - Verify script syntax: `bash -n ha_inventory.sh`
 - Test SSH connectivity: `ssh root@homeassistant "ha info"`
 
+### ESPHome Development
+- Local ESPHome setup: `esphome/` directory with uv package manager
+- Use `just` task runner for common commands (see `esphome/Justfile`)
+- Validate config: `cd esphome && just validate`
+- Compile firmware: `cd esphome && just compile`
+- Upload via OTA: `cd esphome && just upload` (device IP: 192.168.0.87)
+- View logs: `cd esphome && just logs`
+- Clean build: `rm -rf esphome/.esphome/build/tiny-button && cd esphome && just compile`
+
 ## Code Style Guidelines
 - Use bash for shell scripts with proper error handling
 - Follow standard bash conventions: 2-space indentation, quoted variables
@@ -15,6 +24,8 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - Generate markdown documentation with proper headers and formatting
 - Handle SSH connection errors gracefully with appropriate exit codes
 - Use absolute paths for file operations to ensure reliability
+- ESPHome YAML: 2-space indentation, follow ESPHome component structure
+- Use descriptive IDs for ESPHome components (e.g., `bathroom_temp`, `outdoor_temp`)
 
 ## Home Assistant Configuration Management
 - Configuration files location: `/config/` on Home Assistant server
@@ -27,6 +38,24 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - Use SSH to execute HA CLI commands: `ssh root@homeassistant "ha [command]"`
 - To reload after manual edits: `ha core restart` (no direct reload command)
 - YAML uses 2-space indentation and follows Home Assistant entity structure
+
+## ESPHome Device: M5Stack Atom S3 (tiny-button)
+- **Device**: M5Stack Atom S3 with 128x128 LCD display (GC9107 chip, st7789v driver)
+- **Location**: 192.168.0.87
+- **Config**: `esphome/tiny-button.yaml`
+- **Features**:
+  - Multi-click button (GPIO41): single, double, long press
+  - 128x128 LCD display showing time, date, and temperatures
+  - Pulls bathroom temperature from `sensor.bathroom_presence_sensor_temperature`
+  - Pulls outdoor temperature from `weather.forecast_home` attribute
+  - Sends button events to HA as `esphome.button_pressed` with `click_type` data
+- **Display troubleshooting**:
+  - Must use `arduino` framework (not `esp-idf`)
+  - Board: `m5stack-atoms3` (not `esp32-s3-devkitc-1`)
+  - Platform: `st7789v` with `CUSTOM` model
+  - Offsets required: `offset_height: 3`, `offset_width: 1`
+  - When adding new sensor types, do clean build: `rm -rf .esphome/build/tiny-button`
+  - Pin configuration: CLK=GPIO17, MOSI=GPIO21, CS=GPIO15, DC=GPIO33, RST=GPIO34, BL=GPIO16
 
 ## Category Management via Browser Automation
 - Categories are assigned via UI menu, not in YAML files
