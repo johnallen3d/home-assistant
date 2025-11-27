@@ -31,8 +31,8 @@ actions:
           - choose:
               - conditions:
                   - condition: time
-                    after: 07:00:00
-                    before: '22:00:00'
+                    after: input_datetime.daytime_start
+                    before: input_datetime.nighttime_start
                 sequence:
                   - action: scene.turn_on
                     target:
@@ -41,9 +41,9 @@ actions:
                   - condition: or
                     conditions:
                       - condition: time
-                        after: '22:00:00'
+                        after: input_datetime.nighttime_start
                       - condition: time
-                        before: 07:00:00
+                        before: input_datetime.daytime_start
                 sequence:
                   - action: scene.turn_on
                     target:

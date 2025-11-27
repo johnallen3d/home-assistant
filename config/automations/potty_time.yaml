@@ -3,7 +3,7 @@ alias: Potty time
 description: ''
 triggers:
   - trigger: time
-    at: 02:30:00
+    at: input_datetime.potty_time
 conditions: []
 actions:
   - action: scene.turn_on

@@ -28,3 +28,23 @@ input_number:
     unit_of_measurement: seconds
     icon: mdi:timer-outline
     initial: 5
+
+input_datetime:
+  potty_time:
+    name: Potty Time
+    has_date: false
+    has_time: true
+    icon: mdi:clock-outline
+    initial: "02:30:00"
+  daytime_start:
+    name: Daytime Start
+    has_date: false
+    has_time: true
+    icon: mdi:weather-sunset-up
+    initial: "07:00:00"
+  nighttime_start:
+    name: Nighttime Start
+    has_date: false
+    has_time: true
+    icon: mdi:weather-sunset-down
+    initial: "22:00:00"
