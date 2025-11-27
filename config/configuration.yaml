@@ -28,6 +28,14 @@ input_number:
     unit_of_measurement: seconds
     icon: mdi:timer-outline
     initial: 5
+  tv_time_transition_duration:
+    name: TV Time Transition Duration
+    min: 0
+    max: 60
+    step: 1
+    unit_of_measurement: seconds
+    icon: mdi:timer-outline
+    initial: 11
 
 input_datetime:
   potty_time:
@@ -48,3 +56,15 @@ input_datetime:
     has_time: true
     icon: mdi:weather-sunset-down
     initial: "22:00:00"
+  alarm_window_start:
+    name: Alarm Window Start
+    has_date: false
+    has_time: true
+    icon: mdi:shield-lock
+    initial: "20:00:00"
+  alarm_window_end:
+    name: Alarm Window End
+    has_date: false
+    has_time: true
+    icon: mdi:shield-lock-open
+    initial: "07:00:00"

@@ -12,7 +12,7 @@ actions:
   - action: scene.turn_on
     metadata: {}
     data:
-      transition: 11
+      transition: '{{ states(''input_number.tv_time_transition_duration'') | int }}'
     target:
       entity_id: scene.tv_time
 mode: single

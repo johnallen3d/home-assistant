@@ -11,8 +11,8 @@ triggers:
       - unlocked
 conditions:
   - condition: time
-    after: '20:00:00'
-    before: 07:00:00
+    after: input_datetime.alarm_window_start
+    before: input_datetime.alarm_window_end
     weekday:
       - sun
       - mon
