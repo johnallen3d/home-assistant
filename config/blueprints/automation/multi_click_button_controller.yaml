@@ -1,0 +1,78 @@
+blueprint:
+  name: Multi-Click Button Controller
+  description: |
+    Handle single, double, and long press events for smart buttons.
+
+    This blueprint handles the button press detection logic. You define what happens for each press type.
+  domain: automation
+  input:
+    button_entity:
+      name: Button Entity (Optional - for Zigbee)
+      description: The event entity for Zigbee buttons (leave empty for ESPHome)
+      default: ""
+      selector:
+        entity:
+          filter:
+            domain: event
+    single_press_action:
+      name: Single Press Actions
+      description: Actions to perform on single press
+      default: []
+      selector:
+        action: {}
+    double_press_action:
+      name: Double Press Actions
+      description: Actions to perform on double press
+      default: []
+      selector:
+        action: {}
+    long_press_action:
+      name: Long Press Actions
+      description: Actions to perform on long press
+      default: []
+      selector:
+        action: {}
+
+mode: single
+
+# Trigger must be defined in the automation instance, not in the blueprint
+# For Zigbee: trigger on state of event entity
+# For ESPHome: trigger on esphome.button_pressed event
+
+action:
+  - choose:
+      # Single Press
+      - conditions:
+          - condition: or
+            conditions:
+              # Zigbee button
+              - condition: template
+                value_template: "{{ state_attr(button_entity, 'event_type') == 'multi_press_1' if button_entity else false }}"
+              # ESPHome button
+              - condition: template
+                value_template: "{{ trigger.event.data.click_type == 'single' if trigger.event is defined else false }}"
+        sequence: !input single_press_action
+
+      # Double Press
+      - conditions:
+          - condition: or
+            conditions:
+              # Zigbee button
+              - condition: template
+                value_template: "{{ state_attr(button_entity, 'event_type') == 'multi_press_2' if button_entity else false }}"
+              # ESPHome button  
+              - condition: template
+                value_template: "{{ trigger.event.data.click_type == 'double' if trigger.event is defined else false }}"
+        sequence: !input double_press_action
+
+      # Long Press
+      - conditions:
+          - condition: or
+            conditions:
+              # Zigbee button
+              - condition: template
+                value_template: "{{ state_attr(button_entity, 'event_type') == 'long_press' if button_entity else false }}"
+              # ESPHome button
+              - condition: template
+                value_template: "{{ trigger.event.data.click_type == 'long' if trigger.event is defined else false }}"
+        sequence: !input long_press_action

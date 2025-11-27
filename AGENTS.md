@@ -60,6 +60,15 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - **configuration.yaml changes** (helpers, integrations, etc.): Require full restart with `just config::restart` or `just config::deploy`
 - **Best practice**: Use `just config::deploy` when making configuration.yaml changes to ensure restart happens
 
+### Blueprint Management
+- **Init blueprints**: `just config::init-blueprints` - Create local blueprints/automation directory
+- **Upload blueprint**: `just config::upload-blueprint blueprints/automation/FILE.yaml` - Upload blueprint to server
+- **Pull blueprints**: `just config::pull-blueprints` - Download all custom blueprints from server
+- **Location**: Local blueprints stored in `config/blueprints/automation/`
+- **Custom blueprint**: `multi_click_button_controller.yaml` - Handles single/double/long press for smart buttons
+  - Used by: Dad's bedroom button, kitchen button, living room Atom S3 button
+  - Supports both Zigbee event buttons and ESPHome buttons
+
 ## ESPHome Device: M5Stack Atom S3 (tiny-button)
 - **Device**: M5Stack Atom S3 with 128x128 LCD display (GC9107 chip, st7789v driver)
 - **Location**: 192.168.0.87

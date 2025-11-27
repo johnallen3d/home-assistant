@@ -92,3 +92,23 @@ create-helper NAME DISPLAY_NAME MIN MAX STEP UNIT INITIAL:
     @echo "    initial: {{INITIAL}}" >> configuration.yaml
     @echo "✅ Helper '{{NAME}}' added to configuration.yaml"
     @echo "⚠️  Don't forget to run 'just config::upload-config' to deploy"
+
+# Create local blueprints directory if it doesn't exist
+init-blueprints:
+    @mkdir -p blueprints/automation
+    @echo "✅ Blueprints directory created"
+
+# Upload a blueprint to HA server
+# Usage: just config::upload-blueprint blueprints/automation/my_blueprint.yaml
+upload-blueprint FILE:
+    @echo "📤 Uploading blueprint {{FILE}}..."
+    @ssh {{server}} "mkdir -p {{config_path}}/blueprints/automation"
+    @scp {{FILE}} {{server}}:{{config_path}}/{{FILE}}
+    @echo "✅ Blueprint uploaded"
+
+# Pull all blueprints from server
+pull-blueprints:
+    @echo "📥 Downloading blueprints from server..."
+    @mkdir -p blueprints/automation
+    @scp -r {{server}}:{{config_path}}/blueprints/automation/*.yaml blueprints/automation/ 2>/dev/null || echo "No custom blueprints found on server"
+    @echo "✅ Blueprints synced"
