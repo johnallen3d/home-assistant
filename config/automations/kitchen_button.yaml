@@ -1,38 +1,47 @@
 id: '1763158818464'
 alias: Kitchen Button
 description: Handle single, double, and long presses for the kitchen button
-use_blueprint:
-  path: multi_click_button_controller.yaml
-  input:
-    button_entity: event.smart_button_button
-    single_press_action:
-      - choose:
-          - conditions:
-              - condition: state
-                entity_id: light.kitchen
-                state: 'off'
-            sequence:
-              - action: scene.turn_on
-                target:
-                  entity_id: scene.cooking
-          - conditions:
-              - condition: state
-                entity_id: light.kitchen
-                state: 'on'
-            sequence:
-              - action: scene.turn_on
-                data:
-                  transition: 0
-                target:
-                  entity_id: scene.kitchen_off
-    double_press_action:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.kitchen_chill
-    long_press_action:
-      - action: light.turn_on
-        target:
-          entity_id: light.kitchen
 triggers:
   - trigger: state
     entity_id: event.smart_button_button
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_1'' }}'
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: state
+                    entity_id: light.kitchen
+                    state: 'off'
+                sequence:
+                  - action: scene.turn_on
+                    target:
+                      entity_id: scene.cooking
+              - conditions:
+                  - condition: state
+                    entity_id: light.kitchen
+                    state: 'on'
+                sequence:
+                  - action: scene.turn_on
+                    data:
+                      transition: 0
+                    target:
+                      entity_id: scene.kitchen_off
+      - conditions:
+          - condition: template
+            value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_2'' }}'
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.kitchen_chill
+      - conditions:
+          - condition: template
+            value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''long_press'' }}'
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.kitchen
+mode: single

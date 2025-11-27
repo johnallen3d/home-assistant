@@ -1,42 +1,54 @@
 id: '1762718475350'
 alias: Living Room – Atom S3 Multi-Click Button
-description: Single press → toggle living room light; Double press → activate TV time scene; Long press → activate lights out scene
-use_blueprint:
-  path: multi_click_button_controller.yaml
-  input:
-    single_press_action:
-      - choose:
-          - conditions:
-              - condition: state
-                entity_id: light.living_room_light
-                state: 'on'
-            sequence:
-              - target:
-                  entity_id: light.living_room_light
-                action: light.turn_off
-          - conditions:
-              - condition: state
-                entity_id: light.living_room_light
-                state: 'off'
-            sequence:
-              - target:
-                  entity_id: light.living_room_light
-                action: light.turn_on
-        default:
-          - target:
-              entity_id: light.living_room_light
-            action: light.toggle
-    double_press_action:
-      - target:
-          entity_id: scene.tv_time
-        action: scene.turn_on
-    long_press_action:
-      - target:
-          entity_id: scene.lights_out
-        action: scene.turn_on
+description: 'Single press → toggle living room light Double press → activate TV time scene Long press → activate lights out scene
+
+'
 triggers:
   - event_type: esphome.button_pressed
     event_data:
       device: tiny-button
     id: button_event
     trigger: event
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.event.data.click_type == ''single'' }}'
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: state
+                    entity_id: light.living_room_light
+                    state: 'on'
+                sequence:
+                  - target:
+                      entity_id: light.living_room_light
+                    action: light.turn_off
+              - conditions:
+                  - condition: state
+                    entity_id: light.living_room_light
+                    state: 'off'
+                sequence:
+                  - target:
+                      entity_id: light.living_room_light
+                    action: light.turn_on
+            default:
+              - target:
+                  entity_id: light.living_room_light
+                action: light.toggle
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.event.data.click_type == ''double'' }}'
+        sequence:
+          - target:
+              entity_id: scene.tv_time
+            action: scene.turn_on
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.event.data.click_type == ''long'' }}'
+        sequence:
+          - target:
+              entity_id: scene.lights_out
+            action: scene.turn_on
+mode: single
