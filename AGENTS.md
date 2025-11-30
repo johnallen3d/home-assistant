@@ -1,10 +1,35 @@
-# AGENT.md
+# AGENTS.md
 
-## Build/Test/Lint Commands
-This is a Home Assistant inventory repository - no traditional build/test commands needed.
-- Run inventory script: `./ha_inventory.sh`
-- Verify script syntax: `bash -n ha_inventory.sh`
-- Test SSH connectivity: `ssh root@homeassistant "ha info"`
+## ⛔️ CRITICAL: GIT OPERATIONS ARE STRICTLY FORBIDDEN ⛔️
+**NEVER EVER run ANY git commands. NEVER EVER make commits. NEVER EVER stage files with git add.**
+**This includes but is not limited to:**
+- `git commit` (NEVER)
+- `git add` (NEVER)
+- `git push` (NEVER)
+- `git rebase` (NEVER)
+- `git merge` (NEVER)
+- `git stash` (NEVER)
+- `git tag` (NEVER)
+- `git branch` (NEVER - except to READ current branch name)
+- `git checkout` (NEVER - except to READ or discard local changes if explicitly requested)
+- `git reset` (NEVER - except to discard local changes if explicitly requested)
+
+**ONLY ALLOWED git commands (READ-ONLY):**
+- `git status` - to check working directory state
+- `git diff` - to view changes
+- `git log` - to view history
+- `git show` - to view commit details
+- `git branch` (no arguments) - to view current branch
+
+**User is responsible for ALL git operations including commits, staging, and pushing.**
+**If you run ANY write operation with git, you have FAILED.**
+
+## Project-Specific Details
+
+### Connection Info
+- **HA Server**: `root@homeassistant` (or `root@homeassistant.local`)
+- **Server config path**: `/config/`
+- **This repo**: READ-ONLY backup, never push changes back to server
 
 ### ESPHome Development
 - Local ESPHome setup: `esphome/` directory with uv package manager
@@ -14,30 +39,6 @@ This is a Home Assistant inventory repository - no traditional build/test comman
 - Upload via OTA: `cd esphome && just upload` (device IP: 192.168.0.87)
 - View logs: `cd esphome && just logs`
 - Clean build: `rm -rf esphome/.esphome/build/tiny-button && cd esphome && just compile`
-
-## Code Style Guidelines
-- Use bash for shell scripts with proper error handling
-- Follow standard bash conventions: 2-space indentation, quoted variables
-- Use descriptive function names and comments for complex operations
-- Prefer emoji indicators for user feedback (✅❌📥📊)
-- Use Python 3 for data processing with json library
-- Generate markdown documentation with proper headers and formatting
-- Handle SSH connection errors gracefully with appropriate exit codes
-- Use absolute paths for file operations to ensure reliability
-- ESPHome YAML: 2-space indentation, follow ESPHome component structure
-- Use descriptive IDs for ESPHome components (e.g., `bathroom_temp`, `outdoor_temp`)
-
-## Home Assistant Configuration Management
-- Configuration files location: `/config/` on Home Assistant server
-- Server uses single-file configuration: `/config/automations.yaml`, `/config/scenes.yaml`
-- Local repo uses split files: `config/automations/*.yaml`, `config/scenes/*.yaml`
-- Extract script automatically splits into individual files for better git tracking
-- This is a READ-ONLY backup repository - never push changes back to server
-- Edit automations/scenes via Home Assistant UI only (server is source of truth)
-- Use SCP to transfer files: `scp local/file root@homeassistant:/config/file`
-- Use SSH to execute HA CLI commands: `ssh root@homeassistant "ha [command]"`
-- To reload after manual edits: `ha core restart` (no direct reload command)
-- YAML uses 2-space indentation and follows Home Assistant entity structure
 
 ### Just Recipes for Home Assistant Config
 - **Sync all**: `just sync` - Run inventory and extract config
