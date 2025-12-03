@@ -31,6 +31,8 @@ Before starting, verify the environment has:
 4. Git repository connected to HA `/config` directory
 5. Context7 MCP server with Home Assistant docs (recommended)
 
+**Note:** Projects may use task runners like `just` or `make` as wrappers around these SSH/scp commands. Check for `Justfile` or `Makefile` in the project root for convenience shortcuts.
+
 ## Remote Access Patterns
 
 ### Using hass-cli (Local, via REST API)
@@ -624,6 +626,31 @@ hass-cli service call automation.reload
 hass-cli service call automation.trigger --arguments entity_id=automation.name
 ssh root@homeassistant.local "ha core logs | grep -i 'automation' | tail -10"
 ```
+
+## ESPHome Device Integration
+
+Home Assistant often integrates with ESPHome devices (custom firmware for ESP32/ESP8266). When working with ESPHome:
+
+**Configuration:** ESPHome devices have YAML config files typically in an `esphome/` directory.
+
+**Development workflow:**
+1. Edit YAML config locally
+2. Validate: `esphome config device.yaml`
+3. Compile firmware: `esphome compile device.yaml`
+4. Upload OTA: `esphome upload device.yaml --device [IP]`
+5. Monitor logs: `esphome logs device.yaml`
+
+**Integration with HA:**
+- ESPHome devices auto-discovered by Home Assistant
+- Entities automatically created
+- Use these entities in automations and dashboards like any other HA entity
+
+**Common patterns:**
+- Multi-click buttons sending events to HA
+- Custom displays showing HA state data
+- Sensors reporting to HA entities
+
+Check project docs for device-specific hardware requirements (display drivers, GPIO pins, frameworks).
 
 ## Best Practices Summary
 
