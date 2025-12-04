@@ -10,6 +10,36 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
+# Light Groups
+light:
+  - platform: group
+    name: Kitchen Lights
+    entities:
+      - light.kitchen
+      - light.island_bulb
+      - light.sink_bulb
+      - light.hue_lightstrip_plus_1
+  - platform: group
+    name: Dad's Bedroom Lights
+    entities:
+      - light.bedroom_lamp
+  - platform: group
+    name: Bathroom Lights
+    entities:
+      - light.bathroom
+      - light.bathroom_lamp
+
+# Mixed entity groups (lights + switches)
+group:
+  kitchen_all:
+    name: Kitchen All
+    entities:
+      - light.kitchen
+      - light.island_bulb
+      - light.sink_bulb
+      - light.hue_lightstrip_plus_1
+      - switch.kitchen_counter_switch
+
 # Helpers
 input_number:
   bathroom_motion_timeout:
