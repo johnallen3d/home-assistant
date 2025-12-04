@@ -235,7 +235,7 @@ If errors found:
 **Critical Understanding:**
 
 - Creating dashboard file is NOT enough - must register in `.storage/lovelace_dashboards`
-- Dashboard changes don't require HA restart (just browser refresh)
+- **Dashboard changes REQUIRE HA restart** - browser refresh alone is NOT sufficient
 - Use panel view for full-screen content (maps, cameras)
 - Use sections view for organized multi-card layouts
 
@@ -250,20 +250,23 @@ vim .storage/lovelace.control_center
 # 2. Deploy immediately (no git commit yet)
 scp .storage/lovelace.control_center root@homeassistant.local:/config/.storage/
 
-# 3. Refresh browser (Ctrl+F5 or Cmd+Shift+R)
-# No HA restart needed!
+# 3. Restart HA (required for dashboard changes to take effect)
+ssh root@homeassistant.local "ha core restart"
 
-# 4. Iterate: Repeat 1-3 until perfect
+# 4. After restart, hard refresh browser (Ctrl+F5 or Cmd+Shift+R)
 
-# 5. When stable, USER commits to git
+# 5. Iterate: Repeat 1-4 until perfect
+
+# 6. When stable, USER commits to git
 ssh root@homeassistant.local "cd /config && git pull"
 ```
 
 **Why scp for dashboards:**
 
-- Instant feedback (no HA restart)
-- Iterate quickly on visual changes
+- Quick deploy without git commits
+- Iterate on visual changes
 - Commit only stable versions
+- Note: Each change requires HA restart to take effect
 
 ### Creating New Dashboard
 
@@ -684,8 +687,9 @@ Configuration Change Needed
 
 Dashboard Change Needed
 ├─ Make changes locally
-├─ Deploy via scp for testing
-├─ Refresh browser (Ctrl+F5)
+├─ Deploy via scp
+├─ Restart HA (required)
+├─ Hard refresh browser
 ├─ Test on target device
 ├─ Iterate until perfect
 └─ User commits when stable

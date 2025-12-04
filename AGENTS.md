@@ -3,7 +3,7 @@
 ## Project-Specific Details
 
 ### Connection Info
-- **HA Server**: `root@homeassistant` (or `root@homeassistant.local`)
+- **HA Server**: `root@homeassistant` (NOT `.local` - causes auth failures)
 - **Server config path**: `/config/`
 - **This repo**: READ-ONLY backup, never push changes back to server
 
@@ -36,6 +36,13 @@ These `just` commands are convenience wrappers.
 - **Features**:
   - Displays time, date, bathroom temp, outdoor temp
   - Sends button events to HA: `esphome.button_pressed` with `click_type` data
+
+### Lovelace Dashboard Deployment
+- **Dashboard files**: `config/.storage/lovelace.dashboard_*`
+- **Dashboard registry**: `config/.storage/lovelace_dashboards`
+- **Deploy command**: `scp ./config/.storage/lovelace.dashboard_<name> root@homeassistant:/config/.storage/`
+- **After deploying changes**: Requires HA restart (`just config::restart`) - browser refresh alone is NOT sufficient
+- **After registering new dashboard**: Also requires HA restart
 
 ### Custom Blueprints
 - **Location**: `config/blueprints/automation/`
