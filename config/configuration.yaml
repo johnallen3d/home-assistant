@@ -25,9 +25,16 @@ light:
       - light.island_bulb
       - light.sink_bulb
   - platform: group
-    name: Dad's Bedroom Lights
+    name: Dad's Overhead Lights
+    entities:
+      - light.bedroom_overhead_left
+      - light.bedroom_overhead_right
+  - platform: group
+    name: Bedroom Lights
     entities:
       - light.bedroom_lamp
+      - light.bedroom_overhead_left
+      - light.bedroom_overhead_right
   - platform: group
     name: Bathroom Lights
     entities:

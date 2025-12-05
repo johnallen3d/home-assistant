@@ -9,13 +9,13 @@ entities:
     supported_color_modes:
       - color_temp
       - xy
-    color_mode:
-    brightness:
-    color_temp_kelvin:
-    color_temp:
-    hs_color:
-    rgb_color:
-    xy_color:
+    color_mode: null
+    brightness: null
+    color_temp_kelvin: null
+    color_temp: null
+    hs_color: null
+    rgb_color: null
+    xy_color: null
     is_hue_group: true
     hue_scenes: []
     hue_type: room
@@ -41,42 +41,28 @@ entities:
       - color_temp
       - hs
       - xy
-    color_mode:
-    brightness:
-    color_temp_kelvin:
-    color_temp:
-    hs_color:
-    rgb_color:
-    xy_color:
+    color_mode: null
+    brightness: null
+    color_temp_kelvin: null
+    color_temp: null
+    hs_color: null
+    rgb_color: null
+    xy_color: null
     friendly_name: Living Room Light
     supported_features: 32
     state: 'off'
   light.bedroom_lamp:
-    min_color_temp_kelvin: 2127
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 470
-    supported_color_modes:
-      - color_temp
-      - hs
-      - xy
-    color_mode: color_temp
+    state: 'on'
     brightness: 255
     color_temp_kelvin: 5076
-    color_temp: 197
-    hs_color:
-      - 27.087
-      - 18.221
-    rgb_color:
-      - 255
-      - 230
-      - 209
-    xy_color:
-      - 0.368
-      - 0.349
-    friendly_name: Bedroom Lamp
-    supported_features: 32
+  light.bedroom_overhead_left:
     state: 'on'
+    brightness: 255
+    color_temp_kelvin: 5076
+  light.bedroom_overhead_right:
+    state: 'on'
+    brightness: 255
+    color_temp_kelvin: 5076
   switch.kitchen_counter_switch:
     device_class: outlet
     friendly_name: Kitchen counter switch

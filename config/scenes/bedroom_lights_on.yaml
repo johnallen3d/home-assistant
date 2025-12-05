@@ -2,30 +2,16 @@ id: '1763159661461'
 name: Bedroom lights on
 entities:
   light.bedroom_lamp:
-    min_color_temp_kelvin: 2127
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 470
-    supported_color_modes:
-      - color_temp
-      - hs
-      - xy
-    color_mode: color_temp
+    state: 'on'
     brightness: 107
     color_temp_kelvin: 3597
-    color_temp: 278
-    hs_color:
-      - 27.082
-      - 42.706
-    rgb_color:
-      - 255
-      - 195
-      - 146
-    xy_color:
-      - 0.447
-      - 0.372
-    friendly_name: Bedroom Lamp
-    supported_features: 32
+  light.bedroom_overhead_left:
     state: 'on'
+    brightness: 107
+    color_temp_kelvin: 3597
+  light.bedroom_overhead_right:
+    state: 'on'
+    brightness: 107
+    color_temp_kelvin: 3597
 icon: mdi:lamp
 metadata: {}

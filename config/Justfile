@@ -43,6 +43,25 @@ update-automations FILES:
 # Alias for update-automation
 push-automation FILE: (update-automation FILE)
 
+# Update a specific scene: pull from server, update from local file, push back, then re-sync
+# Usage: just config::update-scene scenes/alarm.yaml
+update-scene FILE:
+    @echo "🔧 Updating scene from {{FILE}}..."
+    @uv run --directory .. update_scene.py {{FILE}}
+    @echo "🔄 Re-syncing local copy..."
+    @./extract.sh
+
+# Update multiple scenes at once
+# Usage: just config::update-scenes "scenes/alarm.yaml scenes/tv_time.yaml"
+update-scenes FILES:
+    @echo "🔧 Updating scenes..."
+    @uv run --directory .. update_scene.py {{FILES}}
+    @echo "🔄 Re-syncing local copy..."
+    @./extract.sh
+
+# Alias for update-scene
+push-scene FILE: (update-scene FILE)
+
 # Restart Home Assistant core (takes ~30s)
 restart:
     @echo "🔄 Restarting Home Assistant core..."

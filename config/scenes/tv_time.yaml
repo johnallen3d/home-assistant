@@ -11,8 +11,8 @@ entities:
       - xy
     color_mode: xy
     brightness: 13
-    color_temp_kelvin:
-    color_temp:
+    color_temp_kelvin: null
+    color_temp: null
     hs_color:
       - 308.125
       - 37.647
@@ -52,34 +52,21 @@ entities:
       - color_temp
       - hs
       - xy
-    color_mode:
-    brightness:
-    color_temp_kelvin:
-    color_temp:
-    hs_color:
-    rgb_color:
-    xy_color:
+    color_mode: null
+    brightness: null
+    color_temp_kelvin: null
+    color_temp: null
+    hs_color: null
+    rgb_color: null
+    xy_color: null
     friendly_name: Living Room Light
     supported_features: 32
     state: 'off'
   light.bedroom_lamp:
-    min_color_temp_kelvin: 2127
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 470
-    supported_color_modes:
-      - color_temp
-      - hs
-      - xy
-    color_mode:
-    brightness:
-    color_temp_kelvin:
-    color_temp:
-    hs_color:
-    rgb_color:
-    xy_color:
-    friendly_name: Bedroom Lamp
-    supported_features: 32
+    state: 'off'
+  light.bedroom_overhead_left:
+    state: 'off'
+  light.bedroom_overhead_right:
     state: 'off'
 icon: mdi:television
 metadata: {}

@@ -167,7 +167,7 @@
                   "icon": "mdi:bed",
                   "sub_button": [
                     {
-                      "entity": "light.dad_s_bedroom_lights",
+                      "entity": "light.bedroom_lights",
                       "icon": "mdi:lightbulb-group",
                       "tap_action": {
                         "action": "toggle"
@@ -181,6 +181,16 @@
                   "entity": "light.bedroom_lamp",
                   "name": "Bedroom Lamp",
                   "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.dad_s_overhead_lights",
+                  "name": "Overhead Lights",
+                  "icon": "mdi:ceiling-light",
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"

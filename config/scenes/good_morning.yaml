@@ -40,31 +40,17 @@ entities:
     supported_features: 40
     state: 'on'
   light.bedroom_lamp:
-    min_color_temp_kelvin: 2127
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 470
-    supported_color_modes:
-      - color_temp
-      - hs
-      - xy
-    color_mode: color_temp
+    state: 'on'
     brightness: 63
     color_temp_kelvin: 2127
-    color_temp: 470
-    hs_color:
-      - 30.069
-      - 88.053
-    rgb_color:
-      - 255
-      - 143
-      - 30
-    xy_color:
-      - 0.586
-      - 0.387
-    friendly_name: Bedroom Lamp
-    supported_features: 32
+  light.bedroom_overhead_left:
     state: 'on'
+    brightness: 63
+    color_temp_kelvin: 2127
+  light.bedroom_overhead_right:
+    state: 'on'
+    brightness: 63
+    color_temp_kelvin: 2127
   light.living_room_light:
     min_color_temp_kelvin: 2127
     max_color_temp_kelvin: 6535

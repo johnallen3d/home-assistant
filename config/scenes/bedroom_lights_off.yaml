@@ -2,23 +2,10 @@ id: '1763159704911'
 name: Bedroom lights off
 entities:
   light.bedroom_lamp:
-    min_color_temp_kelvin: 2127
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 470
-    supported_color_modes:
-      - color_temp
-      - hs
-      - xy
-    color_mode:
-    brightness:
-    color_temp_kelvin:
-    color_temp:
-    hs_color:
-    rgb_color:
-    xy_color:
-    friendly_name: Bedroom Lamp
-    supported_features: 32
+    state: 'off'
+  light.bedroom_overhead_left:
+    state: 'off'
+  light.bedroom_overhead_right:
     state: 'off'
 icon: mdi:lamp-outline
 metadata: {}

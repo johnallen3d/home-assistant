@@ -15,9 +15,10 @@
 
 # Light groups (not individual bulbs)
 light.kitchen_lights: true
-light.bedroom_lights: true
+light.island_lights: true
 light.bathroom_lights: true
-light.dad_s_bedroom_lights: true
+light.bedroom_lights: true
+light.dad_s_overhead_lights: true
 
 # Scenes
 scene.alarm: true

@@ -20,12 +20,11 @@ mkdir -p "$CONFIG_DIR"
 # Cleanup temp directory on exit
 trap "rm -rf $TEMP_DIR" EXIT
 
-# List of YAML files to check (excluding secrets.yaml)
+# List of YAML files to check (excluding secrets.yaml, scripts.yaml)
 YAML_FILES=(
   "automations.yaml"
   "scenes.yaml"
   "configuration.yaml"
-  "scripts.yaml"
 )
 
 # Files that will be split into directories
@@ -137,23 +136,8 @@ for file in "${SPLIT_FILES[@]}"; do
 done
 
 # Download exposed entities for voice assistant
-echo ""
-echo "📥 Downloading exposed entities config..."
-mkdir -p "$CONFIG_DIR/.storage"
-scp -q "$HA_HOST:/config/.storage/homeassistant.exposed_entities" "$CONFIG_DIR/.storage/" 2>/dev/null && echo "  ✅ Exposed entities synced" || echo "  ⏭️  No exposed entities file found"
-
-echo ""
-echo "📊 Summary of extracted files:"
-echo "Regular files:"
-ls -lh "$CONFIG_DIR"/*.yaml 2>/dev/null || echo "  No YAML files found"
-echo ""
-echo "Split directories:"
-for dir in "$CONFIG_DIR"/automations "$CONFIG_DIR"/scenes; do
-  if [ -d "$dir" ]; then
-    count=$(find "$dir" -name "*.yaml" | wc -l | tr -d ' ')
-    echo "  $(basename "$dir")/: $count files"
-  fi
-done
-
+# NOTE: We use exposed_entities.yaml + update_exposed_entities.py workflow instead
+# which modifies core.entity_registry directly. The homeassistant.exposed_entities
+# file is only for legacy entities without unique_id.
 echo ""
 echo "✅ Configuration extraction complete!"

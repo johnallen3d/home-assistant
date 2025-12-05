@@ -201,9 +201,27 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "button",
+                  "entity": "light.bedroom_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
                   "entity": "light.bedroom_lamp",
                   "name": "Dad's Lamp",
                   "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.dad_s_overhead_lights",
+                  "name": "Overhead Lights",
+                  "icon": "mdi:ceiling-light",
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"

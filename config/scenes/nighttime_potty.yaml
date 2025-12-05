@@ -11,8 +11,8 @@ entities:
       - xy
     color_mode: xy
     brightness: 26
-    color_temp_kelvin:
-    color_temp:
+    color_temp_kelvin: null
+    color_temp: null
     hs_color:
       - 308.125
       - 37.647

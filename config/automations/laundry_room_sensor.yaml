@@ -16,7 +16,7 @@ triggers:
     for:
       hours: 0
       minutes: 0
-      seconds: '{{ states(''input_number.laundry_room_motion_delay'') | int }}'
+      seconds: 5
     trigger: state
 conditions: []
 actions:

@@ -9,13 +9,13 @@ entities:
     supported_color_modes:
       - color_temp
       - xy
-    color_mode:
-    brightness:
-    color_temp_kelvin:
-    color_temp:
-    hs_color:
-    rgb_color:
-    xy_color:
+    color_mode: null
+    brightness: null
+    color_temp_kelvin: null
+    color_temp: null
+    hs_color: null
+    rgb_color: null
+    xy_color: null
     is_hue_group: true
     hue_scenes: []
     hue_type: room

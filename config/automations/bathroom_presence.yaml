@@ -14,7 +14,9 @@ triggers:
     to:
       - 'off'
     for:
-      minutes: '{{ states(''input_number.bathroom_motion_timeout'') | int }}'
+      hours: 0
+      minutes: 2
+      seconds: 0
     trigger: state
 actions:
   - choose:
@@ -31,8 +33,8 @@ actions:
           - choose:
               - conditions:
                   - condition: time
-                    after: input_datetime.daytime_start
-                    before: input_datetime.nighttime_start
+                    after: 07:00:00
+                    before: '22:00:00'
                 sequence:
                   - action: scene.turn_on
                     target:
@@ -41,9 +43,9 @@ actions:
                   - condition: or
                     conditions:
                       - condition: time
-                        after: input_datetime.nighttime_start
+                        after: '22:00:00'
                       - condition: time
-                        before: input_datetime.daytime_start
+                        before: 07:00:00
                 sequence:
                   - action: scene.turn_on
                     target:
