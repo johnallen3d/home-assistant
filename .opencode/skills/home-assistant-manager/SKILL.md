@@ -695,6 +695,91 @@ Dashboard Change Needed
 └─ User commits when stable
 ```
 
+## Voice Assistant Exposed Entities
+
+Control which entities are exposed to the Assist voice assistant (conversation integration).
+
+### Key Concepts
+
+**Storage locations:**
+- **`core.entity_registry`** - Stores exposure settings for entities WITH a unique_id (most entities)
+- **`homeassistant.exposed_entities`** - Only for legacy entities WITHOUT a unique_id (e.g., light groups)
+
+**Default behavior:**
+- HA auto-exposes entities in these domains: `climate`, `cover`, `fan`, `humidifier`, `light`, `media_player`, `scene`, `switch`, `todo`, `vacuum`, `water_heater`
+- Plus certain `binary_sensor` and `sensor` device classes (temperature, humidity, motion, etc.)
+
+### Critical: Modifying Entity Registry
+
+**HA must be STOPPED before modifying `core.entity_registry`**, otherwise HA overwrites changes on restart (it keeps the registry in memory).
+
+```bash
+# Correct workflow
+ssh root@homeassistant "ha core stop"
+# ... modify core.entity_registry ...
+ssh root@homeassistant "ha core start"
+```
+
+### Entity Registry Structure
+
+Exposure settings are stored in each entity's `options.conversation.should_expose` field:
+
+```json
+{
+  "data": {
+    "entities": [
+      {
+        "entity_id": "light.kitchen",
+        "options": {
+          "conversation": {
+            "should_expose": true
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+### Recommended Management Pattern
+
+1. Create a simple YAML config file listing entities to expose:
+
+```yaml
+# exposed_entities.yaml
+light.kitchen_lights: true
+light.bedroom_lights: true
+scene.tv_time: true
+scene.good_morning: true
+```
+
+2. Create a Python script to apply settings to entity registry:
+   - Download `core.entity_registry` from server
+   - Set `should_expose: true` for listed entities
+   - Set `should_expose: false` for all other entities in auto-exposed domains
+   - Upload modified registry back to server
+
+3. Deployment workflow:
+   - Stop HA
+   - Run script to apply settings
+   - Start HA
+
+### Checking Exposed Entities
+
+```bash
+# List entities currently exposed (from entity registry)
+ssh root@homeassistant "cat /config/.storage/core.entity_registry" | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); \
+  [print(e['entity_id']) for e in d['data']['entities'] \
+  if e.get('options',{}).get('conversation',{}).get('should_expose')==True]"
+```
+
+### Light Groups and Legacy Entities
+
+Light groups defined in `configuration.yaml` may not be in the entity registry. For these:
+- They need entries in `homeassistant.exposed_entities` instead
+- Check if entity exists in registry first before deciding which file to modify
+
 ---
 
 This skill encapsulates efficient Home Assistant management workflows developed through iterative optimization and real-world dashboard development. Apply these patterns to any Home Assistant instance for reliable, fast, and safe configuration management.

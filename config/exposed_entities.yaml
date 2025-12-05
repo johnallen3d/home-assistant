@@ -1,0 +1,37 @@
+# Entities exposed to voice assistant (Assist/conversation)
+# 
+# Only entities listed here with `expose: true` will be exposed.
+# All other entities in DEFAULT_EXPOSED_DOMAINS will be set to `expose: false`.
+#
+# Default exposed domains (per HA source code):
+#   climate, cover, fan, humidifier, light, media_player, scene, 
+#   switch, todo, vacuum, water_heater
+#
+# Plus certain binary_sensor and sensor device classes.
+#
+# Usage:
+#   just config::deploy-exposed   - Apply settings and restart HA
+#   just config::list-exposed     - Show currently exposed entities
+
+# Light groups (not individual bulbs)
+light.kitchen_lights: true
+light.bedroom_lights: true
+light.bathroom_lights: true
+light.dad_s_bedroom_lights: true
+
+# Scenes
+scene.alarm: true
+scene.bedroom_lights_off: true
+scene.bedroom_lights_on: true
+scene.cooking: true
+scene.daytime_potty: true
+scene.eating: true
+scene.good_morning: true
+scene.kitchen_chill: true
+scene.kitchen_off: true
+scene.lights_out: true
+scene.nighttime_potty: true
+scene.shaving: true
+scene.tv_time: true
+scene.winding_down: true
+scene.working: true

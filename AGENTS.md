@@ -49,3 +49,18 @@ These `just` commands are convenience wrappers.
 - **multi_click_button_controller.yaml**: Handles single/double/long press
   - Used by: Dad's bedroom button, kitchen button, living room Atom S3 button
   - Supports: Zigbee event buttons and ESPHome buttons
+
+### Voice Assistant Exposed Entities
+- **Config file**: `config/exposed_entities.yaml` - simple YAML list of entities to expose
+- **Storage location**: Exposure settings stored in `core.entity_registry` on server (NOT `homeassistant.exposed_entities`)
+- **Script**: `update_exposed_entities.py` - applies YAML config to entity registry
+- **Critical**: HA must be **stopped** before modifying `core.entity_registry`, otherwise HA overwrites changes on restart
+- **Deploy workflow**:
+  1. Edit `config/exposed_entities.yaml`
+  2. Run `just config::deploy-exposed` (stops HA, applies changes, starts HA)
+- **Commands**:
+  - `just config::deploy-exposed` - Apply settings and restart HA
+  - `just config::check-exposed` - Dry run, show what would change
+  - `just config::list-exposed` - Show entities in local YAML config
+  - `just config::list-exposed-server` - Show what's actually exposed on server
+- **Note**: Light groups (e.g., `light.kitchen_lights`) may not be in entity registry - they need `homeassistant.exposed_entities` for legacy entity handling

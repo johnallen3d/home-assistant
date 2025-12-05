@@ -157,3 +157,42 @@ deploy-dashboard NAME: (push-dashboard NAME) restart
 list-dashboards:
     @echo "📋 Dashboards on server:"
     @ssh {{server}} "ls -la {{config_path}}/.storage/lovelace.dashboard_* 2>/dev/null" || echo "No dashboards found"
+
+# ============================================
+# Voice Assistant / Exposed Entities
+# ============================================
+# 
+# Exposure settings are stored in core.entity_registry (for entities with unique_id)
+# Edit config/exposed_entities.yaml to define which entities to expose.
+# Only entities listed with `true` will be exposed; all others in managed domains are hidden.
+#
+# CRITICAL: HA must be STOPPED before modifying core.entity_registry,
+# otherwise HA overwrites changes on restart.
+
+# Apply exposed_entities.yaml settings to entity registry (full workflow)
+# Stops HA, applies changes, starts HA
+deploy-exposed:
+    @echo "🛑 Stopping Home Assistant..."
+    @ssh {{server}} "ha core stop"
+    @echo "📤 Applying exposed entities config..."
+    @uv run --directory .. update_exposed_entities.py
+    @echo "🚀 Starting Home Assistant..."
+    @ssh {{server}} "ha core start" || true
+    @echo "⏳ Waiting 30s for startup..."
+    @sleep 30
+    @echo "✅ Exposed entities deployed"
+
+# Preview changes without applying (dry run)
+check-exposed:
+    @echo "🔍 Checking exposed entities (dry run)..."
+    @uv run --directory .. update_exposed_entities.py --dry-run
+
+# Show entities listed in exposed_entities.yaml
+list-exposed:
+    @echo "📋 Entities configured to expose (from exposed_entities.yaml):"
+    @python3 -c "import yaml; d=yaml.safe_load(open('exposed_entities.yaml')); [print(f'  ✅ {k}') for k,v in d.items() if v]"
+
+# Show what's actually exposed on the server (from entity registry)
+list-exposed-server:
+    @echo "📋 Entities currently exposed on server:"
+    @ssh {{server}} "cat {{config_path}}/.storage/core.entity_registry" | python3 -c "import sys,json; d=json.load(sys.stdin); [print(f'  ✅ {e[\"entity_id\"]}') for e in d['data']['entities'] if e.get('options',{}).get('conversation',{}).get('should_expose')==True]"

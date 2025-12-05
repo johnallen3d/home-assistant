@@ -136,6 +136,12 @@ for file in "${SPLIT_FILES[@]}"; do
   fi
 done
 
+# Download exposed entities for voice assistant
+echo ""
+echo "📥 Downloading exposed entities config..."
+mkdir -p "$CONFIG_DIR/.storage"
+scp -q "$HA_HOST:/config/.storage/homeassistant.exposed_entities" "$CONFIG_DIR/.storage/" 2>/dev/null && echo "  ✅ Exposed entities synced" || echo "  ⏭️  No exposed entities file found"
+
 echo ""
 echo "📊 Summary of extracted files:"
 echo "Regular files:"
