@@ -16,48 +16,38 @@ extract:
 # Alias for extract
 pull: extract
 
-# Upload configuration.yaml to HA server and re-sync
+# Upload configuration.yaml to HA server
 upload-config:
     @echo "📤 Uploading configuration.yaml..."
     @scp configuration.yaml {{server}}:{{config_path}}/configuration.yaml
     @echo "✅ Configuration uploaded"
-    @echo "🔄 Re-syncing local copy..."
-    @./extract.sh
 
-# Update a specific automation: pull from server, update from local file, push back, then re-sync
+# Update a specific automation: pull from server, update from local file, push back
 # Usage: just config::update-automation automations/bathroom_presence.yaml
 update-automation FILE:
     @echo "🔧 Updating automation from {{FILE}}..."
     @uv run --directory .. update_automation.py {{FILE}}
-    @echo "🔄 Re-syncing local copy..."
-    @./extract.sh
 
 # Update multiple automations at once
 # Usage: just config::update-automations "automations/bathroom_presence.yaml automations/kitchen_button.yaml"
 update-automations FILES:
     @echo "🔧 Updating automations..."
     @uv run --directory .. update_automation.py {{FILES}}
-    @echo "🔄 Re-syncing local copy..."
-    @./extract.sh
 
 # Alias for update-automation
 push-automation FILE: (update-automation FILE)
 
-# Update a specific scene: pull from server, update from local file, push back, then re-sync
+# Update a specific scene: pull from server, update from local file, push back
 # Usage: just config::update-scene scenes/alarm.yaml
 update-scene FILE:
     @echo "🔧 Updating scene from {{FILE}}..."
     @uv run --directory .. update_scene.py {{FILE}}
-    @echo "🔄 Re-syncing local copy..."
-    @./extract.sh
 
 # Update multiple scenes at once
 # Usage: just config::update-scenes "scenes/alarm.yaml scenes/tv_time.yaml"
 update-scenes FILES:
     @echo "🔧 Updating scenes..."
     @uv run --directory .. update_scene.py {{FILES}}
-    @echo "🔄 Re-syncing local copy..."
-    @./extract.sh
 
 # Alias for update-scene
 push-scene FILE: (update-scene FILE)

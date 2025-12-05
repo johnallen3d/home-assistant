@@ -2,6 +2,7 @@
 inventory/*
 !inventory/.keep
 .env
+.envrc
 
 # Config extraction temporary files (downloaded then split)
 config/automations.yaml

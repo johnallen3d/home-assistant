@@ -91,13 +91,13 @@ input_datetime:
     has_date: false
     has_time: true
     icon: mdi:weather-sunset-up
-    initial: "07:00:00"
+    initial: "06:00:00"
   nighttime_start:
     name: Nighttime Start
     has_date: false
     has_time: true
     icon: mdi:weather-sunset-down
-    initial: "22:00:00"
+    initial: "23:00:00"
   alarm_window_start:
     name: Alarm Window Start
     has_date: false
