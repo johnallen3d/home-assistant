@@ -121,6 +121,23 @@
                 },
                 {
                   "type": "custom:mushroom-light-card",
+                  "entity": "light.island_lights",
+                  "fill_container": true,
+                  "grid_options": {
+                    "columns": 36,
+                    "rows": 2
+                  },
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "show_color_temp_control": true,
+                  "collapsible_controls": true,
+                  "use_light_color": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-light-card",
                   "entity": "light.living_room_light",
                   "use_light_color": true,
                   "show_brightness_control": true,

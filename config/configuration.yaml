@@ -20,6 +20,11 @@ light:
       - light.sink_bulb
       - light.hue_lightstrip_plus_1
   - platform: group
+    name: Island Lights
+    entities:
+      - light.island_bulb
+      - light.sink_bulb
+  - platform: group
     name: Dad's Bedroom Lights
     entities:
       - light.bedroom_lamp

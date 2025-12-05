@@ -118,19 +118,9 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "button",
-                  "entity": "light.island_bulb",
-                  "name": "Island",
+                  "entity": "light.island_lights",
+                  "name": "Island Lights",
                   "icon": "mdi:ceiling-light",
-                  "button_type": "slider",
-                  "show_state": true,
-                  "show_attribute": "brightness"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "light.sink_bulb",
-                  "name": "Sink",
-                  "icon": "mdi:water",
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"
