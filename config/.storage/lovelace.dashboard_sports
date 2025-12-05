@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_sports",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_bruins",
+                  "home_side": "right",
+                  "show_league": false,
+                  "show_timeouts": true,
+                  "outline": true
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.new_england_patriots",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_red_sox",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_celtics",
+                  "show_timeouts": false
+                }
+              ]
+            }
+          ],
+          "type": "sections",
+          "max_columns": 4,
+          "icon": "mdi:hockey-sticks",
+          "background": {
+            "opacity": 0,
+            "alignment": "center",
+            "size": "cover",
+            "repeat": "repeat",
+            "attachment": "fixed"
+          },
+          "cards": []
+        }
+      ]
+    }
+  }
+}

@@ -112,3 +112,48 @@ pull-blueprints:
     @mkdir -p blueprints/automation
     @scp -r {{server}}:{{config_path}}/blueprints/automation/*.yaml blueprints/automation/ 2>/dev/null || echo "No custom blueprints found on server"
     @echo "✅ Blueprints synced"
+
+# ============================================
+# Dashboard Management
+# ============================================
+
+# Pull all dashboards from server (lovelace.dashboard_* files)
+pull-dashboards:
+    @echo "📥 Downloading dashboards from server..."
+    @mkdir -p .storage
+    @scp {{server}}:{{config_path}}/.storage/lovelace.dashboard_* .storage/ 2>/dev/null || echo "No dashboards found on server"
+    @scp {{server}}:{{config_path}}/.storage/lovelace_dashboards .storage/ 2>/dev/null || echo "No dashboard registry found"
+    @echo "✅ Dashboards synced"
+    @ls -la .storage/lovelace* 2>/dev/null || true
+
+# Push a specific dashboard to server
+# Usage: just config::push-dashboard bubbles
+push-dashboard NAME:
+    @echo "📤 Uploading dashboard '{{NAME}}'..."
+    @python3 -m json.tool .storage/lovelace.dashboard_{{NAME}} > /dev/null || (echo "❌ Invalid JSON in dashboard file" && exit 1)
+    @scp .storage/lovelace.dashboard_{{NAME}} {{server}}:{{config_path}}/.storage/
+    @echo "✅ Dashboard '{{NAME}}' uploaded"
+    @echo "⚠️  Restart HA for changes to take effect: just config::restart"
+
+# Push all dashboards to server
+push-dashboards:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "📤 Uploading all dashboards..."
+    for f in .storage/lovelace.dashboard_*; do
+        python3 -m json.tool "$f" > /dev/null || { echo "❌ Invalid JSON in $f"; exit 1; }
+    done
+    scp .storage/lovelace.dashboard_* {{server}}:{{config_path}}/.storage/
+    scp .storage/lovelace_dashboards {{server}}:{{config_path}}/.storage/
+    echo "✅ All dashboards uploaded"
+    echo "⚠️  Restart HA for changes to take effect: just config::restart"
+
+# Deploy a dashboard (push + restart)
+# Usage: just config::deploy-dashboard bubbles
+deploy-dashboard NAME: (push-dashboard NAME) restart
+    @echo "✅ Dashboard '{{NAME}}' deployed and Home Assistant restarted"
+
+# List dashboards on server
+list-dashboards:
+    @echo "📋 Dashboards on server:"
+    @ssh {{server}} "ls -la {{config_path}}/.storage/lovelace.dashboard_* 2>/dev/null" || echo "No dashboards found"

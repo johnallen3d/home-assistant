@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_lights",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "sections",
+          "max_columns": 4,
+          "title": "Lights",
+          "path": "test",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "scene.lights_out",
+                      "show_state": false,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "icon_height": "24px"
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "scene.good_morning",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "icon_height": "24px"
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "scene.tv_time",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "icon_height": "24px"
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "scene.winding_down",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "icon_height": "24px"
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "entity": "scene.cooking",
+                      "show_state": false,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "icon_height": "24px"
+                    }
+                  ],
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": 1
+                  }
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.kitchen",
+                  "fill_container": true,
+                  "grid_options": {
+                    "rows": 2,
+                    "columns": 36
+                  },
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "show_color_temp_control": true,
+                  "collapsible_controls": true,
+                  "use_light_color": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "show_name": true,
+                  "show_icon": true,
+                  "type": "button",
+                  "entity": "switch.kitchen_counter_switch",
+                  "grid_options": {
+                    "columns": 6,
+                    "rows": 2
+                  }
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.hue_lightstrip_plus_1",
+                  "fill_container": true,
+                  "grid_options": {
+                    "columns": 36,
+                    "rows": 2
+                  },
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "show_color_temp_control": true,
+                  "collapsible_controls": true,
+                  "use_light_color": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.living_room_light",
+                  "use_light_color": true,
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "collapsible_controls": true,
+                  "show_color_temp_control": true,
+                  "fill_container": true,
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": 2
+                  },
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.bedroom_lamp",
+                  "use_light_color": true,
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "collapsible_controls": true,
+                  "show_color_temp_control": true,
+                  "fill_container": true,
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "grid_options": {
+                    "columns": "full"
+                  }
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.bathroom",
+                  "use_light_color": true,
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "collapsible_controls": true,
+                  "show_color_temp_control": true,
+                  "fill_container": true,
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "tap_action": {
+                    "action": "toggle"
+                  },
+                  "name": "Bathroom strip"
+                },
+                {
+                  "type": "custom:mushroom-light-card",
+                  "entity": "light.bathroom_lamp",
+                  "use_light_color": true,
+                  "show_brightness_control": true,
+                  "show_color_control": true,
+                  "collapsible_controls": true,
+                  "show_color_temp_control": true,
+                  "fill_container": true,
+                  "grid_options": {
+                    "columns": "full"
+                  },
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                }
+              ],
+              "column_span": 4
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    "sun.sun"
+                  ],
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": 2
+                  },
+                  "logarithmic_scale": false
+                },
+                {
+                  "type": "tile",
+                  "entity": "lock.nuki_smart_lock"
+                },
+                {
+                  "type": "heading",
+                  "heading_style": "title"
+                },
+                {
+                  "show_current": true,
+                  "show_forecast": true,
+                  "type": "weather-forecast",
+                  "entity": "weather.forecast_home",
+                  "forecast_type": "daily"
+                }
+              ],
+              "column_span": 4
+            }
+          ],
+          "icon": "mdi:lightbulb-multiple",
+          "cards": []
+        }
+      ]
+    }
+  }
+}

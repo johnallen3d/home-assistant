@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_bubbles",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "panel",
+          "title": "Bubbles",
+          "path": "bubbles",
+          "icon": "mdi:lightbulb-group",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Scenes",
+                  "icon": "mdi:palette",
+                  "sub_button": [
+                    {
+                      "entity": "scene.lights_out",
+                      "icon": "mdi:power-sleep",
+                      "name": "Off",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.lights_out"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "scene.good_morning",
+                      "icon": "mdi:weather-sunny",
+                      "name": "Morning",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.good_morning"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "scene.tv_time",
+                      "icon": "mdi:television",
+                      "name": "TV",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.tv_time"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "scene.winding_down",
+                      "icon": "mdi:sofa",
+                      "name": "Chill",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.winding_down"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "scene.cooking",
+                      "icon": "mdi:pot-steam",
+                      "name": "Cook",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.cooking"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Living Room",
+                  "icon": "mdi:sofa",
+                  "sub_button": [
+                    {
+                      "entity": "light.living_room_light",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.living_room_light",
+                  "name": "Living Room",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Kitchen",
+                  "icon": "mdi:stove",
+                  "sub_button": [
+                    {
+                      "entity": "group.kitchen_all",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.kitchen",
+                  "name": "Kitchen",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.island_bulb",
+                  "name": "Island",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.sink_bulb",
+                  "name": "Sink",
+                  "icon": "mdi:water",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.hue_lightstrip_plus_1",
+                  "name": "Kitchen Strip",
+                  "icon": "mdi:led-strip-variant",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.kitchen_counter_switch",
+                  "name": "Counter",
+                  "icon": "mdi:power-socket-us",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Dad's Bedroom",
+                  "icon": "mdi:bed",
+                  "sub_button": [
+                    {
+                      "entity": "light.dad_s_bedroom_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bedroom_lamp",
+                  "name": "Bedroom Lamp",
+                  "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Charlie's Bedroom",
+                  "icon": "mdi:teddy-bear",
+                  "sub_button": [
+                    {
+                      "entity": "light.charlie_s_shapes",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.charlie_s_shapes",
+                  "name": "Charlie's Shapes",
+                  "icon": "mdi:shape",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Bathroom",
+                  "icon": "mdi:shower",
+                  "sub_button": [
+                    {
+                      "entity": "light.bathroom_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom",
+                  "name": "Bathroom Strip",
+                  "icon": "mdi:led-strip-variant",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom_lamp",
+                  "name": "Bathroom Lamp",
+                  "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

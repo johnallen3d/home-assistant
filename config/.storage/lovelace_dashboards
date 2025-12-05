@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace_dashboards",
+  "data": {
+    "items": [
+      {
+        "id": "dashboard_lights",
+        "show_in_sidebar": true,
+        "icon": "mdi:lightbulb",
+        "title": "Lights",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-lights"
+      },
+      {
+        "id": "dashboard_sports",
+        "show_in_sidebar": true,
+        "icon": "mdi:hockey-sticks",
+        "title": "Sports",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-sports"
+      },
+      {
+        "id": "dashboard_bubbles",
+        "show_in_sidebar": true,
+        "icon": "mdi:circle-multiple",
+        "title": "Bubbles",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-bubbles"
+      },
+      {
+        "id": "dashboard_desktop",
+        "show_in_sidebar": true,
+        "icon": "mdi:monitor",
+        "title": "Desktop",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-desktop"
+      }
+    ]
+  }
+}

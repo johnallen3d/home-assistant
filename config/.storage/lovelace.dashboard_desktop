@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_desktop",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "sections",
+          "title": "Desktop",
+          "path": "desktop",
+          "icon": "mdi:monitor",
+          "max_columns": 3,
+          "sections": [
+            {
+              "type": "grid",
+              "title": "Scenes",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.lights_out",
+                  "name": "Lights Off",
+                  "icon": "mdi:power-sleep",
+                  "button_type": "state",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "target": {
+                      "entity_id": "scene.lights_out"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.good_morning",
+                  "name": "Morning",
+                  "icon": "mdi:weather-sunny",
+                  "button_type": "state",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "target": {
+                      "entity_id": "scene.good_morning"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.tv_time",
+                  "name": "TV Time",
+                  "icon": "mdi:television",
+                  "button_type": "state",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "target": {
+                      "entity_id": "scene.tv_time"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.winding_down",
+                  "name": "Chill",
+                  "icon": "mdi:sofa",
+                  "button_type": "state",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "target": {
+                      "entity_id": "scene.winding_down"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.cooking",
+                  "name": "Cooking",
+                  "icon": "mdi:pot-steam",
+                  "button_type": "state",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "scene.turn_on",
+                    "target": {
+                      "entity_id": "scene.cooking"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "title": "Kitchen",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "group.kitchen_all",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.kitchen",
+                  "name": "Kitchen",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.island_bulb",
+                  "name": "Island",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.sink_bulb",
+                  "name": "Sink",
+                  "icon": "mdi:water",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.hue_lightstrip_plus_1",
+                  "name": "Strip",
+                  "icon": "mdi:led-strip-variant",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.kitchen_counter_switch",
+                  "name": "Counter",
+                  "icon": "mdi:power-socket-us",
+                  "button_type": "switch"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "title": "Weather",
+              "cards": [
+                {
+                  "type": "weather-forecast",
+                  "entity": "weather.forecast_home",
+                  "show_forecast": true,
+                  "forecast_type": "daily"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.sun_next_rising",
+                      "name": "Sunrise",
+                      "icon": "mdi:weather-sunset-up",
+                      "format": "time"
+                    },
+                    {
+                      "entity": "sensor.sun_next_setting",
+                      "name": "Sunset",
+                      "icon": "mdi:weather-sunset-down",
+                      "format": "time"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_bruins"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "title": "Living Room",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.living_room_light",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "title": "Bedrooms",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bedroom_lamp",
+                  "name": "Dad's Lamp",
+                  "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.charlie_s_shapes",
+                  "name": "Charlie's Shapes",
+                  "icon": "mdi:shape",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "title": "Security",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "lock.nuki_smart_lock",
+                  "name": "Front Door",
+                  "icon": "mdi:door-closed-lock",
+                  "button_type": "switch"
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "title": "Bathroom",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom",
+                  "name": "Strip",
+                  "icon": "mdi:led-strip-variant",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom_lamp",
+                  "name": "Lamp",
+                  "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
