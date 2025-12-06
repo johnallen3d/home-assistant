@@ -17,78 +17,48 @@
               "title": "Scenes",
               "cards": [
                 {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
+                  "type": "button",
                   "entity": "scene.lights_out",
                   "name": "Lights Off",
                   "icon": "mdi:power-sleep",
-                  "button_type": "state",
                   "tap_action": {
-                    "action": "call-service",
-                    "service": "scene.turn_on",
-                    "target": {
-                      "entity_id": "scene.lights_out"
-                    }
+                    "action": "toggle"
                   }
                 },
                 {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "scene.good_morning",
+                  "type": "button",
+                  "entity": "script.adaptive_good_morning",
                   "name": "Morning",
                   "icon": "mdi:weather-sunny",
-                  "button_type": "state",
                   "tap_action": {
-                    "action": "call-service",
-                    "service": "scene.turn_on",
-                    "target": {
-                      "entity_id": "scene.good_morning"
-                    }
+                    "action": "toggle"
                   }
                 },
                 {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "scene.tv_time",
+                  "type": "button",
+                  "entity": "script.adaptive_tv_time",
                   "name": "TV Time",
                   "icon": "mdi:television",
-                  "button_type": "state",
                   "tap_action": {
-                    "action": "call-service",
-                    "service": "scene.turn_on",
-                    "target": {
-                      "entity_id": "scene.tv_time"
-                    }
+                    "action": "toggle"
                   }
                 },
                 {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "scene.winding_down",
+                  "type": "button",
+                  "entity": "script.adaptive_winding_down",
                   "name": "Chill",
                   "icon": "mdi:sofa",
-                  "button_type": "state",
                   "tap_action": {
-                    "action": "call-service",
-                    "service": "scene.turn_on",
-                    "target": {
-                      "entity_id": "scene.winding_down"
-                    }
+                    "action": "toggle"
                   }
                 },
                 {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
+                  "type": "button",
                   "entity": "scene.cooking",
                   "name": "Cooking",
                   "icon": "mdi:pot-steam",
-                  "button_type": "state",
                   "tap_action": {
-                    "action": "call-service",
-                    "service": "scene.turn_on",
-                    "target": {
-                      "entity_id": "scene.cooking"
-                    }
+                    "action": "toggle"
                   }
                 }
               ]

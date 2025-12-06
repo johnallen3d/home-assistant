@@ -326,3 +326,125 @@ adaptive_kitchen_chill:
             brightness_pct: "{{ chill_brightness }}"
             color_temp_kelvin: "{{ chill_color_temp }}"
 
+
+# =============================================================================
+# Good Morning - Adaptive wake-up lighting
+# =============================================================================
+# Lights up the home for morning routine, adapting to sunrise time.
+#
+# Behavior:
+#   - If sun is up (elevation > 5°): Minimal lighting, let natural light in
+#   - If sun is rising (elevation -5° to 5°): Moderate warm light
+#   - If sun is down (elevation < -5°): Bright warm light to simulate sunrise
+#
+# Rooms affected:
+#   - Kitchen: Adaptive brightness, warm color
+#   - Living room: Dim warm ambient
+#   - Bedroom: Dim warm (in case still waking up)
+
+adaptive_good_morning:
+  alias: "Adaptive Good Morning"
+  description: "Wake-up lighting that adapts to sunrise - brighter in winter, dimmer when sun is up"
+  icon: mdi:weather-sunset-up
+  mode: single
+  sequence:
+    - variables:
+        sun_elevation: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
+        # Sun states: up (>5°), rising (-5° to 5°), down (<-5°)
+        sun_is_up: "{{ sun_elevation > 5 }}"
+        sun_is_rising: "{{ sun_elevation >= -5 and sun_elevation <= 5 }}"
+        sun_is_down: "{{ sun_elevation < -5 }}"
+        # When sun is up, use very low brightness; when down, simulate sunrise
+        kitchen_brightness: >
+          {% if sun_is_up %}30 {% elif sun_is_rising %}50 {% else %}70{% endif %}
+        living_brightness: >
+          {% if sun_is_up %}20 {% elif sun_is_rising %}35 {% else %}50{% endif %}
+        bedroom_brightness: >
+          {% if sun_is_up %}15 {% elif sun_is_rising %}25 {% else %}40{% endif %}
+        # Warmer when dark, cooler as sun rises
+        color_temp: >
+          {% if sun_is_up %}3500 {% elif sun_is_rising %}2800 {% else %}2400{% endif %}
+
+    # Kitchen - main morning activity area
+    - action: light.turn_on
+      target:
+        entity_id: light.kitchen
+      data:
+        brightness_pct: "{{ kitchen_brightness }}"
+        color_temp_kelvin: "{{ color_temp }}"
+
+    # Living room - gentle ambient
+    - action: light.turn_on
+      target:
+        entity_id: light.living_room_light
+      data:
+        brightness_pct: "{{ living_brightness }}"
+        color_temp_kelvin: "{{ color_temp }}"
+
+    # Bedroom - gentle in case still waking up
+    - action: light.turn_on
+      target:
+        entity_id:
+          - light.bedroom_lamp
+          - light.bedroom_overhead_left
+          - light.bedroom_overhead_right
+      data:
+        brightness_pct: "{{ bedroom_brightness }}"
+        color_temp_kelvin: "{{ color_temp }}"
+
+
+# =============================================================================
+# Winding Down - Pre-bedtime adaptive lighting
+# =============================================================================
+# Relaxed evening lighting to prepare for sleep. All lights dim and warm.
+#
+# Behavior:
+#   - Uses adaptive sensors but caps brightness at 35% and color temp at 2200K
+#   - Kitchen counter switch always off (no bright task lighting)
+#   - Creates a calm, sleepy atmosphere across all main rooms
+
+adaptive_winding_down:
+  alias: "Adaptive Winding Down"
+  description: "Pre-bedtime lighting - dim warm across all rooms"
+  icon: mdi:weather-sunset-down
+  mode: single
+  sequence:
+    - variables:
+        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(25) }}"
+        # Cap brightness at 35% for winding down
+        capped_brightness: "{{ [adaptive_brightness, 35] | min }}"
+        # Very warm color temp, capped at 2200K
+        color_temp: 2200
+
+    # Turn off task lighting
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kitchen_counter_switch
+
+    # Kitchen - dim warm ambient
+    - action: light.turn_on
+      target:
+        entity_id: light.kitchen
+      data:
+        brightness_pct: "{{ capped_brightness }}"
+        color_temp_kelvin: "{{ color_temp }}"
+
+    # Living room - dim warm
+    - action: light.turn_on
+      target:
+        entity_id: light.living_room_light
+      data:
+        brightness_pct: "{{ capped_brightness }}"
+        color_temp_kelvin: "{{ color_temp }}"
+
+    # Bedroom - slightly brighter for bedtime routine
+    - action: light.turn_on
+      target:
+        entity_id:
+          - light.bedroom_lamp
+          - light.bedroom_overhead_left
+          - light.bedroom_overhead_right
+      data:
+        brightness_pct: "{{ [capped_brightness + 5, 40] | min }}"
+        color_temp_kelvin: "{{ color_temp }}"
+

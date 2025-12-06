@@ -32,9 +32,13 @@
                       "show_name": true,
                       "show_icon": true,
                       "type": "button",
-                      "entity": "scene.good_morning",
+                      "entity": "script.adaptive_good_morning",
                       "tap_action": {
-                        "action": "toggle"
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_good_morning"
+                        }
                       },
                       "icon_height": "24px"
                     },
@@ -42,9 +46,13 @@
                       "show_name": true,
                       "show_icon": true,
                       "type": "button",
-                      "entity": "scene.tv_time",
+                      "entity": "script.adaptive_tv_time",
                       "tap_action": {
-                        "action": "toggle"
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_tv_time"
+                        }
                       },
                       "icon_height": "24px"
                     },
@@ -52,9 +60,13 @@
                       "show_name": true,
                       "show_icon": true,
                       "type": "button",
-                      "entity": "scene.winding_down",
+                      "entity": "script.adaptive_winding_down",
                       "tap_action": {
-                        "action": "toggle"
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_winding_down"
+                        }
                       },
                       "icon_height": "24px"
                     },
