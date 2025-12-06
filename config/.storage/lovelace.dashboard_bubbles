@@ -69,6 +69,18 @@
                       }
                     },
                     {
+                      "entity": "script.adaptive_eating",
+                      "icon": "mdi:food",
+                      "name": "Eat",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_eating"
+                        }
+                      }
+                    },
+                    {
                       "entity": "scene.cooking",
                       "icon": "mdi:pot-steam",
                       "name": "Cook",

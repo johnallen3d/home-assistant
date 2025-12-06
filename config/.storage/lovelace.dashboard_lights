@@ -74,6 +74,20 @@
                       "show_name": true,
                       "show_icon": true,
                       "type": "button",
+                      "entity": "script.adaptive_eating",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_eating"
+                        }
+                      },
+                      "icon_height": "24px"
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
                       "entity": "scene.cooking",
                       "show_state": false,
                       "tap_action": {

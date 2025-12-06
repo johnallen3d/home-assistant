@@ -394,6 +394,80 @@ adaptive_good_morning:
 
 
 # =============================================================================
+# Eating - Adaptive dining ambiance
+# =============================================================================
+# Cozy ambient lighting for meals. Kitchen task lights off, living room
+# provides warm ambient light for the dining area.
+#
+# Behavior by sun/time:
+#   - Daytime (sun elevation > 5°): Minimal lighting, natural light sufficient
+#   - Evening (sun <= 5°, before 11pm): Warm ambient in living room
+#   - Late night (11pm-6am): Very dim warm
+#
+# Always:
+#   - Kitchen lights OFF (dining focus, not cooking)
+#   - Counter switch OFF
+
+adaptive_eating:
+  alias: "Adaptive Eating"
+  description: "Cozy dining ambiance - warm living room light, kitchen off"
+  icon: mdi:food-fork-drink
+  mode: single
+  sequence:
+    - variables:
+        sun_elevation: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
+        hour: "{{ now().hour }}"
+        # Daytime: sun is high enough for natural light
+        is_daytime: "{{ sun_elevation > 5 }}"
+        # Late night: after 11pm or before 6am
+        is_late_night: "{{ hour >= 23 or hour < 6 }}"
+        # Evening brightness based on sun position (dimmer as sun sets further)
+        evening_brightness: >
+          {% if sun_elevation > 0 %}35 {% elif sun_elevation > -5 %}30 {% elif sun_elevation > -10 %}25 {% else %}20{% endif %}
+        # Very warm for dining ambiance
+        color_temp: 2200
+
+    # Always turn off kitchen (focus on dining, not cooking)
+    - action: light.turn_off
+      target:
+        entity_id: light.kitchen_lights
+
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kitchen_counter_switch
+
+    - choose:
+        # Daytime: minimal lighting, let natural light do the work
+        - conditions: "{{ is_daytime }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.living_room_light
+              data:
+                brightness_pct: 15
+                color_temp_kelvin: 2700
+
+        # Late night: very dim
+        - conditions: "{{ is_late_night }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.living_room_light
+              data:
+                brightness_pct: 10
+                color_temp_kelvin: 2200
+
+      # Evening: warm ambient based on sun position
+      default:
+        - action: light.turn_on
+          target:
+            entity_id: light.living_room_light
+          data:
+            brightness_pct: "{{ evening_brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"
+
+
+# =============================================================================
 # Winding Down - Pre-bedtime adaptive lighting
 # =============================================================================
 # Relaxed evening lighting to prepare for sleep. All lights dim and warm.

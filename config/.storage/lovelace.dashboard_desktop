@@ -54,6 +54,15 @@
                 },
                 {
                   "type": "button",
+                  "entity": "script.adaptive_eating",
+                  "name": "Eating",
+                  "icon": "mdi:food",
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "type": "button",
                   "entity": "scene.cooking",
                   "name": "Cooking",
                   "icon": "mdi:pot-steam",
