@@ -30,19 +30,7 @@ actions:
             entity_id: light.bathroom_lamp
             state: 'off'
         sequence:
-          - choose:
-              - conditions:
-                  - condition: time
-                    after: input_datetime.daytime_start
-                    before: input_datetime.nighttime_start
-                sequence:
-                  - action: scene.turn_on
-                    target:
-                      entity_id: scene.daytime_potty
-            default:
-              - action: scene.turn_on
-                target:
-                  entity_id: scene.nighttime_potty
+          - action: script.adaptive_bathroom_lights
       - conditions:
           - condition: trigger
             id: motion_off

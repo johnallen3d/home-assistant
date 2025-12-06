@@ -1,0 +1,328 @@
+# Scripts for Home Assistant
+
+# =============================================================================
+# Adaptive Lighting - General Purpose
+# =============================================================================
+# Uses template sensors for brightness/color temp based on sun position,
+# time of day, and weather conditions.
+#
+# Usage examples:
+#   # Simple - all lights adaptive
+#   - action: script.adaptive_lights
+#     data:
+#       lights:
+#         - light.kitchen
+#         - light.island_bulb
+#
+#   # Night mode - turn off at night
+#   - action: script.adaptive_lights
+#     data:
+#       lights: [light.bedroom_lamp, light.bedroom_overhead_left]
+#       night_mode: "off"
+#
+#   # Night mode - dim RGB (bathroom style)
+#   - action: script.adaptive_lights
+#     data:
+#       lights: [light.bathroom_lamp, light.bathroom_strip]
+#       night_mode: dim_rgb
+#       night_lights: [light.bathroom_strip]
+#       night_rgb: [255, 159, 242]
+#
+#   # Night mode - dim warm white
+#   - action: script.adaptive_lights
+#     data:
+#       lights: [light.kitchen]
+#       night_mode: dim_warm
+
+adaptive_lights:
+  alias: "Adaptive Lights"
+  description: "Apply adaptive brightness and color temperature based on time/weather"
+  icon: mdi:lightbulb-auto
+  mode: parallel
+  max: 10
+  fields:
+    lights:
+      name: Lights
+      description: "Light entities to control"
+      required: true
+      example: "[light.kitchen, light.island_bulb]"
+      selector:
+        entity:
+          domain: light
+          multiple: true
+    night_mode:
+      name: Night Mode
+      description: "Behavior during night hours (11pm-6am)"
+      default: "adaptive"
+      example: "dim_rgb"
+      selector:
+        select:
+          options:
+            - label: "Adaptive (same as day)"
+              value: "adaptive"
+            - label: "Turn off"
+              value: "off"
+            - label: "Dim warm white"
+              value: "dim_warm"
+            - label: "Dim RGB color"
+              value: "dim_rgb"
+            - label: "Skip (don't change)"
+              value: "skip"
+    night_lights:
+      name: Night Lights
+      description: "Subset of lights to use at night (optional, defaults to all)"
+      example: "[light.bathroom_strip]"
+      selector:
+        entity:
+          domain: light
+          multiple: true
+    night_rgb:
+      name: Night RGB Color
+      description: "RGB color for dim_rgb mode"
+      default: [255, 159, 242]
+      example: "[255, 159, 242]"
+      selector:
+        color_rgb:
+    night_brightness:
+      name: Night Brightness
+      description: "Brightness percent for night modes"
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "%"
+  sequence:
+    - variables:
+        brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+        color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+        hour: "{{ now().hour }}"
+        is_night: "{{ hour >= 23 or hour < 6 }}"
+        mode: "{{ night_mode | default('adaptive') }}"
+        rgb: "{{ night_rgb | default([255, 159, 242]) }}"
+        night_pct: "{{ night_brightness | default(10) }}"
+        # Use night_lights if provided, otherwise use all lights
+        night_targets: "{{ night_lights | default(lights) }}"
+    - choose:
+        # Night + off mode: turn off all lights
+        - conditions: "{{ is_night and mode == 'off' }}"
+          sequence:
+            - action: light.turn_off
+              target:
+                entity_id: "{{ lights }}"
+
+        # Night + skip mode: do nothing
+        - conditions: "{{ is_night and mode == 'skip' }}"
+          sequence: []
+
+        # Night + dim_warm mode: warm white at low brightness
+        - conditions: "{{ is_night and mode == 'dim_warm' }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: "{{ night_targets }}"
+              data:
+                brightness_pct: "{{ night_pct }}"
+                color_temp_kelvin: 2200
+
+        # Night + dim_rgb mode: RGB color at low brightness
+        - conditions: "{{ is_night and mode == 'dim_rgb' }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: "{{ night_targets }}"
+              data:
+                brightness_pct: "{{ night_pct }}"
+                rgb_color: "{{ rgb }}"
+
+      # Default: adaptive mode (day or night with adaptive)
+      default:
+        - action: light.turn_on
+          target:
+            entity_id: "{{ lights }}"
+          data:
+            brightness_pct: "{{ brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"
+
+
+# =============================================================================
+# Room-Specific Shortcuts (optional convenience wrappers)
+# =============================================================================
+
+# Bedroom - dim warm at night, adaptive during day
+adaptive_bedroom_lights:
+  alias: "Adaptive Bedroom Lights"
+  description: "Bedroom adaptive lighting with dim warm night mode"
+  icon: mdi:bed
+  mode: single
+  sequence:
+    - action: script.adaptive_lights
+      data:
+        lights:
+          - light.bedroom_lamp
+          - light.bedroom_overhead_left
+          - light.bedroom_overhead_right
+        night_mode: dim_warm
+        night_brightness: 10
+
+
+# Bathroom - uses dim pink RGB at night, only strip light
+adaptive_bathroom_lights:
+  alias: "Adaptive Bathroom Lights"
+  description: "Bathroom adaptive lighting with pink night mode"
+  icon: mdi:toilet
+  mode: single
+  sequence:
+    - action: script.adaptive_lights
+      data:
+        lights:
+          - light.bathroom_lamp
+          - light.bathroom_strip
+        night_mode: dim_rgb
+        night_lights:
+          - light.bathroom_strip
+        night_rgb: [255, 159, 242]
+        night_brightness: 10
+
+
+# =============================================================================
+# TV Time - Adaptive ambient lighting for watching TV
+# =============================================================================
+# Context: TV on left wall, Dad's chair on right facing TV, sliding glass
+# doors to right of chair. Living room light causes glare, kitchen lights don't.
+#
+# Behavior by sun/time:
+#   - Daytime (sun elevation > 5°): No changes (natural light sufficient)
+#   - Evening (sun elevation <= 5°, before 11pm): Dim warm ambient in kitchen
+#   - Late night (11pm-6am): Even dimmer, just kitchen strip
+#
+# Always:
+#   - Living room light OFF (causes glare)
+#   - Bedroom lights OFF
+#   - Kitchen counter switch OFF
+
+adaptive_tv_time:
+  alias: "Adaptive TV Time"
+  description: "Smart ambient lighting for TV watching based on sun position"
+  icon: mdi:television-ambient-light
+  mode: single
+  fields:
+    transition:
+      name: Transition
+      description: "Transition duration in seconds"
+      default: 11
+      selector:
+        number:
+          min: 0
+          max: 60
+          unit_of_measurement: "seconds"
+  sequence:
+    - variables:
+        sun_elevation: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
+        hour: "{{ now().hour }}"
+        trans: "{{ transition | default(states('input_number.tv_time_transition_duration') | int(11)) }}"
+        # Daytime: sun is high enough for natural light
+        is_daytime: "{{ sun_elevation > 5 }}"
+        # Late night: after 11pm or before 6am
+        is_late_night: "{{ hour >= 23 or hour < 6 }}"
+        # Evening: sun is low/set but not late night yet
+        is_evening: "{{ not is_daytime and not is_late_night }}"
+        # Warm amber - cozy without being distracting
+        ambient_color: [255, 180, 107]
+
+    # Always turn off glare-causing lights
+    - action: light.turn_off
+      target:
+        entity_id:
+          - light.living_room_light
+          - light.bedroom_lamp
+          - light.bedroom_overhead_left
+          - light.bedroom_overhead_right
+      data:
+        transition: "{{ trans }}"
+
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kitchen_counter_switch
+
+    - choose:
+        # Daytime: Don't touch kitchen lights, natural light is fine
+        - conditions: "{{ is_daytime }}"
+          sequence: []
+
+        # Late night: Very dim, just the strip
+        - conditions: "{{ is_late_night }}"
+          sequence:
+            - action: light.turn_off
+              target:
+                entity_id:
+                  - light.island_bulb
+                  - light.sink_bulb
+              data:
+                transition: "{{ trans }}"
+            - action: light.turn_on
+              target:
+                entity_id: light.hue_lightstrip_plus_1
+              data:
+                brightness_pct: 3
+                rgb_color: "{{ ambient_color }}"
+                transition: "{{ trans }}"
+
+
+# =============================================================================
+# Kitchen Chill - Relaxed ambient lighting for kitchen
+# =============================================================================
+# A "chill" mode that's warmer and dimmer than normal kitchen lighting.
+# Good for casual hanging out, not task lighting.
+#
+# Behavior:
+#   - Daytime: Adaptive brightness (capped at 60%) with warm color temp (capped at 3000K)
+#   - Night (11pm-6am): Very dim warm, just the strip light
+#   - Counter switch always OFF (no task lighting)
+
+adaptive_kitchen_chill:
+  alias: "Adaptive Kitchen Chill"
+  description: "Relaxed kitchen ambient lighting - warmer and dimmer than normal"
+  icon: mdi:sofa
+  mode: single
+  sequence:
+    - variables:
+        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+        adaptive_color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+        hour: "{{ now().hour }}"
+        is_night: "{{ hour >= 23 or hour < 6 }}"
+        # Cap brightness at 60% for chill mode
+        chill_brightness: "{{ [adaptive_brightness, 60] | min }}"
+        # Cap color temp at 3000K (warmer = more chill)
+        chill_color_temp: "{{ [adaptive_color_temp, 3000] | min }}"
+
+    # Always turn off counter switch (task lighting)
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kitchen_counter_switch
+
+    - choose:
+        # Night: Very dim, just the strip
+        - conditions: "{{ is_night }}"
+          sequence:
+            - action: light.turn_off
+              target:
+                entity_id:
+                  - light.island_bulb
+                  - light.sink_bulb
+            - action: light.turn_on
+              target:
+                entity_id: light.hue_lightstrip_plus_1
+              data:
+                brightness_pct: 10
+                color_temp_kelvin: 2200
+
+      # Daytime/evening: Chill ambient across kitchen
+      default:
+        - action: light.turn_on
+          target:
+            entity_id: light.kitchen
+          data:
+            brightness_pct: "{{ chill_brightness }}"
+            color_temp_kelvin: "{{ chill_color_temp }}"
+

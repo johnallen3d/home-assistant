@@ -34,14 +34,12 @@ actions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_2'' }}'
         sequence:
-          - action: scene.turn_on
-            target:
-              entity_id: scene.kitchen_chill
+          - action: script.adaptive_kitchen_chill
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''long_press'' }}'
         sequence:
-          - action: light.turn_on
+          - action: light.turn_off
             target:
               entity_id: light.kitchen
 mode: single

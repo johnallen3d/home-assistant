@@ -17,17 +17,15 @@ actions:
                     entity_id: light.bedroom_lights
                     state: 'off'
                 sequence:
-                  - action: scene.turn_on
-                    target:
-                      entity_id: scene.bedroom_lights_on
+                  - action: script.adaptive_bedroom_lights
               - conditions:
                   - condition: state
                     entity_id: light.bedroom_lights
                     state: 'on'
                 sequence:
-                  - action: scene.turn_on
+                  - action: light.turn_off
                     target:
-                      entity_id: scene.bedroom_lights_off
+                      entity_id: light.bedroom_lights
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.bedside_button_button'', ''event_type'') == ''multi_press_2'' }}'

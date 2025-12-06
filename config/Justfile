@@ -22,6 +22,23 @@ upload-config:
     @scp configuration.yaml {{server}}:{{config_path}}/configuration.yaml
     @echo "✅ Configuration uploaded"
 
+# Upload scripts.yaml to HA server
+upload-scripts:
+    @echo "📤 Uploading scripts.yaml..."
+    @scp scripts.yaml {{server}}:{{config_path}}/scripts.yaml
+    @echo "✅ Scripts uploaded"
+    @echo "💡 Run 'just config::reload-scripts' to apply without restart"
+
+# Reload scripts without full restart
+reload-scripts:
+    @echo "🔄 Reloading scripts..."
+    @ssh {{server}} "ha core reload-scripts" || curl -s -X POST http://localhost:8123/api/services/script/reload -H "Authorization: Bearer $(cat /config/.storage/auth)" > /dev/null
+    @echo "✅ Scripts reloaded"
+
+# Deploy scripts (upload + reload)
+deploy-scripts: upload-scripts reload-scripts
+    @echo "✅ Scripts deployed"
+
 # Update a specific automation: pull from server, update from local file, push back
 # Usage: just config::update-automation automations/bathroom_presence.yaml
 update-automation FILE:
@@ -51,6 +68,14 @@ update-scenes FILES:
 
 # Alias for update-scene
 push-scene FILE: (update-scene FILE)
+
+# Delete scenes from server by name
+# Usage: just config::delete-scene "Daytime potty" "Nighttime potty" "TV Time"
+delete-scene +NAMES:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "🗑️  Deleting scene(s)..."
+    cd .. && uv run delete_scene.py {{NAMES}}
 
 # Restart Home Assistant core (takes ~30s)
 restart:

@@ -1,5 +1,36 @@
 # AGENTS.md
 
+## Core Tenets
+
+1. **Make changes locally** - Edit files in this repo, not in HA UI
+2. **Push local changes to HA** - Use `just` commands or scp
+3. **Reload HA when necessary** - Use MCP `ha_call_service` for reloads, or `just config::restart`
+4. **Never make changes in HA UI** - For things managed here (automations, scripts, scenes, configuration.yaml)
+
+## What We Manage Locally
+
+| Type | Local File(s) | Deploy Command | Reload Command |
+|------|---------------|----------------|----------------|
+| Automations | `config/automations/*.yaml` | `just config::update-automation <file>` | auto |
+| Scenes | `config/scenes/*.yaml` | `just config::update-scene <file>` | auto |
+| Scripts | `config/scripts.yaml` | `just config::deploy-scripts` | `ha_call_service("script", "reload")` |
+| Configuration | `config/configuration.yaml` | `just config::deploy` | restart required |
+| Blueprints | `config/blueprints/` | `just config::upload-blueprint <file>` | `ha_call_service("automation", "reload")` |
+| Dashboards | `config/.storage/lovelace.*` | `just config::deploy-dashboard <name>` | restart required |
+| Exposed entities | `config/exposed_entities.yaml` | `just config::deploy-exposed` | restart required |
+
+**Defined in `configuration.yaml`** (deploy via `just config::deploy`):
+- Light groups (`light:` section)
+- Entity groups (`group:` section)  
+- Input helpers (`input_number:`, `input_datetime:`, etc.)
+- Template sensors (`template:` section)
+
+**NOT managed locally** (OK to edit in HA UI):
+- Integrations, devices, entities
+- Areas, floors, labels
+- Users, persons, zones
+- HACS repositories
+
 ## Available Tools
 
 This project has three layers of Home Assistant tooling:
@@ -23,6 +54,36 @@ This project has three layers of Home Assistant tooling:
 - Query/modify entities, automations, dashboards → Use MCP tools
 - Check config validity, view logs, rapid file deployment → Use skill (SSH/scp)
 - Routine tasks with established patterns → Use `just` commands
+
+### Known Issues
+
+**`ha core reload-scripts` via SSH doesn't reliably reload new scripts.**  
+After uploading scripts.yaml, use MCP `ha_call_service("script", "reload")` instead of SSH `ha core reload-scripts`. The SSH command may silently fail to pick up new script definitions.
+
+### Automation/Script Update Checklist
+
+After modifying automations that respond to physical triggers (buttons, sensors), **always verify**:
+
+1. **Check the automation exists and is enabled:**
+   ```
+   ha_get_state("automation.xxx") → state should be "on"
+   ```
+
+2. **Test the script/action directly first:**
+   ```
+   ha_call_service("script", "turn_on", entity_id="script.xxx")
+   ```
+   Verify the expected state change occurred.
+
+3. **Trigger a test event and check traces:**
+   - Ask user to press the button
+   - Check `ha_get_automation_traces()` for the new run
+   - Verify `execution: finished` and no errors
+
+4. **If automation fails silently:** The MCP `ha_config_set_automation` may mangle config. 
+   Re-push and reload, or compare with a known-working automation.
+
+**Do NOT mark an automation change as "done" until step 3 confirms it works end-to-end.**
 
 ## Floorplan
 
@@ -62,7 +123,6 @@ This project has three layers of Home Assistant tooling:
 ### Connection Info
 - **HA Server**: `root@homeassistant` (NOT `.local` - causes auth failures)
 - **Server config path**: `/config/`
-- **This repo**: READ-ONLY backup, never push changes back to server
 
 ### ESPHome Device: M5Stack Atom S3 (tiny-button)
 - **Location**: 192.168.0.87

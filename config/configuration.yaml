@@ -110,3 +110,43 @@ input_datetime:
     has_time: true
     icon: mdi:shield-lock-open
     initial: "07:00:00"
+
+# Adaptive Lighting Template Sensors
+# Color temp: 2200K (night) -> 2400K (below horizon) -> up to 4500K (midday)
+# Brightness: 10% (night) -> 25% (dusk/dawn) -> 70-90% (day, boosted by clouds)
+template:
+  - sensor:
+      - name: "Adaptive Color Temp"
+        unique_id: adaptive_color_temp
+        unit_of_measurement: "K"
+        icon: mdi:temperature-kelvin
+        state: |
+          {% set sun_elev = state_attr('sun.sun', 'elevation') | float(0) %}
+          {% set hour = now().hour %}
+          {% if hour >= 23 or hour < 6 %}
+          2200
+          {% elif sun_elev < 0 %}
+          2400
+          {% elif sun_elev < 15 %}
+          {{ (2400 + (sun_elev * 80)) | int }}
+          {% else %}
+          {{ [3600 + ((sun_elev - 15) * 20) | int, 4500] | min }}
+          {% endif %}
+
+      - name: "Adaptive Brightness"
+        unique_id: adaptive_brightness
+        unit_of_measurement: "%"
+        icon: mdi:brightness-percent
+        state: |
+          {% set sun_elev = state_attr('sun.sun', 'elevation') | float(0) %}
+          {% set cloud_cover = state_attr('weather.forecast_home', 'cloud_coverage') | float(0) %}
+          {% set hour = now().hour %}
+          {% if hour >= 23 or hour < 6 %}
+          10
+          {% elif sun_elev < 0 %}
+          25
+          {% elif sun_elev < 15 %}
+          {{ (25 + (sun_elev * 3)) | int }}
+          {% else %}
+          {{ [70 + (cloud_cover / 100 * 20) | int, 100] | min }}
+          {% endif %}
