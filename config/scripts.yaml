@@ -246,9 +246,14 @@ adaptive_tv_time:
         entity_id: switch.kitchen_counter_switch
 
     - choose:
-        # Daytime: Don't touch kitchen lights, natural light is fine
+        # Daytime: Turn off kitchen lights (no ambient needed, reduce distraction)
         - conditions: "{{ is_daytime }}"
-          sequence: []
+          sequence:
+            - action: light.turn_off
+              target:
+                entity_id: light.kitchen_lights
+              data:
+                transition: "{{ trans }}"
 
         # Late night: Very dim, just the strip
         - conditions: "{{ is_late_night }}"
@@ -267,6 +272,16 @@ adaptive_tv_time:
                 brightness_pct: 3
                 rgb_color: "{{ ambient_color }}"
                 transition: "{{ trans }}"
+
+      # Evening (default): Dim warm ambient in kitchen
+      default:
+        - action: light.turn_on
+          target:
+            entity_id: light.kitchen_lights
+          data:
+            brightness_pct: 15
+            rgb_color: "{{ ambient_color }}"
+            transition: "{{ trans }}"
 
 
 # =============================================================================
