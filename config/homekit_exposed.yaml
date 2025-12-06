@@ -19,6 +19,7 @@ include_entities:
   - scene.lights_out
   - scene.cooking
   # Scripts (adaptive lighting - used on dashboards)
+  - script.adaptive_charlie_eating
   - script.adaptive_good_morning
   - script.adaptive_tv_time
   - script.adaptive_winding_down

@@ -40,6 +40,7 @@ DEFAULT_EXPOSED_DOMAINS = {
 # Additional domains that might have exposed entities
 ADDITIONAL_DOMAINS = {
     "binary_sensor",
+    "script",
     "sensor",
     "assist_satellite",
 }

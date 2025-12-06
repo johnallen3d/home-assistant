@@ -63,6 +63,15 @@
                 },
                 {
                   "type": "button",
+                  "entity": "script.adaptive_charlie_eating",
+                  "name": "Charlie",
+                  "icon": "mdi:baby-face-outline",
+                  "tap_action": {
+                    "action": "toggle"
+                  }
+                },
+                {
+                  "type": "button",
                   "entity": "scene.cooking",
                   "name": "Cooking",
                   "icon": "mdi:pot-steam",

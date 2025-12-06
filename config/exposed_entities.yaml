@@ -30,6 +30,7 @@ scene.working: true
 # Scripts (adaptive lighting - replace static scenes)
 script.adaptive_bathroom_lights: true
 script.adaptive_bedroom_lights: true
+script.adaptive_charlie_eating: true
 script.adaptive_eating: true
 script.adaptive_good_morning: true
 script.adaptive_kitchen_chill: true

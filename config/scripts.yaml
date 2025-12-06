@@ -537,3 +537,60 @@ adaptive_winding_down:
         brightness_pct: "{{ [capped_brightness + 5, 40] | min }}"
         color_temp_kelvin: "{{ color_temp }}"
 
+
+# =============================================================================
+# Charlie Eating - Focused island light for Charlie's meals
+# =============================================================================
+# Simple lighting for when Charlie is eating at the island.
+# Just the island bulb on, everything else in kitchen off.
+#
+# Behavior:
+#   - Island bulb: adaptive brightness/color temp
+#   - All other kitchen lights: OFF
+#   - Counter switch: OFF
+#
+# This avoids distractions and keeps focus on the eating area.
+
+adaptive_charlie_eating:
+  alias: "Adaptive Charlie Eating"
+  description: "Island light only for Charlie's meals - kitchen lights off"
+  icon: mdi:baby-face-outline
+  mode: single
+  sequence:
+    - variables:
+        brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+        color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+        hour: "{{ now().hour }}"
+        is_night: "{{ hour >= 23 or hour < 6 }}"
+
+    # Turn off all kitchen lights except island bulb
+    - action: light.turn_off
+      target:
+        entity_id:
+          - light.sink_bulb
+          - light.hue_lightstrip_plus_1
+
+    # Turn off counter switch
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kitchen_counter_switch
+
+    - choose:
+        # Late night: dim warm
+        - conditions: "{{ is_night }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.island_bulb
+              data:
+                brightness_pct: 20
+                color_temp_kelvin: 2200
+
+      # Default: adaptive
+      default:
+        - action: light.turn_on
+          target:
+            entity_id: light.island_bulb
+          data:
+            brightness_pct: "{{ brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"

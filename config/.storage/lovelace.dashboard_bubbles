@@ -81,6 +81,18 @@
                       }
                     },
                     {
+                      "entity": "script.adaptive_charlie_eating",
+                      "icon": "mdi:baby-face-outline",
+                      "name": "Charlie",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_charlie_eating"
+                        }
+                      }
+                    },
+                    {
                       "entity": "scene.cooking",
                       "icon": "mdi:pot-steam",
                       "name": "Cook",
