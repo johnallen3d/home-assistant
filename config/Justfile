@@ -230,3 +230,41 @@ list-exposed:
 list-exposed-server:
     @echo "📋 Entities currently exposed on server:"
     @ssh {{server}} "cat {{config_path}}/.storage/core.entity_registry" | python3 -c "import sys,json; d=json.load(sys.stdin); [print(f'  ✅ {e[\"entity_id\"]}') for e in d['data']['entities'] if e.get('options',{}).get('conversation',{}).get('should_expose')==True]"
+
+# ============================================
+# HomeKit Bridge Exposed Entities  
+# ============================================
+#
+# HomeKit uses a different model than voice assistant:
+# - Voice assistant: per-entity exposure in core.entity_registry
+# - HomeKit: domain-based filter in core.config_entries
+#
+# Edit config/homekit_exposed.yaml to define:
+# - include_domains: entire domains to expose (e.g., light, lock)
+# - include_entities: specific entities from other domains
+# - exclude_entities: entities to hide from included domains
+#
+# CRITICAL: HA must be STOPPED before modifying core.config_entries.
+
+# Apply homekit_exposed.yaml settings to HomeKit Bridge (full workflow)
+# Stops HA, applies changes, starts HA
+deploy-homekit:
+    @echo "🛑 Stopping Home Assistant..."
+    @ssh {{server}} "ha core stop"
+    @echo "📤 Applying HomeKit config..."
+    @uv run --directory .. update_homekit_entities.py
+    @echo "🚀 Starting Home Assistant..."
+    @ssh {{server}} "ha core start" || true
+    @echo "⏳ Waiting 30s for startup..."
+    @sleep 30
+    @echo "✅ HomeKit entities deployed"
+
+# Preview changes without applying (dry run)
+check-homekit:
+    @echo "🔍 Checking HomeKit config (dry run)..."
+    @uv run --directory .. update_homekit_entities.py --dry-run
+
+# Show current HomeKit filter config on server
+list-homekit-server:
+    @echo "📋 HomeKit Bridge filter config on server:"
+    @ssh {{server}} "cat {{config_path}}/.storage/core.config_entries" | python3 -c "import sys,json; d=json.load(sys.stdin); e=[x for x in d['data']['entries'] if x.get('domain')=='homekit' and x.get('options',{}).get('mode')=='bridge'][0]; f=e['options']['filter']; print(f'  include_domains: {f.get(\"include_domains\",[])}'); print(f'  include_entities: {f.get(\"include_entities\",[])}'); print(f'  exclude_entities: {f.get(\"exclude_entities\",[])}')"

@@ -17,7 +17,8 @@
 | Configuration | `config/configuration.yaml` | `just config::deploy` | restart required |
 | Blueprints | `config/blueprints/` | `just config::upload-blueprint <file>` | `ha_call_service("automation", "reload")` |
 | Dashboards | `config/.storage/lovelace.*` | `just config::deploy-dashboard <name>` | restart required |
-| Exposed entities | `config/exposed_entities.yaml` | `just config::deploy-exposed` | restart required |
+| Exposed entities (voice) | `config/exposed_entities.yaml` | `just config::deploy-exposed` | restart required |
+| Exposed entities (HomeKit) | `config/homekit_exposed.yaml` | `just config::deploy-homekit` | restart required |
 
 **Defined in `configuration.yaml`** (deploy via `just config::deploy`):
 - Light groups (`light:` section)
@@ -155,3 +156,19 @@ After modifying automations that respond to physical triggers (buttons, sensors)
   - `just config::deploy-exposed` - Apply settings and restart HA
   - `just config::check-exposed` - Dry run, show what would change
 - **Note**: Light groups may need `homeassistant.exposed_entities` for legacy handling
+
+### HomeKit Bridge Exposed Entities
+- **Config file**: `config/homekit_exposed.yaml` - domain-based filter config
+- **Script**: `update_homekit_entities.py` - applies YAML config to HomeKit config entry
+- **Critical**: HA must be **stopped** before modifying `core.config_entries`
+- **Model**: Unlike voice assistant (per-entity), HomeKit uses domain includes + entity excludes
+- **Commands**:
+  - `just config::deploy-homekit` - Apply settings and restart HA
+  - `just config::check-homekit` - Dry run, show what would change
+  - `just config::list-homekit-server` - Show current filter on server
+- **Config structure**:
+  ```yaml
+  include_domains: [light, lock]  # expose all entities in these domains
+  include_entities: [scene.x, script.y]  # add specific entities from other domains
+  exclude_entities: [light.atom_echo_led]  # hide specific entities from included domains
+  ```

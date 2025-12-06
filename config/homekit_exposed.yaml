@@ -1,0 +1,35 @@
+# Entities exposed to HomeKit Bridge
+#
+# This uses a domain-based model with include/exclude lists.
+# Unlike voice assistant (per-entity), HomeKit exposes entire domains
+# and then refines with include_entities and exclude_entities.
+#
+# Usage:
+#   just config::deploy-homekit   - Apply settings and restart HA
+#   just config::check-homekit    - Dry run, show what would change
+
+# Domains to include (all entities in these domains are exposed)
+include_domains:
+  - light
+  - lock
+
+# Specific entities to include (from domains NOT in include_domains)
+include_entities:
+  # Scenes (used on dashboards)
+  - scene.lights_out
+  - scene.cooking
+  # Scripts (adaptive lighting - used on dashboards)
+  - script.adaptive_good_morning
+  - script.adaptive_tv_time
+  - script.adaptive_winding_down
+  - script.adaptive_eating
+  # Switches (only useful ones, not camera/vacuum controls)
+  - switch.kitchen_counter_switch
+  - switch.laundry_room_switch
+
+# Entities to exclude (from included domains)
+exclude_entities:
+  # ESPHome diagnostic LEDs
+  - light.atom_echo_led
+  # Plug indicator lights (not actual lights)
+  - light.bedroom_plug_dnd
