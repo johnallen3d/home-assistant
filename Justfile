@@ -10,11 +10,6 @@ mod config
 default:
     @just --list
 
-# Run inventory script to fetch HA device/entity data
-inventory:
-    @echo "📊 Running Home Assistant inventory..."
-    @./inventory/extract.sh
-
-# Run both inventory and config extraction in sequence
-sync: inventory config::extract
+# Extract config from server
+sync: config::extract
     @echo "✅ Sync complete!"

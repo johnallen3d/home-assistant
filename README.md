@@ -26,9 +26,8 @@ This repository uses [just](https://github.com/casey/just) as a command runner.
 
 ### Home Assistant
 
-- `just inventory` - Generate device/entity inventory reports
-- `just config` - Download YAML config files (automations, scenes, configuration)
-- `just sync` - Run both inventory and config extraction
+- `just config::extract` - Download YAML config files (automations, scenes, configuration)
+- `just sync` - Alias for config extraction
 
 ### ESPHome
 
@@ -47,4 +46,3 @@ Running `just` with no arguments lists all available commands. You can also run 
 Scripts are organized in their respective directories:
 
 - `./config/extract.sh` - Downloads YAML config files from HA server
-- `./inventory/extract.sh` - Generates device/entity inventory reports
