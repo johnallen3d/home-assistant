@@ -89,7 +89,7 @@
                 },
                 {
                   "type": "custom:mushroom-light-card",
-                  "entity": "light.kitchen",
+                  "entity": "light.kitchen_lights",
                   "fill_container": true,
                   "grid_options": {
                     "rows": 2,

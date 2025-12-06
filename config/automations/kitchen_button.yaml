@@ -14,7 +14,7 @@ actions:
           - choose:
               - conditions:
                   - condition: state
-                    entity_id: light.kitchen
+                    entity_id: group.kitchen_all
                     state: 'off'
                 sequence:
                   - action: scene.turn_on
@@ -22,14 +22,12 @@ actions:
                       entity_id: scene.cooking
               - conditions:
                   - condition: state
-                    entity_id: light.kitchen
+                    entity_id: group.kitchen_all
                     state: 'on'
                 sequence:
-                  - action: scene.turn_on
-                    data:
-                      transition: 0
+                  - action: homeassistant.turn_off
                     target:
-                      entity_id: scene.kitchen_off
+                      entity_id: group.kitchen_all
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_2'' }}'
@@ -39,7 +37,7 @@ actions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''long_press'' }}'
         sequence:
-          - action: light.turn_off
+          - action: homeassistant.turn_off
             target:
-              entity_id: light.kitchen
+              entity_id: group.kitchen_all
 mode: single

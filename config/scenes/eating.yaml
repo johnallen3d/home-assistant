@@ -1,66 +1,17 @@
 id: '1762816501938'
 name: Eating
 entities:
-  light.kitchen:
-    min_color_temp_kelvin: 2000
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 500
-    supported_color_modes:
-      - color_temp
-      - xy
-    color_mode: null
-    brightness: null
-    color_temp_kelvin: null
-    color_temp: null
-    hs_color: null
-    rgb_color: null
-    xy_color: null
-    is_hue_group: true
-    hue_scenes: []
-    hue_type: room
-    lights:
-      - Sink bulb
-      - Kitchen strip
-      - Island bulb
-    entity_id:
-      - light.island_bulb
-      - light.hue_lightstrip_plus_1
-      - light.sink_bulb
-    dynamics: false
-    icon: mdi:lightbulb-group
-    friendly_name: Kitchen
-    supported_features: 40
+  light.island_bulb:
+    state: 'off'
+  light.sink_bulb:
+    state: 'off'
+  light.hue_lightstrip_plus_1:
     state: 'off'
   light.living_room_light:
-    min_color_temp_kelvin: 2127
-    max_color_temp_kelvin: 6535
-    min_mireds: 153
-    max_mireds: 470
-    supported_color_modes:
-      - color_temp
-      - hs
-      - xy
-    color_mode: color_temp
+    state: 'on'
     brightness: 63
     color_temp_kelvin: 2127
-    color_temp: 470
-    hs_color:
-      - 30.069
-      - 88.053
-    rgb_color:
-      - 255
-      - 143
-      - 30
-    xy_color:
-      - 0.586
-      - 0.387
-    friendly_name: Living Room Light
-    supported_features: 32
-    state: 'on'
   switch.kitchen_counter_switch:
-    device_class: outlet
-    friendly_name: Kitchen counter switch
     state: 'off'
 icon: mdi:food-fork-drink
 metadata: {}

@@ -125,7 +125,7 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "button",
-                  "entity": "light.kitchen",
+                  "entity": "light.kitchen_lights",
                   "name": "Kitchen",
                   "icon": "mdi:ceiling-light",
                   "button_type": "slider",

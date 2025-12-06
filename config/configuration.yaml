@@ -15,7 +15,6 @@ light:
   - platform: group
     name: Kitchen Lights
     entities:
-      - light.kitchen
       - light.island_bulb
       - light.sink_bulb
       - light.hue_lightstrip_plus_1
@@ -46,7 +45,6 @@ group:
   kitchen_all:
     name: Kitchen All
     entities:
-      - light.kitchen
       - light.island_bulb
       - light.sink_bulb
       - light.hue_lightstrip_plus_1
