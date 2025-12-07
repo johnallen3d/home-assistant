@@ -7,8 +7,8 @@
       "views": [
         {
           "type": "panel",
-          "title": "Bubbles",
-          "path": "bubbles",
+          "title": "Mobile",
+          "path": "mobile",
           "icon": "mdi:lightbulb-group",
           "cards": [
             {
@@ -17,13 +17,14 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "separator",
-                  "name": "Scenes",
                   "icon": "mdi:palette",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
                   "sub_button": [
                     {
                       "entity": "scene.lights_out",
                       "icon": "mdi:power-sleep",
                       "name": "Off",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
@@ -36,6 +37,7 @@
                       "entity": "script.adaptive_good_morning",
                       "icon": "mdi:weather-sunny",
                       "name": "Morning",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.turn_on",
@@ -48,6 +50,7 @@
                       "entity": "script.adaptive_tv_time",
                       "icon": "mdi:television",
                       "name": "TV",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.turn_on",
@@ -60,6 +63,7 @@
                       "entity": "script.adaptive_winding_down",
                       "icon": "mdi:sofa",
                       "name": "Chill",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.turn_on",
@@ -67,11 +71,20 @@
                           "entity_id": "script.adaptive_winding_down"
                         }
                       }
-                    },
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "icon": "mdi:silverware-fork-knife",
+                  "styles": "ha-card { margin-bottom: 8px; }",
+                  "sub_button": [
                     {
                       "entity": "script.adaptive_eating",
                       "icon": "mdi:food",
                       "name": "Eat",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.turn_on",
@@ -84,6 +97,7 @@
                       "entity": "script.adaptive_charlie_eating",
                       "icon": "mdi:baby-face-outline",
                       "name": "Charlie",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "script.turn_on",
@@ -96,6 +110,7 @@
                       "entity": "scene.cooking",
                       "icon": "mdi:pot-steam",
                       "name": "Cook",
+                      "show_name": true,
                       "tap_action": {
                         "action": "call-service",
                         "service": "scene.turn_on",
@@ -162,6 +177,26 @@
                   "entity": "light.island_lights",
                   "name": "Island Lights",
                   "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.island_bulb",
+                  "name": "Island Bulb",
+                  "icon": "mdi:lightbulb",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.sink_bulb",
+                  "name": "Sink Bulb",
+                  "icon": "mdi:lightbulb",
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"
