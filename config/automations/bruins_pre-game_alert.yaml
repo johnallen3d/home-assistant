@@ -8,8 +8,9 @@ triggers:
 conditions: []
 actions:
   - data:
-      title: "Bruins Game Incoming \U0001F945"
-      message: 'Bruins about to start! Opponent: {{ state_attr(''sensor.boston_bruins'', ''opponent_name'') }} Starts: {{ (state_attr(''sensor.boston_bruins'', ''date'') | as_datetime).strftime(''%-I:%M %p'') }} ({{ state_attr(''sensor.boston_bruins'', ''kickoff_in'') }}) #magic___^_^___line '
+      title: "Bruins Game Incoming 🥅"
+      message: >-
+        Bruins about to start! Opponent: {{ state_attr('sensor.boston_bruins', 'opponent_name') }} Starts: {{ (state_attr('sensor.boston_bruins', 'date') | as_datetime).strftime('%-I:%M %p') }} ({{ state_attr('sensor.boston_bruins', 'kickoff_in') }})
       data:
         push:
           sound: default
