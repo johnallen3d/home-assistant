@@ -41,7 +41,7 @@ actions:
             value_template: '{{ trigger.event.data.click_type == ''double'' }}'
         sequence:
           - target:
-              entity_id: script.adaptive_tv_time
+              entity_id: script.tv_time
             action: script.turn_on
       - conditions:
           - condition: template

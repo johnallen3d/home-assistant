@@ -61,6 +61,19 @@ This project has three layers of Home Assistant tooling:
 **`ha core reload-scripts` via SSH doesn't reliably reload new scripts.**  
 After uploading scripts.yaml, use MCP `ha_call_service("script", "reload")` instead of SSH `ha core reload-scripts`. The SSH command may silently fail to pick up new script definitions.
 
+### Renaming Scripts/Scenes/Entities Checklist
+
+When renaming any script, scene, or entity that may be exposed to voice assistants or HomeKit:
+
+1. **Update the entity definition** (e.g., `scripts.yaml`, `scenes/*.yaml`)
+2. **Update all references** in automations that call the entity
+3. **Update exposure configs** - these reference entities by ID:
+   - `config/exposed_entities.yaml` - voice assistant (Assist)
+   - `config/homekit_exposed.yaml` - HomeKit/Siri
+4. **Deploy all changes** - scripts, automations, AND exposure configs
+
+**The exposure configs are the primary reason for renaming** - they control what voice assistants can access. Forgetting to update them defeats the purpose of the rename.
+
 ### Automation/Script Update Checklist
 
 After modifying automations that respond to physical triggers (buttons, sensors), **always verify**:

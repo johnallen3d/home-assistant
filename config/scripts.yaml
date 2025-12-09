@@ -34,8 +34,8 @@
 #       lights: [light.kitchen_lights]
 #       night_mode: dim_warm
 
-adaptive_lights:
-  alias: "Adaptive Lights"
+lights:
+  alias: "Lights"
   description: "Apply adaptive brightness and color temperature based on time/weather"
   icon: mdi:lightbulb-auto
   mode: parallel
@@ -150,13 +150,13 @@ adaptive_lights:
 # =============================================================================
 
 # Bedroom - dim warm at night, adaptive during day
-adaptive_bedroom_lights:
-  alias: "Adaptive Bedroom Lights"
+bedroom_lights:
+  alias: "Bedroom Lights"
   description: "Bedroom adaptive lighting with dim warm night mode"
   icon: mdi:bed
   mode: single
   sequence:
-    - action: script.adaptive_lights
+    - action: script.lights
       data:
         lights:
           - light.bedroom_lamp
@@ -167,13 +167,13 @@ adaptive_bedroom_lights:
 
 
 # Bathroom - uses dim pink RGB at night, only strip light
-adaptive_bathroom_lights:
-  alias: "Adaptive Bathroom Lights"
+bathroom_lights:
+  alias: "Bathroom Lights"
   description: "Bathroom adaptive lighting with pink night mode"
   icon: mdi:toilet
   mode: single
   sequence:
-    - action: script.adaptive_lights
+    - action: script.lights
       data:
         lights:
           - light.bathroom_lamp
@@ -201,8 +201,8 @@ adaptive_bathroom_lights:
 #   - Bedroom lights OFF
 #   - Kitchen counter switch OFF
 
-adaptive_tv_time:
-  alias: "Adaptive TV Time"
+tv_time:
+  alias: "TV Time"
   description: "Smart ambient lighting for TV watching based on sun position"
   icon: mdi:television-ambient-light
   mode: single
@@ -295,8 +295,8 @@ adaptive_tv_time:
 #   - Night (11pm-6am): Very dim warm, just the strip light
 #   - Counter switch always OFF (no task lighting)
 
-adaptive_kitchen_chill:
-  alias: "Adaptive Kitchen Chill"
+kitchen_chill:
+  alias: "Kitchen Chill"
   description: "Relaxed kitchen ambient lighting - warmer and dimmer than normal"
   icon: mdi:sofa
   mode: single
@@ -357,8 +357,8 @@ adaptive_kitchen_chill:
 #   - Living room: Dim warm ambient
 #   - Bedroom: Dim warm (in case still waking up)
 
-adaptive_good_morning:
-  alias: "Adaptive Good Morning"
+good_morning:
+  alias: "Good Morning"
   description: "Wake-up lighting that adapts to sunrise - brighter in winter, dimmer when sun is up"
   icon: mdi:weather-sunset-up
   mode: single
@@ -423,8 +423,8 @@ adaptive_good_morning:
 #   - Kitchen lights OFF (dining focus, not cooking)
 #   - Counter switch OFF
 
-adaptive_eating:
-  alias: "Adaptive Eating"
+eating:
+  alias: "Eating"
   description: "Cozy dining ambiance - warm living room light, kitchen off"
   icon: mdi:food-fork-drink
   mode: single
@@ -492,8 +492,8 @@ adaptive_eating:
 #   - Kitchen counter switch always off (no bright task lighting)
 #   - Creates a calm, sleepy atmosphere across all main rooms
 
-adaptive_winding_down:
-  alias: "Adaptive Winding Down"
+winding_down:
+  alias: "Winding Down"
   description: "Pre-bedtime lighting - dim warm across all rooms"
   icon: mdi:weather-sunset-down
   mode: single
@@ -551,8 +551,8 @@ adaptive_winding_down:
 #
 # This avoids distractions and keeps focus on the eating area.
 
-adaptive_charlie_eating:
-  alias: "Adaptive Charlie Eating"
+charlie_eating:
+  alias: "Charlie Eating"
   description: "Island light only for Charlie's meals - kitchen lights off"
   icon: mdi:baby-face-outline
   mode: single

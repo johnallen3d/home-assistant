@@ -20,12 +20,12 @@ include_entities:
   - scene.cooking
   - scene.working
   # Scripts (adaptive lighting - used on dashboards)
-  - script.adaptive_charlie_eating
-  - script.adaptive_good_morning
-  - script.adaptive_kitchen_chill
-  - script.adaptive_tv_time
-  - script.adaptive_winding_down
-  - script.adaptive_eating
+  - script.charlie_eating
+  - script.good_morning
+  - script.kitchen_chill
+  - script.tv_time
+  - script.winding_down
+  - script.eating
   # Switches (only useful ones, not camera/vacuum controls)
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch

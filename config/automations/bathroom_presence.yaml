@@ -30,7 +30,7 @@ actions:
             entity_id: light.bathroom_lamp
             state: 'off'
         sequence:
-          - action: script.adaptive_bathroom_lights
+          - action: script.bathroom_lights
       - conditions:
           - condition: trigger
             id: motion_off

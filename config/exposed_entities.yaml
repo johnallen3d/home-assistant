@@ -28,11 +28,11 @@ scene.shaving: true
 scene.working: true
 
 # Scripts (adaptive lighting - replace static scenes)
-script.adaptive_bathroom_lights: true
-script.adaptive_bedroom_lights: true
-script.adaptive_charlie_eating: true
-script.adaptive_eating: true
-script.adaptive_good_morning: true
-script.adaptive_kitchen_chill: true
-script.adaptive_tv_time: true
-script.adaptive_winding_down: true
+script.bathroom_lights: true
+script.bedroom_lights: true
+script.charlie_eating: true
+script.eating: true
+script.good_morning: true
+script.kitchen_chill: true
+script.tv_time: true
+script.winding_down: true

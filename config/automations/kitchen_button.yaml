@@ -32,7 +32,7 @@ actions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_2'' }}'
         sequence:
-          - action: script.adaptive_kitchen_chill
+          - action: script.kitchen_chill
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''long_press'' }}'

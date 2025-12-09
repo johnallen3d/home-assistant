@@ -6,5 +6,5 @@ triggers:
     at: 02:30:00
 conditions: []
 actions:
-  - action: script.adaptive_bathroom_lights
+  - action: script.bathroom_lights
 mode: single

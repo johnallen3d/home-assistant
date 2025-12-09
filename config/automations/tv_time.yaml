@@ -9,7 +9,7 @@ triggers:
     trigger: device
 conditions: []
 actions:
-  - action: script.adaptive_tv_time
+  - action: script.tv_time
     data:
       transition: '{{ states(''input_number.tv_time_transition_duration'') | int(11) }}'
 mode: single
