@@ -240,6 +240,7 @@ tv_time:
       target:
         entity_id:
           - light.living_room_light
+          - light.living_room_overhead_light
           - light.bedroom_lamp
           - light.bedroom_overhead_left
           - light.bedroom_overhead_right
@@ -403,7 +404,9 @@ good_morning:
     # Living room - gentle ambient
     - action: light.turn_on
       target:
-        entity_id: light.living_room_light
+        entity_id:
+          - light.living_room_light
+          - light.living_room_overhead_light
       data:
         brightness_pct: "{{ living_brightness }}"
         color_temp_kelvin: "{{ color_temp }}"
@@ -481,7 +484,9 @@ eating:
           sequence:
             - action: light.turn_on
               target:
-                entity_id: light.living_room_light
+                entity_id:
+                  - light.living_room_light
+                  - light.living_room_overhead_light
               data:
                 brightness_pct: 15
                 color_temp_kelvin: 2700
@@ -491,7 +496,9 @@ eating:
           sequence:
             - action: light.turn_on
               target:
-                entity_id: light.living_room_light
+                entity_id:
+                  - light.living_room_light
+                  - light.living_room_overhead_light
               data:
                 brightness_pct: 10
                 color_temp_kelvin: 2200
@@ -500,7 +507,9 @@ eating:
       default:
         - action: light.turn_on
           target:
-            entity_id: light.living_room_light
+            entity_id:
+              - light.living_room_light
+              - light.living_room_overhead_light
           data:
             brightness_pct: "{{ evening_brightness }}"
             color_temp_kelvin: "{{ color_temp }}"
@@ -548,7 +557,9 @@ winding_down:
     # Living room - dim warm
     - action: light.turn_on
       target:
-        entity_id: light.living_room_light
+        entity_id:
+          - light.living_room_light
+          - light.living_room_overhead_light
       data:
         brightness_pct: "{{ capped_brightness }}"
         color_temp_kelvin: "{{ color_temp }}"
@@ -575,6 +586,107 @@ winding_down:
           data:
             brightness_pct: "{{ capped_brightness }}"
             color_temp_kelvin: "{{ color_temp }}"
+
+
+# =============================================================================
+# Arriving Home - Adaptive lighting for arrival (kitchen/living room only)
+# =============================================================================
+# A welcoming lighting scene for when arriving home. Similar to kitchen_chill
+# but includes living room. Designed to be used by arrival automations.
+#
+# Behavior by sun/time:
+#   - Daytime (sun elevation > 5°): Minimal lighting (natural light sufficient)
+#   - Evening (sun <= 5°, before 11pm): Warm adaptive in kitchen + living room
+#   - Late night (11pm-6am): Very dim warm
+#
+# Always:
+#   - Kitchen counter switch OFF (no harsh task lighting)
+#   - Bedroom lights untouched (might be sleeping)
+#   - Charlie's room untouched
+
+arriving_home:
+  alias: "Arriving Home"
+  description: "Welcoming adaptive lighting for arrival - kitchen and living room only"
+  icon: mdi:home-import-outline
+  mode: single
+  sequence:
+    - variables:
+        sun_elevation: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
+        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+        adaptive_color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+        hour: "{{ now().hour }}"
+        # Daytime: sun is high enough for natural light
+        is_daytime: "{{ sun_elevation > 5 }}"
+        # Late night: after 11pm or before 6am
+        is_late_night: "{{ hour >= 23 or hour < 6 }}"
+        # Cap brightness at 60% for chill vibe
+        chill_brightness: "{{ [adaptive_brightness, 60] | min }}"
+        # Cap color temp at 3000K (warmer = more welcoming)
+        chill_color_temp: "{{ [adaptive_color_temp, 3000] | min }}"
+
+    # Always turn off counter switch (no harsh task lighting when arriving)
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kitchen_counter_switch
+
+    - choose:
+        # Daytime: Minimal lighting, let natural light do the work
+        - conditions: "{{ is_daytime }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id:
+                  - light.living_room_light
+                  - light.living_room_overhead_light
+              data:
+                brightness_pct: 20
+                color_temp_kelvin: 3000
+            - action: light.turn_on
+              target:
+                entity_id: light.kitchen_lights
+              data:
+                brightness_pct: 25
+                color_temp_kelvin: 3000
+
+        # Late night: Very dim warm
+        - conditions: "{{ is_late_night }}"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id:
+                  - light.living_room_light
+                  - light.living_room_overhead_light
+              data:
+                brightness_pct: 10
+                color_temp_kelvin: 2200
+            - action: light.turn_off
+              target:
+                entity_id:
+                  - light.island_bulb
+                  - light.sink_bulb
+            - action: light.turn_on
+              target:
+                entity_id: light.hue_lightstrip_plus_1
+              data:
+                brightness_pct: 10
+                color_temp_kelvin: 2200
+
+      # Evening (default): Warm adaptive in kitchen + living room
+      default:
+        - action: light.turn_on
+          target:
+            entity_id:
+              - light.living_room_light
+              - light.living_room_overhead_light
+          data:
+            brightness_pct: "{{ chill_brightness }}"
+            color_temp_kelvin: "{{ chill_color_temp }}"
+        - action: light.turn_on
+          target:
+            entity_id: light.kitchen_lights
+          data:
+            brightness_pct: "{{ chill_brightness }}"
+            color_temp_kelvin: "{{ chill_color_temp }}"
 
 
 # =============================================================================

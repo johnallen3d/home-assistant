@@ -1,0 +1,17 @@
+id: '1765308850517'
+alias: "Presence Debug: Departed Home"
+description: >-
+  Notify when Home Assistant detects I've left home. Used to debug HA presence detection vs HomeKit.
+triggers:
+  - entity_id: person.john_allen
+    zone: zone.home
+    event: leave
+    trigger: zone
+conditions: []
+actions:
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "HA Presence: Left Home"
+      message: >-
+        HA thinks you left at {{ now().strftime('%-I:%M %p') }}
+mode: single

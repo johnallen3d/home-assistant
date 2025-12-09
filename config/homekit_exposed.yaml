@@ -20,12 +20,13 @@ include_entities:
   - scene.cooking
   - scene.working
   # Scripts (adaptive lighting - used on dashboards)
+  - script.arriving_home
   - script.charlie_eating
+  - script.eating
   - script.good_morning
   - script.kitchen_chill
   - script.tv_time
   - script.winding_down
-  - script.eating
   # Switches (only useful ones, not camera/vacuum controls)
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
@@ -36,3 +37,6 @@ exclude_entities:
   - light.atom_echo_led
   # Plug indicator lights (not actual lights)
   - light.bedroom_plug_dnd
+  # Individual bulbs (use light.living_room_overhead_light group instead)
+  - light.living_room_overhead_thread
+  - light.living_room_overhead_wifi

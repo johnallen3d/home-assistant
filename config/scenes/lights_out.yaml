@@ -129,5 +129,7 @@ entities:
     state: 'off'
   light.bedroom_overhead_right:
     state: 'off'
+  light.living_room_overhead_light:
+    state: 'off'
 icon: mdi:lightbulb-night-outline
 metadata: {}

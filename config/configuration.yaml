@@ -39,6 +39,11 @@ light:
     entities:
       - light.bathroom
       - light.bathroom_lamp
+  - platform: group
+    name: Living Room Overhead Light
+    entities:
+      - light.living_room_overhead_thread
+      - light.living_room_overhead_wifi
 
 # Mixed entity groups (lights + switches)
 group:

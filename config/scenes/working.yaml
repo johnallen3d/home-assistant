@@ -9,6 +9,8 @@ entities:
     state: 'off'
   light.living_room_light:
     state: 'off'
+  light.living_room_overhead_light:
+    state: 'off'
   light.bedroom_lamp:
     state: 'on'
     brightness: 255
