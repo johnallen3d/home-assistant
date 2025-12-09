@@ -128,7 +128,7 @@
                   "icon": "mdi:sofa",
                   "sub_button": [
                     {
-                      "entity": "light.living_room_light",
+                      "entity": "light.living_room_lights",
                       "icon": "mdi:lightbulb-group",
                       "tap_action": {
                         "action": "toggle"
@@ -139,8 +139,28 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "button",
+                  "entity": "light.living_room_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
                   "entity": "light.living_room_light",
-                  "name": "Living Room",
+                  "name": "Floor Lamp",
+                  "icon": "mdi:floor-lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.living_room_overhead_light",
+                  "name": "Overhead",
                   "icon": "mdi:ceiling-light",
                   "button_type": "slider",
                   "show_state": true,
@@ -153,7 +173,7 @@
                   "icon": "mdi:stove",
                   "sub_button": [
                     {
-                      "entity": "group.kitchen_all",
+                      "entity": "light.kitchen_lights",
                       "icon": "mdi:lightbulb-group",
                       "tap_action": {
                         "action": "toggle"
@@ -178,8 +198,8 @@
                   "type": "custom:bubble-card",
                   "card_type": "button",
                   "entity": "light.kitchen_lights",
-                  "name": "Kitchen",
-                  "icon": "mdi:ceiling-light",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"
@@ -250,6 +270,16 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "button",
+                  "entity": "light.bedroom_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
                   "entity": "light.bedroom_lamp",
                   "name": "Bedroom Lamp",
                   "icon": "mdi:lamp",
@@ -306,6 +336,16 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
                 },
                 {
                   "type": "custom:bubble-card",
