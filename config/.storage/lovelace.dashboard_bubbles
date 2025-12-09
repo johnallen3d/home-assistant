@@ -61,8 +61,8 @@
                     },
                     {
                       "entity": "script.adaptive_winding_down",
-                      "icon": "mdi:sofa",
-                      "name": "Chill",
+                      "icon": "mdi:weather-sunset-down",
+                      "name": "Wind Down",
                       "show_name": true,
                       "tap_action": {
                         "action": "call-service",
@@ -157,6 +157,19 @@
                       "icon": "mdi:lightbulb-group",
                       "tap_action": {
                         "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "script.adaptive_kitchen_chill",
+                      "icon": "mdi:sofa",
+                      "name": "Chill",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.adaptive_kitchen_chill"
+                        }
                       }
                     }
                   ]
