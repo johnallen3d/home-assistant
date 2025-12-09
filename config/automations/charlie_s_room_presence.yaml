@@ -1,0 +1,35 @@
+id: '1765129357442'
+alias: "Charlie's Room Presence"
+description: "Control Charlie's room devices based on his iPhone presence - Shapes light and sound machine"
+triggers:
+  - trigger: state
+    entity_id: device_tracker.charlies_iphone
+    to: "home"
+    id: charlie_home
+  - trigger: state
+    entity_id: device_tracker.charlies_iphone
+    to: "not_home"
+    id: charlie_away
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: charlie_home
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.charlie_s_shapes
+          - action: switch.turn_on
+            target:
+              entity_id: switch.sound_machine_outlet
+      - conditions:
+          - condition: trigger
+            id: charlie_away
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id: light.charlie_s_shapes
+          - action: switch.turn_off
+            target:
+              entity_id: switch.sound_machine_outlet
+mode: single

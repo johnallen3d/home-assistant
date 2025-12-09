@@ -200,6 +200,9 @@ bathroom_lights:
 #   - Living room light OFF (causes glare)
 #   - Bedroom lights OFF
 #   - Kitchen counter switch OFF
+#
+# Charlie presence:
+#   - When Charlie is home, kitchen lights are NOT adjusted (he may be eating/playing)
 
 tv_time:
   alias: "TV Time"
@@ -229,6 +232,8 @@ tv_time:
         is_evening: "{{ not is_daytime and not is_late_night }}"
         # Warm amber - cozy without being distracting
         ambient_color: [255, 180, 107]
+        # Charlie presence - skip kitchen adjustments when he's home
+        charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
 
     # Always turn off glare-causing lights
     - action: light.turn_off
@@ -244,6 +249,10 @@ tv_time:
     - action: switch.turn_off
       target:
         entity_id: switch.kitchen_counter_switch
+
+    # Skip kitchen light adjustments when Charlie is home
+    - condition: template
+      value_template: "{{ not charlie_is_home }}"
 
     - choose:
         # Daytime: Turn off kitchen lights (no ambient needed, reduce distraction)
@@ -356,6 +365,7 @@ kitchen_chill:
 #   - Kitchen: Adaptive brightness, warm color
 #   - Living room: Dim warm ambient
 #   - Bedroom: Dim warm (in case still waking up)
+#   - Charlie's room: Only when Charlie is home (shapes light)
 
 good_morning:
   alias: "Good Morning"
@@ -379,6 +389,8 @@ good_morning:
         # Warmer when dark, cooler as sun rises
         color_temp: >
           {% if sun_is_up %}3500 {% elif sun_is_rising %}2800 {% else %}2400{% endif %}
+        # Charlie presence
+        charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
 
     # Kitchen - main morning activity area
     - action: light.turn_on
@@ -406,6 +418,18 @@ good_morning:
       data:
         brightness_pct: "{{ bedroom_brightness }}"
         color_temp_kelvin: "{{ color_temp }}"
+
+    # Charlie's room - only when he's home
+    - if:
+        - condition: template
+          value_template: "{{ charlie_is_home }}"
+      then:
+        - action: light.turn_on
+          target:
+            entity_id: light.charlie_s_shapes
+          data:
+            brightness_pct: "{{ bedroom_brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"
 
 
 # =============================================================================
@@ -491,6 +515,7 @@ eating:
 #   - Uses adaptive sensors but caps brightness at 35% and color temp at 2200K
 #   - Kitchen counter switch always off (no bright task lighting)
 #   - Creates a calm, sleepy atmosphere across all main rooms
+#   - Charlie's room: Only when Charlie is home (shapes light dimmed)
 
 winding_down:
   alias: "Winding Down"
@@ -504,6 +529,8 @@ winding_down:
         capped_brightness: "{{ [adaptive_brightness, 35] | min }}"
         # Very warm color temp, capped at 2200K
         color_temp: 2200
+        # Charlie presence
+        charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
 
     # Turn off task lighting
     - action: switch.turn_off
@@ -536,6 +563,18 @@ winding_down:
       data:
         brightness_pct: "{{ [capped_brightness + 5, 40] | min }}"
         color_temp_kelvin: "{{ color_temp }}"
+
+    # Charlie's room - only when he's home, dim warm for bedtime
+    - if:
+        - condition: template
+          value_template: "{{ charlie_is_home }}"
+      then:
+        - action: light.turn_on
+          target:
+            entity_id: light.charlie_s_shapes
+          data:
+            brightness_pct: "{{ capped_brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"
 
 
 # =============================================================================
