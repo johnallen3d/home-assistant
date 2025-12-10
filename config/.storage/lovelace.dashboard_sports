@@ -32,6 +32,26 @@
                   "type": "custom:teamtracker-card",
                   "entity": "sensor.boston_celtics",
                   "show_timeouts": false
+                },
+                {
+                  "type": "heading",
+                  "heading": "Bruins Lights",
+                  "heading_style": "subtitle",
+                  "icon": "mdi:hockey-puck"
+                },
+                {
+                  "type": "tile",
+                  "entity": "scene.bruins",
+                  "name": "Bruins Scene",
+                  "icon": "mdi:hockey-puck",
+                  "color": "amber"
+                },
+                {
+                  "type": "tile",
+                  "entity": "script.bruins_animation",
+                  "name": "Bruins Animation",
+                  "icon": "mdi:rotate-3d-variant",
+                  "color": "amber"
                 }
               ]
             }

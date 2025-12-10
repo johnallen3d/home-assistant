@@ -72,6 +72,20 @@
                       "name": "Cooking",
                       "icon": "mdi:pot-steam",
                       "tap_action": { "action": "toggle" }
+                    },
+                    {
+                      "type": "button",
+                      "entity": "scene.bruins",
+                      "name": "Bruins",
+                      "icon": "mdi:hockey-puck",
+                      "tap_action": { "action": "toggle" }
+                    },
+                    {
+                      "type": "button",
+                      "entity": "script.bruins_animation",
+                      "name": "B's Anim",
+                      "icon": "mdi:rotate-3d-variant",
+                      "tap_action": { "action": "toggle" }
                     }
                   ]
                 },

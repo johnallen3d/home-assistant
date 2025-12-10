@@ -25,8 +25,8 @@
       {
         "id": "dashboard_bubbles",
         "show_in_sidebar": true,
-        "icon": "mdi:circle-multiple",
-        "title": "Bubbles",
+        "icon": "mdi:cellphone",
+        "title": "Mobile",
         "require_admin": false,
         "mode": "storage",
         "url_path": "dashboard-bubbles"

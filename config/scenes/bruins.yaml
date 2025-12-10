@@ -1,0 +1,17 @@
+id: '1733788800000'
+name: Bruins
+entities:
+  light.island_bulb:
+    state: 'on'
+    brightness: 30
+    hs_color: [30, 100]
+  light.sink_bulb:
+    state: 'on'
+    brightness: 30
+    hs_color: [30, 100]
+  light.hue_lightstrip_plus_1:
+    state: 'on'
+    brightness: 255
+    hs_color: [43, 89]
+icon: mdi:hockey-puck
+metadata: {}

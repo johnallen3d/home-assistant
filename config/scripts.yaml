@@ -702,6 +702,124 @@ arriving_home:
 #
 # This avoids distractions and keeps focus on the eating area.
 
+# =============================================================================
+# Bruins Animation - Rotating black & gold through kitchen lights
+# =============================================================================
+# Cycles the Bruins colors (gold and dark brown "black") through the three
+# kitchen lights in a rotating pattern.
+#
+# Pattern:
+#   Step 1: Island=gold, Sink=black, Strip=black
+#   Step 2: Island=black, Sink=gold, Strip=black
+#   Step 3: Island=black, Sink=black, Strip=gold
+#   (repeats)
+#
+# Use script.turn_off to stop the animation.
+
+bruins_animation:
+  alias: "Bruins Animation"
+  description: "Rotating black & gold animation through kitchen lights"
+  icon: mdi:hockey-puck
+  mode: restart
+  fields:
+    delay_seconds:
+      name: Delay
+      description: "Seconds between each color change"
+      default: 10
+      selector:
+        number:
+          min: 0.5
+          max: 30
+          step: 0.5
+          unit_of_measurement: "seconds"
+    cycles:
+      name: Cycles
+      description: "Number of full rotations (0 = infinite)"
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 100
+  sequence:
+    - variables:
+        gold_hs: [43, 89]
+        black_hs: [30, 100]
+        gold_brightness: 255
+        black_brightness: 30
+        delay_sec: "{{ delay_seconds | default(10) | float }}"
+        max_cycles: "{{ cycles | default(0) | int }}"
+    - repeat:
+        while:
+          - condition: template
+            value_template: "{{ max_cycles == 0 or repeat.index <= max_cycles }}"
+        sequence:
+          # Step 1: Island=gold, Sink=black, Strip=black
+          - action: light.turn_on
+            target:
+              entity_id: light.island_bulb
+            data:
+              brightness: "{{ gold_brightness }}"
+              hs_color: "{{ gold_hs }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.sink_bulb
+            data:
+              brightness: "{{ black_brightness }}"
+              hs_color: "{{ black_hs }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.hue_lightstrip_plus_1
+            data:
+              brightness: "{{ black_brightness }}"
+              hs_color: "{{ black_hs }}"
+          - delay:
+              seconds: "{{ delay_sec }}"
+
+          # Step 2: Island=black, Sink=gold, Strip=black
+          - action: light.turn_on
+            target:
+              entity_id: light.island_bulb
+            data:
+              brightness: "{{ black_brightness }}"
+              hs_color: "{{ black_hs }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.sink_bulb
+            data:
+              brightness: "{{ gold_brightness }}"
+              hs_color: "{{ gold_hs }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.hue_lightstrip_plus_1
+            data:
+              brightness: "{{ black_brightness }}"
+              hs_color: "{{ black_hs }}"
+          - delay:
+              seconds: "{{ delay_sec }}"
+
+          # Step 3: Island=black, Sink=black, Strip=gold
+          - action: light.turn_on
+            target:
+              entity_id: light.island_bulb
+            data:
+              brightness: "{{ black_brightness }}"
+              hs_color: "{{ black_hs }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.sink_bulb
+            data:
+              brightness: "{{ black_brightness }}"
+              hs_color: "{{ black_hs }}"
+          - action: light.turn_on
+            target:
+              entity_id: light.hue_lightstrip_plus_1
+            data:
+              brightness: "{{ gold_brightness }}"
+              hs_color: "{{ gold_hs }}"
+          - delay:
+              seconds: "{{ delay_sec }}"
+
+
 charlie_eating:
   alias: "Charlie Eating"
   description: "Island light only for Charlie's meals - kitchen lights off"

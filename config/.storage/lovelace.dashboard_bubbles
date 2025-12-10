@@ -191,6 +191,32 @@
                           "entity_id": "script.adaptive_kitchen_chill"
                         }
                       }
+                    },
+                    {
+                      "entity": "scene.bruins",
+                      "icon": "mdi:hockey-puck",
+                      "name": "B's",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.bruins"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "script.bruins_animation",
+                      "icon": "mdi:rotate-3d-variant",
+                      "name": "Anim",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.bruins_animation"
+                        }
+                      }
                     }
                   ]
                 },
