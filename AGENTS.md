@@ -58,6 +58,9 @@ This project has three layers of Home Assistant tooling:
 
 ### Known Issues
 
+**`just config::update-automation` only updates existing automations.**  
+For NEW automations, use MCP `ha_config_set_automation()` to create them first, then update the local YAML file with the generated `id` from the response. The `update-automation` command downloads the server's automation list and merges changes - it won't add automations that don't already exist on the server.
+
 **`ha core reload-scripts` via SSH doesn't reliably reload new scripts.**  
 After uploading scripts.yaml, use MCP `ha_call_service("script", "reload")` instead of SSH `ha core reload-scripts`. The SSH command may silently fail to pick up new script definitions.
 

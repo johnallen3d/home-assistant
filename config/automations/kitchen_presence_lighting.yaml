@@ -1,0 +1,43 @@
+# Kitchen Presence Lighting
+# Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
+#
+# On entry: Uses adaptive lighting script for time-appropriate brightness/color
+# On exit: Turns lights off immediately (no delay)
+
+id: '1765490530767'
+alias: "Kitchen Presence Lighting"
+description: "Adaptive kitchen lights based on FP2 presence detection"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.kitchen_presence_kitchen
+    to: "on"
+    id: presence_on
+  - trigger: state
+    entity_id: binary_sensor.kitchen_presence_kitchen
+    to: "off"
+    id: presence_off
+
+actions:
+  - choose:
+      # Presence detected - turn on with adaptive lighting
+      - conditions:
+          - condition: trigger
+            id: presence_on
+        sequence:
+          - action: script.lights
+            data:
+              lights:
+                - light.kitchen_lights
+              night_mode: dim_warm
+              night_brightness: 15
+
+      # Presence cleared - turn off
+      - conditions:
+          - condition: trigger
+            id: presence_off
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id: light.kitchen_lights
