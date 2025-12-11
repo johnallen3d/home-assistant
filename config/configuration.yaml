@@ -151,11 +151,11 @@ template:
           {% set cloud_cover = state_attr('weather.forecast_home', 'cloud_coverage') | float(0) %}
           {% set hour = now().hour %}
           {% if hour >= 23 or hour < 6 %}
-          10
-          {% elif sun_elev < 0 %}
           25
+          {% elif sun_elev < 0 %}
+          40
           {% elif sun_elev < 15 %}
-          {{ (25 + (sun_elev * 3)) | int }}
+          {{ (40 + (sun_elev * 2)) | int }}
           {% else %}
           {{ [70 + (cloud_cover / 100 * 20) | int, 100] | min }}
           {% endif %}
