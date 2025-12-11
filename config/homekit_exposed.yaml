@@ -18,6 +18,7 @@ include_entities:
   # Scenes (used on dashboards)
   - scene.lights_out
   - scene.cooking
+  - scene.shaving
   - scene.working
   # Scripts (adaptive lighting - used on dashboards)
   - script.arriving_home
@@ -30,6 +31,7 @@ include_entities:
   # Switches (only useful ones, not camera/vacuum controls)
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
+  - switch.sound_machine_outlet
 
 # Entities to exclude (from included domains)
 exclude_entities:
