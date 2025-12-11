@@ -380,36 +380,45 @@ good_morning:
         sun_is_up: "{{ sun_elevation > 5 }}"
         sun_is_rising: "{{ sun_elevation >= -5 and sun_elevation <= 5 }}"
         sun_is_down: "{{ sun_elevation < -5 }}"
-        # When sun is up, use very low brightness; when down, simulate sunrise
+        # When sun is up, use very low brightness; when down, gentle wake-up
+        # Kitchen/living room only when sun is rising/up (presence handles them otherwise)
         kitchen_brightness: >
-          {% if sun_is_up %}30 {% elif sun_is_rising %}50 {% else %}70{% endif %}
+          {% if sun_is_up %}30 {% elif sun_is_rising %}50 {% else %}0{% endif %}
         living_brightness: >
-          {% if sun_is_up %}20 {% elif sun_is_rising %}35 {% else %}50{% endif %}
+          {% if sun_is_up %}20 {% elif sun_is_rising %}35 {% else %}0{% endif %}
         bedroom_brightness: >
-          {% if sun_is_up %}15 {% elif sun_is_rising %}25 {% else %}40{% endif %}
+          {% if sun_is_up %}15 {% elif sun_is_rising %}25 {% else %}25{% endif %}
         # Warmer when dark, cooler as sun rises
         color_temp: >
           {% if sun_is_up %}3500 {% elif sun_is_rising %}2800 {% else %}2400{% endif %}
         # Charlie presence
         charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
 
-    # Kitchen - main morning activity area
-    - action: light.turn_on
-      target:
-        entity_id: light.kitchen_lights
-      data:
-        brightness_pct: "{{ kitchen_brightness }}"
-        color_temp_kelvin: "{{ color_temp }}"
+    # Kitchen - only when sun is rising/up (presence handles dark mornings)
+    - if:
+        - condition: template
+          value_template: "{{ kitchen_brightness > 0 }}"
+      then:
+        - action: light.turn_on
+          target:
+            entity_id: light.kitchen_lights
+          data:
+            brightness_pct: "{{ kitchen_brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"
 
-    # Living room - gentle ambient
-    - action: light.turn_on
-      target:
-        entity_id:
-          - light.living_room_light
-          - light.living_room_overhead_light
-      data:
-        brightness_pct: "{{ living_brightness }}"
-        color_temp_kelvin: "{{ color_temp }}"
+    # Living room - only when sun is rising/up (presence handles dark mornings)
+    - if:
+        - condition: template
+          value_template: "{{ living_brightness > 0 }}"
+      then:
+        - action: light.turn_on
+          target:
+            entity_id:
+              - light.living_room_light
+              - light.living_room_overhead_light
+          data:
+            brightness_pct: "{{ living_brightness }}"
+            color_temp_kelvin: "{{ color_temp }}"
 
     # Bedroom - gentle in case still waking up
     - action: light.turn_on
