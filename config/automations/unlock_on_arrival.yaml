@@ -22,10 +22,6 @@ actions:
     timeout:
       minutes: 5
     continue_on_timeout: false
-  # Short delay after WiFi connects to ensure stable connection
-  # (avoids unlock if WiFi briefly connects while walking past)
-  - delay:
-      seconds: 5
   # Final check: still home on GPS and WiFi, and door still locked
   - condition: state
     entity_id: person.john_allen
