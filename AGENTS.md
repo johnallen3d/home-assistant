@@ -188,3 +188,37 @@ After modifying automations that respond to physical triggers (buttons, sensors)
   include_entities: [scene.x, script.y]  # add specific entities from other domains
   exclude_entities: [light.atom_echo_led]  # hide specific entities from included domains
   ```
+
+### Adaptive Lighting System
+
+**Location**: `config/configuration.yaml` (template sensors section)
+
+**Key entities**:
+- `sensor.adaptive_brightness` - brightness % based on sun elevation and time
+- `sensor.adaptive_color_temp` - color temperature (K) based on sun elevation and time
+
+**Brightness curve** (update this table if values change):
+
+| Condition | Brightness |
+|-----------|------------|
+| Night (11pm-6am) | 25% |
+| Sun below horizon (dusk/dawn) | 40% |
+| Sun 0-15° elevation | 40% + (elevation × 2), so 40-70% |
+| Sun above 15° | 70% + cloud boost (up to 100%) |
+
+**Color temp curve**:
+
+| Condition | Color Temp |
+|-----------|------------|
+| Night (11pm-6am) | 2200K |
+| Sun below horizon | 2400K |
+| Sun 0-15° elevation | 2400K + (elevation × 80), so 2400-3600K |
+| Sun above 15° | 3600K-4500K |
+
+**Usage**: Most lighting scripts call `script.lights` which reads these sensors.
+Presence automations (kitchen, living room) also use these values.
+
+**Tuning tips**:
+- If lights feel too dim at dusk, increase the `sun_elev < 0` baseline
+- If night mode is too dim, increase the `hour >= 23 or hour < 6` value
+- The ramp multiplier (currently `× 2`) controls how quickly brightness increases with sun elevation
