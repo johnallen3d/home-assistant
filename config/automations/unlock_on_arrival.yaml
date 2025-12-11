@@ -20,7 +20,7 @@ actions:
         entity_id: device_tracker.iphone
         to: home
     timeout:
-      minutes: 2
+      minutes: 5
     continue_on_timeout: false
   # Short delay after WiFi connects to ensure stable connection
   # (avoids unlock if WiFi briefly connects while walking past)
