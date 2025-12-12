@@ -1,14 +1,14 @@
 id: '1765129357442'
 alias: "Charlie's Room Presence"
-description: "Control Charlie's room devices based on his iPhone presence - Shapes light and sound machine"
+description: "Control Charlie's room devices based on presence - Shapes light and sound machine. Uses custom binary sensor with GPS + WiFi fallback and staleness timeout."
 triggers:
   - trigger: state
-    entity_id: device_tracker.charlies_iphone
-    to: "home"
+    entity_id: binary_sensor.charlie_home
+    to: "on"
     id: charlie_home
   - trigger: state
-    entity_id: device_tracker.charlies_iphone
-    to: "not_home"
+    entity_id: binary_sensor.charlie_home
+    to: "off"
     id: charlie_away
 actions:
   - choose:

@@ -316,8 +316,8 @@ kitchen_chill:
         adaptive_color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
         hour: "{{ now().hour }}"
         is_night: "{{ hour >= 23 or hour < 6 }}"
-        # Cap brightness at 60% for chill mode
-        chill_brightness: "{{ [adaptive_brightness, 60] | min }}"
+        # Use full adaptive brightness (no cap)
+        chill_brightness: "{{ adaptive_brightness }}"
         # Cap color temp at 3000K (warmer = more chill)
         chill_color_temp: "{{ [adaptive_color_temp, 3000] | min }}"
 
@@ -836,10 +836,12 @@ charlie_eating:
   mode: single
   sequence:
     - variables:
-        brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
         color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
         hour: "{{ now().hour }}"
         is_night: "{{ hour >= 23 or hour < 6 }}"
+        # Minimum 50% brightness for task lighting
+        brightness: "{{ [adaptive_brightness, 50] | max }}"
 
     # Turn off all kitchen lights except island bulb
     - action: light.turn_off
