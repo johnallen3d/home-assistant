@@ -8,9 +8,10 @@ triggers:
     event: enter
 conditions: []
 actions:
-  - action: scene.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: scene.good_morning
+  - action: script.lights
+    data:
+      lights:
+        - light.kitchen_lights
+      night_mode: dim_warm
+      night_brightness: 15
 mode: single
