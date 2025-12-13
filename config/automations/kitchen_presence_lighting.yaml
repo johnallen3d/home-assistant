@@ -2,7 +2,7 @@
 # Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns lights off immediately (no delay)
+# On exit: Turns lights off after 30s delay (unless presence returns)
 
 id: '1765490530767'
 alias: "Kitchen Presence Lighting"
@@ -33,11 +33,21 @@ actions:
               night_mode: dim_warm
               night_brightness: 15
 
-      # Presence cleared - turn off
+      # Presence cleared - turn off after 30s delay (unless presence returns)
       - conditions:
           - condition: trigger
             id: presence_off
         sequence:
-          - action: light.turn_off
-            target:
-              entity_id: light.kitchen_lights
+          - wait_for_trigger:
+              trigger:
+                - trigger: state
+                  entity_id: binary_sensor.kitchen_presence_kitchen
+                  to: "on"
+              timeout: "00:00:30"
+          - if:
+              - condition: template
+                value_template: "{{ wait.trigger is none }}"
+            then:
+              - action: light.turn_off
+                target:
+                  entity_id: light.kitchen_lights
