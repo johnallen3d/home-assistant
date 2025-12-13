@@ -1,17 +1,17 @@
 ---
 name: home-assistant-manager
-description: Expert-level Home Assistant configuration management with efficient deployment workflows (rapid scp iteration), remote CLI access via SSH and hass-cli, automation verification protocols, log analysis, reload vs restart optimization, and comprehensive Lovelace dashboard management for tablet-optimized UIs. Includes template patterns, card types, debugging strategies, and real-world examples. CRITICAL - Never use git write operations (commit/add/push).
+description: Expert-level Home Assistant configuration management with efficient deployment workflows (rapid scp iteration), MCP server integration, automation verification protocols, log analysis, reload vs restart optimization, and comprehensive Lovelace dashboard management for tablet-optimized UIs. Includes template patterns, card types, debugging strategies, and real-world examples. CRITICAL - Never use git write operations (commit/add/push).
 ---
 
 # Home Assistant Manager
 
-Expert-level Home Assistant configuration management with efficient workflows, remote CLI access, and verification protocols.
+Expert-level Home Assistant configuration management with efficient workflows, MCP server integration, and verification protocols.
 
 **⛔️ CRITICAL: Never use git write operations (commit, add, push, merge, rebase) - user handles all git operations.**
 
 ## Core Capabilities
 
-- Remote Home Assistant instance management via SSH and hass-cli
+- Remote Home Assistant instance management via SSH and MCP server
 - Smart deployment workflows (git-based and rapid iteration)
 - Configuration validation and safety checks
 - Automation testing and verification
@@ -26,32 +26,31 @@ Expert-level Home Assistant configuration management with efficient workflows, r
 Before starting, verify the environment has:
 
 1. SSH access to Home Assistant instance (`root@homeassistant.local`)
-2. `hass-cli` installed locally
-3. Environment variables loaded (HASS_SERVER, HASS_TOKEN)
-4. Git repository connected to HA `/config` directory
-5. Context7 MCP server with Home Assistant docs (recommended)
+2. Home Assistant MCP server tools available
+3. Git repository connected to HA `/config` directory
+4. Context7 MCP server with Home Assistant docs (recommended)
 
 **Note:** Projects may use task runners like `just` or `make` as wrappers around these SSH/scp commands. Check for `Justfile` or `Makefile` in the project root for convenience shortcuts.
 
 ## Remote Access Patterns
 
-### Using hass-cli (Local, via REST API)
+### Using MCP Server Tools
 
-All `hass-cli` commands use environment variables automatically:
+The skill uses Home Assistant MCP server tools for API operations:
 
-```bash
-# List entities
-hass-cli state list
-
-# Get specific state
-hass-cli state get sensor.entity_name
+```python
+# Get entity state
+ha_get_state(entity_id="sensor.temperature")
 
 # Call services
-hass-cli service call automation.reload
-hass-cli service call automation.trigger --arguments entity_id=automation.name
+ha_call_service(domain="automation", service="reload")
+ha_call_service(domain="automation", service="trigger", entity_id="automation.name")
+
+# List entities
+ha_get_overview()
 ```
 
-### Using SSH for HA CLI
+### Using SSH for HA Management
 
 ```bash
 # Check configuration validity
@@ -84,12 +83,12 @@ ssh root@homeassistant.local "ha core check"
 ssh root@homeassistant.local "cd /config && git pull"
 
 # 5. Reload or restart
-hass-cli service call automation.reload  # if reload sufficient
+ha_call_service(domain="automation", service="reload")  # if reload sufficient
 # OR
 ssh root@homeassistant.local "ha core restart"  # if restart needed
 
 # 6. Verify
-hass-cli state get sensor.new_entity
+ha_get_state(entity_id="sensor.new_entity")
 ssh root@homeassistant.local "ha core logs | grep -i error | tail -20"
 ```
 
@@ -103,7 +102,7 @@ Use `scp` for quick testing before user commits:
 scp automations.yaml root@homeassistant.local:/config/
 
 # 3. Reload/restart
-hass-cli service call automation.reload
+ha_call_service(domain="automation", service="reload")
 
 # 4. Test and iterate (repeat 1-3 as needed)
 
@@ -125,12 +124,12 @@ hass-cli service call automation.reload
 
 ### Can be reloaded (fast, preferred)
 
-- ✅ Automations: `hass-cli service call automation.reload`
-- ✅ Scripts: `hass-cli service call script.reload`
-- ✅ Scenes: `hass-cli service call scene.reload`
-- ✅ Template entities: `hass-cli service call template.reload`
-- ✅ Groups: `hass-cli service call group.reload`
-- ✅ Themes: `hass-cli service call frontend.reload_themes`
+- ✅ Automations: `ha_call_service(domain="automation", service="reload")`
+- ✅ Scripts: `ha_call_service(domain="script", service="reload")`
+- ✅ Scenes: `ha_call_service(domain="scene", service="reload")`
+- ✅ Template entities: `ha_call_service(domain="template", service="reload")`
+- ✅ Groups: `ha_call_service(domain="group", service="reload")`
+- ✅ Themes: `ha_call_service(domain="frontend", service="reload_themes")`
 
 ### Require full restart
 
@@ -159,13 +158,13 @@ ssh root@homeassistant.local "ha core check"
 ### Step 3: Reload
 
 ```bash
-hass-cli service call automation.reload
+ha_call_service(domain="automation", service="reload")
 ```
 
 ### Step 4: Manually Trigger
 
 ```bash
-hass-cli service call automation.trigger --arguments entity_id=automation.name
+ha_call_service(domain="automation", service="trigger", entity_id="automation.name")
 ```
 
 **Why trigger manually?**
@@ -204,13 +203,13 @@ ssh root@homeassistant.local "ha core logs | grep -i 'automation_name' | tail -2
 **For device control:**
 
 ```bash
-hass-cli state get switch.device_name
+ha_get_state(entity_id="switch.device_name")
 ```
 
 **For sensors:**
 
 ```bash
-hass-cli state get sensor.new_sensor
+ha_get_state(entity_id="sensor.new_sensor")
 ```
 
 ### Step 7: Fix and Re-test if Needed
@@ -522,7 +521,7 @@ Paste template to test before adding to dashboard
 **4. Verify Entities:**
 
 ```bash
-hass-cli state get binary_sensor.front_door
+ha_get_state(entity_id="binary_sensor.front_door")
 ```
 
 **5. Clear Browser Cache:**
@@ -610,10 +609,10 @@ ssh root@homeassistant.local "ha core logs | tail -50"
 ssh root@homeassistant.local "ha core logs | grep -i error | tail -20"
 
 # State/Services
-hass-cli state list
-hass-cli state get entity.name
-hass-cli service call automation.reload
-hass-cli service call automation.trigger --arguments entity_id=automation.name
+ha_get_overview()
+ha_get_state(entity_id="entity.name")
+ha_call_service(domain="automation", service="reload")
+ha_call_service(domain="automation", service="trigger", entity_id="automation.name")
 
 # Deployment (after user commits)
 ssh root@homeassistant.local "cd /config && git pull"
@@ -625,8 +624,8 @@ python3 -m json.tool .storage/lovelace.my_dashboard > /dev/null  # Validate JSON
 
 # Quick test cycle
 scp automations.yaml root@homeassistant.local:/config/
-hass-cli service call automation.reload
-hass-cli service call automation.trigger --arguments entity_id=automation.name
+ha_call_service(domain="automation", service="reload")
+ha_call_service(domain="automation", service="trigger", entity_id="automation.name")
 ssh root@homeassistant.local "ha core logs | grep -i 'automation' | tail -10"
 ```
 

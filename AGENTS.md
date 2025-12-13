@@ -1,5 +1,9 @@
 # AGENTS.md
 
+## Todo List
+
+Use `/todo` command for todo list queries. This queries `todo.ha_enhancements` (not the internal `todoread`/`todowrite` tools).
+
 ## Core Tenets
 
 1. **Make changes locally** - Edit files in this repo, not in HA UI
