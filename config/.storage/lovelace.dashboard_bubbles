@@ -211,11 +211,7 @@
                       "name": "Anim",
                       "show_name": true,
                       "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.bruins_animation"
-                        }
+                        "action": "toggle"
                       }
                     }
                   ]
