@@ -29,56 +29,88 @@
                       "entity": "scene.lights_out",
                       "name": "Lights Off",
                       "icon": "mdi:power-sleep",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": { "entity_id": "scene.lights_out" }
+                      }
                     },
                     {
                       "type": "button",
-                      "entity": "script.adaptive_good_morning",
+                      "entity": "script.good_morning",
                       "name": "Morning",
                       "icon": "mdi:weather-sunny",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": { "entity_id": "script.good_morning" }
+                      }
                     },
                     {
                       "type": "button",
-                      "entity": "script.adaptive_tv_time",
+                      "entity": "script.tv_time",
                       "name": "TV Time",
                       "icon": "mdi:television",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": { "entity_id": "script.tv_time" }
+                      }
                     },
                     {
                       "type": "button",
-                      "entity": "script.adaptive_winding_down",
+                      "entity": "script.winding_down",
                       "name": "Chill",
                       "icon": "mdi:sofa",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": { "entity_id": "script.winding_down" }
+                      }
                     },
                     {
                       "type": "button",
-                      "entity": "script.adaptive_eating",
+                      "entity": "script.eating",
                       "name": "Eating",
                       "icon": "mdi:food",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": { "entity_id": "script.eating" }
+                      }
                     },
                     {
                       "type": "button",
-                      "entity": "script.adaptive_charlie_eating",
+                      "entity": "script.charlie_eating",
                       "name": "Charlie",
                       "icon": "mdi:baby-face-outline",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": { "entity_id": "script.charlie_eating" }
+                      }
                     },
                     {
                       "type": "button",
                       "entity": "scene.cooking",
                       "name": "Cooking",
                       "icon": "mdi:pot-steam",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": { "entity_id": "scene.cooking" }
+                      }
                     },
                     {
                       "type": "button",
                       "entity": "scene.bruins",
                       "name": "Bruins",
                       "icon": "mdi:hockey-puck",
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": { "entity_id": "scene.bruins" }
+                      }
                     },
                     {
                       "type": "button",

@@ -34,7 +34,7 @@
                       }
                     },
                     {
-                      "entity": "script.adaptive_good_morning",
+                      "entity": "script.good_morning",
                       "icon": "mdi:weather-sunny",
                       "name": "Morning",
                       "show_name": true,
@@ -42,12 +42,12 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": {
-                          "entity_id": "script.adaptive_good_morning"
+                          "entity_id": "script.good_morning"
                         }
                       }
                     },
                     {
-                      "entity": "script.adaptive_tv_time",
+                      "entity": "script.tv_time",
                       "icon": "mdi:television",
                       "name": "TV",
                       "show_name": true,
@@ -55,12 +55,12 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": {
-                          "entity_id": "script.adaptive_tv_time"
+                          "entity_id": "script.tv_time"
                         }
                       }
                     },
                     {
-                      "entity": "script.adaptive_winding_down",
+                      "entity": "script.winding_down",
                       "icon": "mdi:weather-sunset-down",
                       "name": "Wind Down",
                       "show_name": true,
@@ -68,7 +68,7 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": {
-                          "entity_id": "script.adaptive_winding_down"
+                          "entity_id": "script.winding_down"
                         }
                       }
                     }
@@ -81,7 +81,7 @@
                   "styles": "ha-card { margin-bottom: 8px; }",
                   "sub_button": [
                     {
-                      "entity": "script.adaptive_eating",
+                      "entity": "script.eating",
                       "icon": "mdi:food",
                       "name": "Eat",
                       "show_name": true,
@@ -89,12 +89,12 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": {
-                          "entity_id": "script.adaptive_eating"
+                          "entity_id": "script.eating"
                         }
                       }
                     },
                     {
-                      "entity": "script.adaptive_charlie_eating",
+                      "entity": "script.charlie_eating",
                       "icon": "mdi:baby-face-outline",
                       "name": "Charlie",
                       "show_name": true,
@@ -102,7 +102,7 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": {
-                          "entity_id": "script.adaptive_charlie_eating"
+                          "entity_id": "script.charlie_eating"
                         }
                       }
                     },
@@ -180,7 +180,7 @@
                       }
                     },
                     {
-                      "entity": "script.adaptive_kitchen_chill",
+                      "entity": "script.kitchen_chill",
                       "icon": "mdi:sofa",
                       "name": "Chill",
                       "show_name": true,
@@ -188,7 +188,7 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": {
-                          "entity_id": "script.adaptive_kitchen_chill"
+                          "entity_id": "script.kitchen_chill"
                         }
                       }
                     },
@@ -210,9 +210,7 @@
                       "icon": "mdi:rotate-3d-variant",
                       "name": "Anim",
                       "show_name": true,
-                      "tap_action": {
-                        "action": "toggle"
-                      }
+                      "tap_action": { "action": "toggle" }
                     }
                   ]
                 },
