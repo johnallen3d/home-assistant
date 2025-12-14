@@ -354,14 +354,13 @@
                       "tap_action": {
                         "action": "toggle"
                       }
+                    },
+                    {
+                      "entity": "sensor.bathroom_presence_sensor_temperature",
+                      "show_name": false,
+                      "show_state": true
                     }
                   ]
-                },
-                {
-                  "type": "sensor",
-                  "entity": "sensor.bathroom_presence_sensor_temperature",
-                  "name": "Temperature",
-                  "graph": "none"
                 },
                 {
                   "type": "custom:bubble-card",
@@ -397,13 +396,29 @@
                   "type": "custom:bubble-card",
                   "card_type": "separator",
                   "name": "Laundry Room",
-                  "icon": "mdi:washing-machine"
+                  "icon": "mdi:washing-machine",
+                  "sub_button": [
+                    {
+                      "entity": "switch.laundry_room_switch",
+                      "icon": "mdi:power-socket-us",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "sensor.laundry_room_sensor_temperature",
+                      "show_name": false,
+                      "show_state": true
+                    }
+                  ]
                 },
                 {
-                  "type": "sensor",
-                  "entity": "sensor.laundry_room_sensor_temperature",
-                  "name": "Temperature",
-                  "graph": "none"
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.laundry_room_switch",
+                  "name": "All",
+                  "icon": "mdi:power-socket-us",
+                  "button_type": "switch"
                 }
               ]
             }

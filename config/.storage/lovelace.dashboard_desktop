@@ -279,12 +279,6 @@
                           "heading_style": "subtitle"
                         },
                         {
-                          "type": "sensor",
-                          "entity": "sensor.bathroom_presence_sensor_temperature",
-                          "name": "Temperature",
-                          "graph": "none"
-                        },
-                        {
                           "type": "custom:bubble-card",
                           "card_type": "button",
                           "entity": "light.bathroom_lights",
@@ -292,7 +286,14 @@
                           "icon": "mdi:lightbulb-group",
                           "button_type": "slider",
                           "show_state": true,
-                          "show_attribute": "brightness"
+                          "show_attribute": "brightness",
+                          "sub_button": [
+                            {
+                              "entity": "sensor.bathroom_presence_sensor_temperature",
+                              "show_name": false,
+                              "show_state": true
+                            }
+                          ]
                         },
                         {
                           "type": "custom:bubble-card",
@@ -320,10 +321,19 @@
                           "heading_style": "subtitle"
                         },
                         {
-                          "type": "sensor",
-                          "entity": "sensor.laundry_room_sensor_temperature",
-                          "name": "Temperature",
-                          "graph": "none"
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "switch.laundry_room_switch",
+                          "name": "All",
+                          "icon": "mdi:power-socket-us",
+                          "button_type": "switch",
+                          "sub_button": [
+                            {
+                              "entity": "sensor.laundry_room_sensor_temperature",
+                              "show_name": false,
+                              "show_state": true
+                            }
+                          ]
                         },
                         {
                           "type": "heading",
