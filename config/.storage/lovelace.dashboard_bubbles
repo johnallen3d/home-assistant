@@ -358,6 +358,12 @@
                   ]
                 },
                 {
+                  "type": "sensor",
+                  "entity": "sensor.bathroom_presence_sensor_temperature",
+                  "name": "Temperature",
+                  "graph": "none"
+                },
+                {
                   "type": "custom:bubble-card",
                   "card_type": "button",
                   "entity": "light.bathroom_lights",
@@ -386,6 +392,18 @@
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Laundry Room",
+                  "icon": "mdi:washing-machine"
+                },
+                {
+                  "type": "sensor",
+                  "entity": "sensor.laundry_room_sensor_temperature",
+                  "name": "Temperature",
+                  "graph": "none"
                 }
               ]
             }

@@ -279,6 +279,12 @@
                           "heading_style": "subtitle"
                         },
                         {
+                          "type": "sensor",
+                          "entity": "sensor.bathroom_presence_sensor_temperature",
+                          "name": "Temperature",
+                          "graph": "none"
+                        },
+                        {
                           "type": "custom:bubble-card",
                           "card_type": "button",
                           "entity": "light.bathroom_lights",
@@ -307,6 +313,17 @@
                           "button_type": "slider",
                           "show_state": true,
                           "show_attribute": "brightness"
+                        },
+                        {
+                          "type": "heading",
+                          "heading": "Laundry Room",
+                          "heading_style": "subtitle"
+                        },
+                        {
+                          "type": "sensor",
+                          "entity": "sensor.laundry_room_sensor_temperature",
+                          "name": "Temperature",
+                          "graph": "none"
                         },
                         {
                           "type": "heading",
