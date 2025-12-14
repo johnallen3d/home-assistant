@@ -384,6 +384,15 @@
                         {
                           "type": "custom:teamtracker-card",
                           "entity": "sensor.boston_bruins"
+                        },
+                        {
+                          "type": "heading",
+                          "heading": "Ember Mug",
+                          "heading_style": "subtitle"
+                        },
+                        {
+                          "type": "custom:ember-mug-card",
+                          "entity": "sensor.ember_mug_e87720e9d7b9_state"
                         }
                       ]
                     }
