@@ -1,6 +1,6 @@
 id: '1762718598905'
 alias: Arriving home
-description: ''
+description: "Triggers kitchen presence lighting when arriving home"
 triggers:
   - trigger: zone
     entity_id: person.john_allen
@@ -8,10 +8,7 @@ triggers:
     event: enter
 conditions: []
 actions:
-  - action: script.lights
-    data:
-      lights:
-        - light.kitchen_lights
-      night_mode: dim_warm
-      night_brightness: 15
+  - action: automation.trigger
+    target:
+      entity_id: automation.kitchen_presence_lighting
 mode: single
