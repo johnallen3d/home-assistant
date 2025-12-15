@@ -1,7 +1,7 @@
 # Living Room Presence Lighting
 # Turns living room lights on/off based on FP2 presence sensor living room zone
 #
-# On entry: Uses adaptive lighting script for time-appropriate brightness/color
+# On entry: Uses adaptive lighting with overhead 15% dimmer than main light
 # On exit: Turns lights off immediately (no delay)
 
 id: '1765490534742'
@@ -31,12 +31,45 @@ actions:
                 entity_id: media_player.lg_webos_tv_oled65c3aua
                 state: "on"
         sequence:
-          - action: script.lights
-            data:
-              lights:
-                - light.living_room_lights
-              night_mode: dim_warm
+          - variables:
+              brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+              color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+              hour: "{{ now().hour }}"
+              is_night: "{{ hour >= 23 or hour < 6 }}"
+              # Overhead is 15 percentage points dimmer than main light
+              overhead_brightness: "{{ [brightness - 15, 5] | max }}"
               night_brightness: 15
+              overhead_night_brightness: "{{ [night_brightness - 15, 5] | max }}"
+          - choose:
+              # Night mode: dim warm
+              - conditions: "{{ is_night }}"
+                sequence:
+                  - action: light.turn_on
+                    target:
+                      entity_id: light.living_room_light
+                    data:
+                      brightness_pct: "{{ night_brightness }}"
+                      color_temp_kelvin: 2200
+                  - action: light.turn_on
+                    target:
+                      entity_id: light.living_room_overhead_light
+                    data:
+                      brightness_pct: "{{ overhead_night_brightness }}"
+                      color_temp_kelvin: 2200
+            # Default: adaptive mode
+            default:
+              - action: light.turn_on
+                target:
+                  entity_id: light.living_room_light
+                data:
+                  brightness_pct: "{{ brightness }}"
+                  color_temp_kelvin: "{{ color_temp }}"
+              - action: light.turn_on
+                target:
+                  entity_id: light.living_room_overhead_light
+                data:
+                  brightness_pct: "{{ overhead_brightness }}"
+                  color_temp_kelvin: "{{ color_temp }}"
 
       # Presence cleared - turn off
       - conditions:

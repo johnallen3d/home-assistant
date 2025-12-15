@@ -205,10 +205,10 @@ After modifying automations that respond to physical triggers (buttons, sensors)
 
 | Condition | Brightness |
 |-----------|------------|
-| Night (11pm-6am) | 25% |
-| Sun below horizon (dusk/dawn) | 40% |
-| Sun 0-15° elevation | 40% + (elevation × 2), so 40-70% |
-| Sun above 15° | 70% + cloud boost (up to 100%) |
+| Night (11pm-6am) | 20% |
+| Sun below horizon (dusk/dawn) | 32% |
+| Sun 0-15° elevation | 32% + (elevation × 1.6), so 32-56% |
+| Sun above 15° | 56% + cloud boost (up to 80%) |
 
 **Color temp curve**:
 

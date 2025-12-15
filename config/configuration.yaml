@@ -151,13 +151,13 @@ template:
           {% set cloud_cover = state_attr('weather.forecast_home', 'cloud_coverage') | float(0) %}
           {% set hour = now().hour %}
           {% if hour >= 23 or hour < 6 %}
-          25
+          20
           {% elif sun_elev < 0 %}
-          40
+          32
           {% elif sun_elev < 15 %}
-          {{ (40 + (sun_elev * 2)) | int }}
+          {{ (32 + (sun_elev * 1.6)) | int }}
           {% else %}
-          {{ [70 + (cloud_cover / 100 * 20) | int, 100] | min }}
+          {{ [56 + (cloud_cover / 100 * 16) | int, 80] | min }}
           {% endif %}
 
   # Charlie's Presence with timeout fallback
