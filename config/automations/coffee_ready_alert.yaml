@@ -1,0 +1,20 @@
+id: "1765826628887"
+alias: Coffee ready alert
+description: >-
+  Send an alert to phone when Ember mug temperature reaches 3 degrees higher than target temperature
+triggers:
+  - trigger: template
+    value_template: >-
+      {{ states('sensor.ember_mug_e87720e9d7b9_current_temp') | float(0) >=
+         states('number.ember_mug_e87720e9d7b9_target_temp') | float(0) + 3 }}
+conditions:
+  - condition: state
+    entity_id: sensor.ember_mug_e87720e9d7b9_state
+    state: heating
+actions:
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "Coffee Ready!"
+      message: >-
+        Your coffee is ready! Current temp: {{ states('sensor.ember_mug_e87720e9d7b9_current_temp') | round(0) }}°F
+mode: single
