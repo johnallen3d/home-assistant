@@ -431,6 +431,18 @@
                   "entity": "sensor.ember_mug_e87720e9d7b9_state",
                   "layout": "minimal",
                   "mug_scale": 0.5
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Travel Mug",
+                  "icon": "mdi:coffee"
+                },
+                {
+                  "type": "custom:ember-mug-card",
+                  "entity": "sensor.ember_travel_mug_c2f5f790c51d_state",
+                  "layout": "minimal",
+                  "mug_scale": 0.5
                 }
               ]
             }
