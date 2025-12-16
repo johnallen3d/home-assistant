@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_media_controls",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "cards": [
+            {
+              "cards": [
+                {
+                  "card_type": "separator",
+                  "icon": "mdi:lightning-bolt",
+                  "name": "Quick Actions",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
+                  "sub_button": [
+                    {
+                      "entity": "script.tv_time",
+                      "icon": "mdi:television",
+                      "name": "TV Time",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.tv_time"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "scene.lights_out",
+                      "icon": "mdi:power-sleep",
+                      "name": "Lights Out",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.lights_out"
+                        }
+                      }
+                    }
+                  ],
+                  "type": "custom:bubble-card"
+                },
+                {
+                  "card_type": "separator",
+                  "icon": "mdi:apple",
+                  "name": "AppleTV",
+                  "styles": "ha-card { margin-top: 12px; }",
+                  "type": "custom:bubble-card"
+                },
+                {
+                  "collapsible_controls": false,
+                  "entity": "media_player.living_room",
+                  "fill_container": true,
+                  "media_controls": [
+                    "on_off",
+                    "play_pause_stop",
+                    "previous",
+                    "next"
+                  ],
+                  "show_volume_level": true,
+                  "type": "custom:mushroom-media-player-card",
+                  "use_media_info": true,
+                  "volume_controls": [
+                    "volume_buttons",
+                    "volume_set"
+                  ]
+                },
+                {
+                  "card_type": "separator",
+                  "icon": "mdi:television",
+                  "name": "LG TV",
+                  "styles": "ha-card { margin-top: 12px; }",
+                  "sub_button": [
+                    {
+                      "entity": "media_player.lg_webos_tv_oled65c3aua",
+                      "icon": "mdi:power",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ],
+                  "type": "custom:bubble-card"
+                },
+                {
+                  "collapsible_controls": false,
+                  "entity": "media_player.lg_webos_tv_oled65c3aua",
+                  "fill_container": true,
+                  "media_controls": [
+                    "on_off"
+                  ],
+                  "show_volume_level": true,
+                  "type": "custom:mushroom-media-player-card",
+                  "use_media_info": true,
+                  "volume_controls": [
+                    "volume_buttons",
+                    "volume_set"
+                  ]
+                },
+                {
+                  "card_type": "separator",
+                  "icon": "mdi:android",
+                  "name": "Superbox (Android TV)",
+                  "styles": "ha-card { margin-top: 12px; }",
+                  "sub_button": [
+                    {
+                      "entity": "media_player.superbox",
+                      "icon": "mdi:power",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ],
+                  "type": "custom:bubble-card"
+                },
+                {
+                  "collapsible_controls": false,
+                  "entity": "media_player.superbox",
+                  "fill_container": true,
+                  "media_controls": [
+                    "on_off",
+                    "play_pause_stop"
+                  ],
+                  "show_volume_level": true,
+                  "type": "custom:mushroom-media-player-card",
+                  "use_media_info": true,
+                  "volume_controls": [
+                    "volume_buttons"
+                  ]
+                },
+                {
+                  "card_type": "separator",
+                  "icon": "mdi:lightbulb-group",
+                  "name": "Living Room Lights",
+                  "styles": "ha-card { margin-top: 12px; }",
+                  "sub_button": [
+                    {
+                      "entity": "light.living_room_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ],
+                  "type": "custom:bubble-card"
+                },
+                {
+                  "button_type": "slider",
+                  "card_type": "button",
+                  "entity": "light.living_room_lights",
+                  "icon": "mdi:lightbulb-group",
+                  "name": "All Lights",
+                  "show_attribute": "brightness",
+                  "show_state": true,
+                  "type": "custom:bubble-card"
+                }
+              ],
+              "type": "vertical-stack"
+            }
+          ],
+          "icon": "mdi:remote-tv",
+          "path": "media",
+          "title": "Media",
+          "type": "panel"
+        }
+      ]
+    },
+    "id": "media_controls"
+  }
+}

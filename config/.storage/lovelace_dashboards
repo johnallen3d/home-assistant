@@ -31,15 +31,24 @@
         "mode": "storage",
         "url_path": "dashboard-bubbles"
       },
-      {
-        "id": "dashboard_desktop",
-        "show_in_sidebar": true,
-        "icon": "mdi:monitor",
-        "title": "Desktop",
-        "require_admin": false,
-        "mode": "storage",
-        "url_path": "dashboard-desktop"
-      }
+       {
+         "id": "dashboard_desktop",
+         "show_in_sidebar": true,
+         "icon": "mdi:monitor",
+         "title": "Desktop",
+         "require_admin": false,
+         "mode": "storage",
+         "url_path": "dashboard-desktop"
+       },
+       {
+         "id": "media_controls",
+         "url_path": "media-controls",
+         "title": "Media",
+         "require_admin": false,
+         "show_in_sidebar": true,
+         "icon": "mdi:remote-tv",
+         "mode": "storage"
+       }
     ]
   }
 }
