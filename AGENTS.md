@@ -51,7 +51,6 @@ This project has three layers of Home Assistant tooling:
    - Covers: reload vs restart decisions, dashboard JSON debugging, template testing
 
 3. **`just` commands** - Convenience wrappers (see `just --list`)
-   - `just sync` - Extract full config from server
    - `just config::deploy` - Upload configuration.yaml and restart
    - `just config::restart` - Restart HA core
 
