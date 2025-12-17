@@ -1,21 +1,21 @@
-# Kitchen Presence Lighting
-# Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
+# Charlie Meal Presence Lighting
+# Turns island light on/off based on Charlie Meal zone presence detection
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns lights off after 30s delay (unless presence returns)
+# On exit: Turns light off after 30s delay (unless presence returns)
 
-id: '1765490530767'
-alias: "Kitchen Presence Lighting"
-description: "Adaptive kitchen lights based on FP2 presence detection"
+id: '1765995078078'
+alias: "Charlie Meal Presence Lighting"
+description: "Adaptive island light based on Charlie Meal zone presence detection"
 mode: single
 
 triggers:
   - trigger: state
-    entity_id: binary_sensor.kitchen_presence_kitchen
+    entity_id: binary_sensor.charlie_meal
     to: "on"
     id: presence_on
   - trigger: state
-    entity_id: binary_sensor.kitchen_presence_kitchen
+    entity_id: binary_sensor.charlie_meal
     to: "off"
     id: presence_off
 
@@ -29,7 +29,7 @@ actions:
           - action: script.lights
             data:
               lights:
-                - light.kitchen_lights
+                - light.island_bulb
               night_mode: dim_warm
               night_brightness: 15
 
@@ -40,7 +40,7 @@ actions:
         sequence:
           - wait_for_trigger:
               - platform: state
-                entity_id: binary_sensor.kitchen_presence_kitchen
+                entity_id: binary_sensor.charlie_meal
                 to: "on"
             timeout: "00:00:30"
           - if:
@@ -49,6 +49,4 @@ actions:
             then:
               - action: light.turn_off
                 target:
-                  entity_id:
-                    - light.sink_bulb
-                    - light.hue_lightstrip_plus_1
+                  entity_id: light.island_bulb
