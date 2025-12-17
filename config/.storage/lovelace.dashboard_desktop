@@ -187,7 +187,7 @@
                           "card_type": "button",
                           "entity": "switch.kitchen_counter_switch",
                           "name": "Counter",
-                          "icon": "mdi:power-socket-us",
+                          "icon": "mdi:light-switch",
                           "button_type": "switch"
                         },
                         {
@@ -232,7 +232,7 @@
                       "cards": [
                         {
                           "type": "heading",
-                          "heading": "Bedrooms",
+                          "heading": "Dad's Bedroom",
                           "heading_style": "subtitle"
                         },
                         {
@@ -241,13 +241,15 @@
                           "entity": "light.bedroom_lights",
                           "name": "All",
                           "icon": "mdi:lightbulb-group",
-                          "button_type": "switch"
+                          "button_type": "slider",
+                          "show_state": true,
+                          "show_attribute": "brightness"
                         },
                         {
                           "type": "custom:bubble-card",
                           "card_type": "button",
                           "entity": "light.bedroom_lamp",
-                          "name": "Dad's Lamp",
+                          "name": "Bedroom Lamp",
                           "icon": "mdi:lamp",
                           "button_type": "slider",
                           "show_state": true,
@@ -264,6 +266,11 @@
                           "show_attribute": "brightness"
                         },
                         {
+                          "type": "heading",
+                          "heading": "Charlie's Bedroom",
+                          "heading_style": "subtitle"
+                        },
+                        {
                           "type": "custom:bubble-card",
                           "card_type": "button",
                           "entity": "light.charlie_s_shapes",
@@ -272,6 +279,14 @@
                           "button_type": "slider",
                           "show_state": true,
                           "show_attribute": "brightness"
+                        },
+                        {
+                          "type": "custom:bubble-card",
+                          "card_type": "button",
+                          "entity": "switch.sound_machine_outlet",
+                          "name": "Sound Machine",
+                          "icon": "mdi:speaker",
+                          "button_type": "switch"
                         },
                         {
                           "type": "heading",

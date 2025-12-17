@@ -269,7 +269,7 @@
                   "card_type": "button",
                   "entity": "switch.kitchen_counter_switch",
                   "name": "Counter",
-                  "icon": "mdi:power-socket-us",
+                  "icon": "mdi:light-switch",
                   "button_type": "switch"
                 },
                 {
