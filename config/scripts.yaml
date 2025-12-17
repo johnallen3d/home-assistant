@@ -232,8 +232,9 @@ tv_time:
         is_evening: "{{ not is_daytime and not is_late_night }}"
         # Warm amber - cozy without being distracting
         ambient_color: [255, 180, 107]
-        # Charlie presence - skip kitchen adjustments when he's home
+        # Charlie presence - skip kitchen adjustments when he's home or in Charlie Meal zone
         charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
+        charlie_meal_active: "{{ is_state('binary_sensor.charlie_meal', 'on') }}"
 
     # Always turn off glare-causing lights
     - action: light.turn_off
@@ -261,20 +262,38 @@ tv_time:
           sequence:
             - action: light.turn_off
               target:
-                entity_id: light.kitchen_lights
+                entity_id:
+                  - light.sink_bulb
+                  - light.hue_lightstrip_plus_1
               data:
                 transition: "{{ trans }}"
+            - if:
+                - condition: template
+                  value_template: "{{ not charlie_meal_active }}"
+              then:
+                - action: light.turn_off
+                  target:
+                    entity_id: light.island_bulb
+                  data:
+                    transition: "{{ trans }}"
 
         # Late night: Very dim, just the strip
         - conditions: "{{ is_late_night }}"
           sequence:
             - action: light.turn_off
               target:
-                entity_id:
-                  - light.island_bulb
-                  - light.sink_bulb
+                entity_id: light.sink_bulb
               data:
                 transition: "{{ trans }}"
+            - if:
+                - condition: template
+                  value_template: "{{ not charlie_meal_active }}"
+              then:
+                - action: light.turn_off
+                  target:
+                    entity_id: light.island_bulb
+                  data:
+                    transition: "{{ trans }}"
             - action: light.turn_on
               target:
                 entity_id: light.hue_lightstrip_plus_1
@@ -287,11 +306,24 @@ tv_time:
       default:
         - action: light.turn_on
           target:
-            entity_id: light.kitchen_lights
+            entity_id:
+              - light.sink_bulb
+              - light.hue_lightstrip_plus_1
           data:
             brightness_pct: 15
             rgb_color: "{{ ambient_color }}"
             transition: "{{ trans }}"
+        - if:
+            - condition: template
+              value_template: "{{ not charlie_meal_active }}"
+          then:
+            - action: light.turn_on
+              target:
+                entity_id: light.island_bulb
+              data:
+                brightness_pct: 15
+                rgb_color: "{{ ambient_color }}"
+                transition: "{{ trans }}"
 
 
 # =============================================================================

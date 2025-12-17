@@ -1,4 +1,4 @@
-id: '1732649000000'
+id: '1765997019747'
 alias: TV Time
 description: Adaptive ambient lighting when TV turns on. Adjusts based on time of day - no changes during daytime, dim ambient in evening, very dim late night.
 triggers:
