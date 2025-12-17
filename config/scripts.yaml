@@ -615,7 +615,7 @@ winding_down:
 
 arriving_home:
   alias: "Arriving Home"
-  description: "Welcoming adaptive lighting for arrival - kitchen and living room only"
+  description: "Welcoming adaptive lighting for arrival - kitchen only"
   icon: mdi:home-import-outline
   mode: single
   sequence:
@@ -644,14 +644,6 @@ arriving_home:
           sequence:
             - action: light.turn_on
               target:
-                entity_id:
-                  - light.living_room_light
-                  - light.living_room_overhead_light
-              data:
-                brightness_pct: 20
-                color_temp_kelvin: 3000
-            - action: light.turn_on
-              target:
                 entity_id: light.kitchen_lights
               data:
                 brightness_pct: 25
@@ -660,14 +652,6 @@ arriving_home:
         # Late night: Very dim warm
         - conditions: "{{ is_late_night }}"
           sequence:
-            - action: light.turn_on
-              target:
-                entity_id:
-                  - light.living_room_light
-                  - light.living_room_overhead_light
-              data:
-                brightness_pct: 10
-                color_temp_kelvin: 2200
             - action: light.turn_off
               target:
                 entity_id:
@@ -680,16 +664,8 @@ arriving_home:
                 brightness_pct: 10
                 color_temp_kelvin: 2200
 
-      # Evening (default): Warm adaptive in kitchen + living room
+      # Evening (default): Warm adaptive in kitchen
       default:
-        - action: light.turn_on
-          target:
-            entity_id:
-              - light.living_room_light
-              - light.living_room_overhead_light
-          data:
-            brightness_pct: "{{ chill_brightness }}"
-            color_temp_kelvin: "{{ chill_color_temp }}"
         - action: light.turn_on
           target:
             entity_id: light.kitchen_lights
