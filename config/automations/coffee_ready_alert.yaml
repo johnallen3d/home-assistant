@@ -13,4 +13,4 @@ actions:
       title: "Coffee Ready!"
       message: >-
         Your coffee is ready! Current temp: {{ states('sensor.ember_mug_e87720e9d7b9_current_temp') | round(0) }}°F
-mode: single
+mode: restart
