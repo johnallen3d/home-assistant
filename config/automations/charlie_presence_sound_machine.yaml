@@ -1,0 +1,22 @@
+id: '1766003135892'
+alias: "Charlie Presence Sound Machine Reset"
+description: "Reset sound machine outlet when Charlie leaves - toggle off then back on"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.charlie_s_presence
+    to: "off"
+    id: charlie_leaving
+
+conditions: []
+
+actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.sound_machine_outlet
+  - delay:
+      seconds: 3
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sound_machine_outlet

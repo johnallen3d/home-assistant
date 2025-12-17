@@ -233,7 +233,7 @@ tv_time:
         # Warm amber - cozy without being distracting
         ambient_color: [255, 180, 107]
         # Charlie presence - skip kitchen adjustments when he's home or in Charlie Meal zone
-        charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
+        charlie_is_home: "{{ is_state('input_boolean.charlie_s_presence', 'on') }}"
         charlie_meal_active: "{{ is_state('binary_sensor.charlie_meal', 'on') }}"
 
     # Always turn off glare-causing lights
@@ -424,7 +424,7 @@ good_morning:
         color_temp: >
           {% if sun_is_up %}3500 {% elif sun_is_rising %}2800 {% else %}2400{% endif %}
         # Charlie presence
-        charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
+        charlie_is_home: "{{ is_state('input_boolean.charlie_s_presence', 'on') }}"
 
     # Kitchen - only when sun is rising/up (presence handles dark mornings)
     - if:
@@ -580,7 +580,7 @@ winding_down:
         # Very warm color temp, capped at 2200K
         color_temp: 2200
         # Charlie presence
-        charlie_is_home: "{{ is_state('device_tracker.charlies_iphone', 'home') }}"
+        charlie_is_home: "{{ is_state('input_boolean.charlie_s_presence', 'on') }}"
 
     # Turn off task lighting
     - action: switch.turn_off
