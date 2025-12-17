@@ -1,5 +1,5 @@
-id: '1762785763071'
-name: Working
+id: '1734358800001'
+name: On Camera
 entities:
   light.island_bulb:
     state: 'off'
@@ -13,17 +13,17 @@ entities:
     state: 'off'
   light.bedroom_lamp:
     state: 'on'
-    brightness: 150
-    color_temp_kelvin: 3500
+    brightness: 255
+    color_temp_kelvin: 5076
   light.bedroom_overhead_left:
     state: 'on'
-    brightness: 150
-    color_temp_kelvin: 3500
+    brightness: 255
+    color_temp_kelvin: 5076
   light.bedroom_overhead_right:
     state: 'on'
-    brightness: 150
-    color_temp_kelvin: 3500
+    brightness: 255
+    color_temp_kelvin: 5076
   switch.kitchen_counter_switch:
     state: 'off'
-icon: mdi:laptop
+icon: mdi:camera
 metadata: {}

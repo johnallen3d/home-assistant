@@ -1,0 +1,25 @@
+id: '1765934015096'
+alias: 'Camera Active Lighting'
+description: 'Switch to "on camera" scene when camera is in use, return to "working" when camera is off'
+trigger:
+  - platform: state
+    entity_id: binary_sensor.m4_macbook_pro_camera_in_use
+action:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: binary_sensor.m4_macbook_pro_camera_in_use
+            state: 'on'
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.on_camera
+      - conditions:
+          - condition: state
+            entity_id: binary_sensor.m4_macbook_pro_camera_in_use
+            state: 'off'
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.working
+mode: single
