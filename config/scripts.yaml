@@ -874,3 +874,30 @@ charlie_eating:
           data:
             brightness_pct: "{{ brightness }}"
             color_temp_kelvin: "{{ color_temp }}"
+
+
+# =============================================================================
+# Charlie Presence Scripts
+# =============================================================================
+# Simple scripts to manually set Charlie's presence status.
+# Useful when phone tracking fails (e.g., phone turned off).
+
+charlies_home:
+  alias: "Charlie's Home"
+  description: "Mark Charlie as home"
+  icon: mdi:account-plus
+  mode: single
+  sequence:
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.charlie_s_presence
+
+charlies_away:
+  alias: "Charlie's Away"
+  description: "Mark Charlie as away"
+  icon: mdi:account-minus
+  mode: single
+  sequence:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.charlie_s_presence

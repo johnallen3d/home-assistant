@@ -61,6 +61,12 @@ group:
       - light.hue_lightstrip_plus_1
       - switch.kitchen_counter_switch
 
+input_boolean:
+  charlie_presence:
+    name: "Charlie's Presence"
+    icon: mdi:account
+    initial: false
+
 # Helpers
 input_number:
   bathroom_motion_timeout:
