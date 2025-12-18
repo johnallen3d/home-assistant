@@ -2,7 +2,10 @@
 # Turns island light on/off based on Charlie Meal zone presence detection
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns light off after 30s delay (unless presence returns)
+# On exit: Turns light off after 30s delay (unless presence returns in either zone)
+#
+# Note: Island light is shared with Kitchen Presence Lighting. Only turn off
+# if BOTH charlie_meal AND kitchen zones are clear.
 
 id: '1765995078078'
 alias: "Charlie Meal Presence Lighting"
@@ -33,7 +36,7 @@ actions:
               night_mode: dim_warm
               night_brightness: 15
 
-      # Presence cleared - turn off after 30s delay (unless presence returns)
+      # Presence cleared - turn off after 30s delay (unless presence returns to either zone)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -42,10 +45,16 @@ actions:
               - platform: state
                 entity_id: binary_sensor.charlie_meal
                 to: "on"
+              - platform: state
+                entity_id: binary_sensor.kitchen_presence_kitchen
+                to: "on"
             timeout: "00:00:30"
           - if:
               - condition: template
                 value_template: "{{ wait.trigger is none }}"
+              - condition: state
+                entity_id: binary_sensor.kitchen_presence_kitchen
+                state: "off"
             then:
               - action: light.turn_off
                 target:

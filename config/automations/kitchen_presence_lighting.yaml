@@ -2,7 +2,10 @@
 # Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns lights off after 30s delay (unless presence returns)
+# On exit: Turns lights off after 30s delay (unless presence returns to either zone)
+#
+# Note: Charlie Meal zone is inside Kitchen zone. The island light is managed
+# separately by the Charlie Meal automation - this one only controls sink/lightstrip.
 
 id: '1765490530767'
 alias: "Kitchen Presence Lighting"
@@ -33,7 +36,9 @@ actions:
               night_mode: dim_warm
               night_brightness: 15
 
-      # Presence cleared - turn off after 30s delay (unless presence returns)
+      # Presence cleared - turn off after 30s delay (unless presence returns to kitchen zone)
+      # Note: We only wait for kitchen zone, not charlie_meal. If someone is only in
+      # charlie_meal, the sink/lightstrip should turn off (island handled by other automation)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -47,6 +52,7 @@ actions:
               - condition: template
                 value_template: "{{ wait.trigger is none }}"
             then:
+              # Only turn off sink and lightstrip - island is managed by Charlie Meal automation
               - action: light.turn_off
                 target:
                   entity_id:
