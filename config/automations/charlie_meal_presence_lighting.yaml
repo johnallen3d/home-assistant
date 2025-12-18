@@ -1,11 +1,10 @@
 # Charlie Meal Presence Lighting
-# Turns island light on/off based on Charlie Meal zone presence detection
+# Turns island light on when Charlie enters the meal zone
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns light off after 30s delay (unless presence returns in either zone)
-#
-# Note: Island light is shared with Kitchen Presence Lighting. Only turn off
-# if BOTH charlie_meal AND kitchen zones are clear.
+# On exit: No action - kitchen automation handles turn-off since charlie_meal
+#          zone is inside kitchen zone (can't leave charlie_meal without
+#          either being in kitchen or leaving kitchen entirely)
 
 id: '1765995078078'
 alias: "Charlie Meal Presence Lighting"
@@ -16,46 +15,11 @@ triggers:
   - trigger: state
     entity_id: binary_sensor.charlie_meal
     to: "on"
-    id: presence_on
-  - trigger: state
-    entity_id: binary_sensor.charlie_meal
-    to: "off"
-    id: presence_off
 
 actions:
-  - choose:
-      # Presence detected - turn on with adaptive lighting
-      - conditions:
-          - condition: trigger
-            id: presence_on
-        sequence:
-          - action: script.lights
-            data:
-              lights:
-                - light.island_bulb
-              night_mode: dim_warm
-              night_brightness: 15
-
-      # Presence cleared - turn off after 30s delay (unless presence returns to either zone)
-      - conditions:
-          - condition: trigger
-            id: presence_off
-        sequence:
-          - wait_for_trigger:
-              - platform: state
-                entity_id: binary_sensor.charlie_meal
-                to: "on"
-              - platform: state
-                entity_id: binary_sensor.kitchen_presence_kitchen
-                to: "on"
-            timeout: "00:00:30"
-          - if:
-              - condition: template
-                value_template: "{{ wait.trigger is none }}"
-              - condition: state
-                entity_id: binary_sensor.kitchen_presence_kitchen
-                state: "off"
-            then:
-              - action: light.turn_off
-                target:
-                  entity_id: light.island_bulb
+  - action: script.lights
+    data:
+      lights:
+        - light.island_bulb
+      night_mode: dim_warm
+      night_brightness: 15

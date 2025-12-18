@@ -4,8 +4,10 @@
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
 # On exit: Turns lights off after 30s delay (unless presence returns to either zone)
 #
-# Note: Charlie Meal zone is inside Kitchen zone. The island light is managed
-# separately by the Charlie Meal automation - this one only controls sink/lightstrip.
+# Note: Charlie Meal zone is inside Kitchen zone. Island light is shared:
+# - Kitchen turns it ON (via kitchen_lights group)
+# - Kitchen turns it OFF only if charlie_meal is also clear
+# - Charlie Meal automation handles island when charlie_meal zone is active
 
 id: '1765490530767'
 alias: "Kitchen Presence Lighting"
@@ -36,9 +38,7 @@ actions:
               night_mode: dim_warm
               night_brightness: 15
 
-      # Presence cleared - turn off after 30s delay (unless presence returns to kitchen zone)
-      # Note: We only wait for kitchen zone, not charlie_meal. If someone is only in
-      # charlie_meal, the sink/lightstrip should turn off (island handled by other automation)
+      # Presence cleared - turn off after 30s delay (unless presence returns)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -52,9 +52,18 @@ actions:
               - condition: template
                 value_template: "{{ wait.trigger is none }}"
             then:
-              # Only turn off sink and lightstrip - island is managed by Charlie Meal automation
+              # Always turn off sink and lightstrip
               - action: light.turn_off
                 target:
                   entity_id:
                     - light.sink_bulb
                     - light.hue_lightstrip_plus_1
+              # Turn off island only if charlie_meal zone is also clear
+              - if:
+                  - condition: state
+                    entity_id: binary_sensor.charlie_meal
+                    state: "off"
+                then:
+                  - action: light.turn_off
+                    target:
+                      entity_id: light.island_bulb
