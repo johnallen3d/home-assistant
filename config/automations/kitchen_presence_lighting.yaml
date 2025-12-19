@@ -26,10 +26,14 @@ triggers:
 
 actions:
   - choose:
-      # Presence detected - turn on with adaptive lighting
+      # Presence detected - turn on with adaptive lighting (only if lights are off)
       - conditions:
           - condition: trigger
             id: presence_on
+          # Don't override if lights already on (e.g., cooking scene, manual setting)
+          - condition: state
+            entity_id: light.kitchen_lights
+            state: "off"
         sequence:
           - action: script.lights
             data:
