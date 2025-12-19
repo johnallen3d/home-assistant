@@ -30,17 +30,19 @@ actions:
       - conditions:
           - condition: trigger
             id: presence_on
-          # Don't override if lights already on (e.g., cooking scene, manual setting)
-          - condition: state
-            entity_id: light.kitchen_lights
-            state: "off"
         sequence:
-          - action: script.lights
-            data:
-              lights:
-                - light.kitchen_lights
-              night_mode: dim_warm
-              night_brightness: 15
+          # Only proceed if lights are actually off
+          - if:
+              - condition: state
+                entity_id: light.sink_bulb
+                state: "off"
+            then:
+              - action: script.lights
+                data:
+                  lights:
+                    - light.kitchen_lights
+                  night_mode: dim_warm
+                  night_brightness: 15
 
       # Presence cleared - turn off after 30s delay (unless presence returns)
       - conditions:
@@ -56,12 +58,15 @@ actions:
               - condition: template
                 value_template: "{{ wait.trigger is none }}"
             then:
-              # Always turn off sink and lightstrip
+              # Always turn off sink, lightstrip, and counter switch
               - action: light.turn_off
                 target:
                   entity_id:
                     - light.sink_bulb
                     - light.hue_lightstrip_plus_1
+              - action: switch.turn_off
+                target:
+                  entity_id: switch.kitchen_counter_switch
               # Turn off island only if charlie_meal zone is also clear
               - if:
                   - condition: state
