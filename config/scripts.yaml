@@ -904,3 +904,29 @@ charlies_away:
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.charlie_presence
+
+
+# =============================================================================
+# Lock Down - Bedtime security and shutdown
+# =============================================================================
+# Comprehensive bedtime routine: lock door, turn off lights and media.
+# Triggered by long-press of bedroom button.
+
+lock_down:
+  alias: "Lock Down"
+  description: "Bedtime lock down: lock door, turn off lights and media"
+  icon: mdi:shield-lock
+  mode: single
+  sequence:
+    - parallel:
+        - action: lock.lock
+          target:
+            entity_id: lock.nuki_smart_lock
+        - action: scene.turn_on
+          target:
+            entity_id: scene.lights_out
+        - action: media_player.turn_off
+          target:
+            entity_id:
+              - media_player.lg_webos_tv_oled65c3aua
+              - media_player.living_room
