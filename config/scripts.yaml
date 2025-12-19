@@ -232,8 +232,7 @@ tv_time:
         is_evening: "{{ not is_daytime and not is_late_night }}"
         # Warm amber - cozy without being distracting
         ambient_color: [255, 180, 107]
-        # Charlie presence - skip kitchen adjustments when he's home or in Charlie Meal zone
-        charlie_is_home: "{{ is_state('input_boolean.charlie_s_presence', 'on') }}"
+        # Charlie meal zone - protect island bulb when FP2 detects presence
         charlie_meal_active: "{{ is_state('binary_sensor.charlie_meal', 'on') }}"
 
     # Always turn off glare-causing lights
@@ -251,10 +250,6 @@ tv_time:
     - action: switch.turn_off
       target:
         entity_id: switch.kitchen_counter_switch
-
-    # Skip kitchen light adjustments when Charlie is home
-    - condition: template
-      value_template: "{{ not charlie_is_home }}"
 
     - choose:
         # Daytime: Turn off kitchen lights (no ambient needed, reduce distraction)
@@ -424,7 +419,7 @@ good_morning:
         color_temp: >
           {% if sun_is_up %}3500 {% elif sun_is_rising %}2800 {% else %}2400{% endif %}
         # Charlie presence
-        charlie_is_home: "{{ is_state('input_boolean.charlie_s_presence', 'on') }}"
+        charlie_is_home: "{{ is_state('input_boolean.charlie_presence', 'on') }}"
 
     # Kitchen - only when sun is rising/up (presence handles dark mornings)
     - if:
@@ -580,7 +575,7 @@ winding_down:
         # Very warm color temp, capped at 2200K
         color_temp: 2200
         # Charlie presence
-        charlie_is_home: "{{ is_state('input_boolean.charlie_s_presence', 'on') }}"
+        charlie_is_home: "{{ is_state('input_boolean.charlie_presence', 'on') }}"
 
     # Turn off task lighting
     - action: switch.turn_off
@@ -898,7 +893,7 @@ charlies_home:
   sequence:
     - action: input_boolean.turn_on
       target:
-        entity_id: input_boolean.charlie_s_presence
+        entity_id: input_boolean.charlie_presence
 
 charlies_away:
   alias: "Charlie's Away"
@@ -908,4 +903,4 @@ charlies_away:
   sequence:
     - action: input_boolean.turn_off
       target:
-        entity_id: input_boolean.charlie_s_presence
+        entity_id: input_boolean.charlie_presence

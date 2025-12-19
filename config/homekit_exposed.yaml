@@ -32,7 +32,7 @@ include_entities:
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
   - switch.sound_machine_outlet
-  - input_boolean.charlie_s_presence
+  - input_boolean.charlie_presence
   # Charlie presence scripts
   - script.charlies_home
   - script.charlies_away

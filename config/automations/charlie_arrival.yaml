@@ -1,0 +1,25 @@
+id: '1766153826832'
+alias: "Charlie Arrival"
+description: "Set up Charlie's room when he arrives - sound machine on and lights on"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.charlie_presence
+    to: "on"
+    id: charlie_arriving
+
+conditions: []
+
+actions:
+  # Ensure sound machine outlet is on
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sound_machine_outlet
+  # Turn on Nanoleaf shapes with adaptive lighting
+  - action: light.turn_on
+    target:
+      entity_id: light.charlie_s_shapes
+    data:
+      brightness_pct: "{{ states('sensor.adaptive_brightness') | int(50) }}"
+      color_temp_kelvin: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"

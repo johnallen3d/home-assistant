@@ -65,7 +65,6 @@ input_boolean:
   charlie_presence:
     name: "Charlie's Presence"
     icon: mdi:account
-    initial: false
 
 # Helpers
 input_number:
@@ -166,29 +165,4 @@ template:
           {{ [56 + (cloud_cover / 100 * 16) | int, 80] | min }}
           {% endif %}
 
-  # Charlie's Presence with timeout fallback
-  # Logic: Home if GPS says home AND updated recently. Away if WiFi says not_home/unavailable OR GPS is stale.
-  - binary_sensor:
-      - name: "Charlie Home"
-        unique_id: charlie_home
-        device_class: presence
-        icon: mdi:account
-        state: |
-          {% set gps = states('device_tracker.charlies_iphone_2') %}
-          {% set wifi = states('device_tracker.charlies_iphone') %}
-          {% set gps_last = states.device_tracker.charlies_iphone_2.last_updated | default(now()) %}
-          {% set gps_age_min = ((now() - gps_last).total_seconds() / 60) | int %}
-          {% set stale_threshold = 15 %}
-          {% if wifi in ['not_home', 'unavailable'] %}
-            false
-          {% elif gps == 'home' and gps_age_min < stale_threshold %}
-            true
-          {% else %}
-            false
-          {% endif %}
-        attributes:
-          gps_state: "{{ states('device_tracker.charlies_iphone_2') }}"
-          wifi_state: "{{ states('device_tracker.charlies_iphone') }}"
-          gps_age_minutes: |
-            {% set gps_last = states.device_tracker.charlies_iphone_2.last_updated | default(now()) %}
-            {{ ((now() - gps_last).total_seconds() / 60) | int }}
+
