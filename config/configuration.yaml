@@ -65,6 +65,9 @@ input_boolean:
   charlie_presence:
     name: "Charlie's Presence"
     icon: mdi:account
+  coffee_ready_notified:
+    name: "Coffee Ready Notified"
+    icon: mdi:coffee-outline
 
 # Helpers
 input_number:
