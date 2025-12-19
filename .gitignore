@@ -15,3 +15,7 @@ esphome/build/
 esphome/.esphome/
 esphome/main.py
 esphome/.gitignore
+
+# claude-code
+CLAUDE.md
+.claude/
