@@ -19,3 +19,6 @@ esphome/.gitignore
 # claude-code
 CLAUDE.md
 .claude/
+
+# bv (beads viewer) local config and caches
+.bv/
