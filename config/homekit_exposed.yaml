@@ -17,7 +17,6 @@ include_domains:
 include_entities:
   # Scenes (used on dashboards)
   - scene.lights_out
-  - scene.cooking
   - scene.shaving
   - scene.working
   # Scripts (adaptive lighting - used on dashboards)
@@ -26,13 +25,16 @@ include_entities:
   - script.eating
   - script.good_morning
   - script.kitchen_chill
+  - script.toggle_cooking
   - script.tv_time
   - script.winding_down
   # Switches (only useful ones, not camera/vacuum controls)
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
   - switch.sound_machine_outlet
+  # Helpers
   - input_boolean.charlie_presence
+  - input_boolean.cooking_mode
   # Charlie presence scripts
   - script.charlies_home
   - script.charlies_away

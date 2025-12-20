@@ -22,7 +22,6 @@ light.dad_s_overhead_lights: true
 
 # Scenes (static lighting presets)
 scene.alarm: true
-scene.cooking: true
 scene.lights_out: true
 scene.shaving: true
 scene.working: true
