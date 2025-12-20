@@ -68,6 +68,9 @@ input_boolean:
   coffee_ready_notified:
     name: "Coffee Ready Notified"
     icon: mdi:coffee-outline
+  cooking_mode:
+    name: "Cooking Mode"
+    icon: mdi:chef-hat
 
 # Helpers
 input_number:

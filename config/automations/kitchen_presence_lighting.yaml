@@ -2,12 +2,15 @@
 # Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns lights off after 30s delay (unless presence returns to either zone)
+# On exit: Turns lights off after 30s delay (unless presence returns or cooking_mode is active)
 #
 # Note: Charlie Meal zone is inside Kitchen zone. Island light is shared:
 # - Kitchen turns it ON (via kitchen_lights group)
 # - Kitchen turns it OFF only if charlie_meal is also clear
 # - Charlie Meal automation handles island when charlie_meal zone is active
+#
+# Cooking Mode: When input_boolean.cooking_mode is ON, lights are NOT turned off.
+# This protects against the FP2 coverage gap at the oven.
 
 id: '1765490530767'
 alias: "Kitchen Presence Lighting"
@@ -44,11 +47,15 @@ actions:
                   night_mode: dim_warm
                   night_brightness: 15
 
-      # Presence cleared - turn off after 30s delay (unless presence returns)
+      # Presence cleared - turn off after 30s delay (unless presence returns or cooking_mode is on)
       - conditions:
           - condition: trigger
             id: presence_off
         sequence:
+          # If cooking_mode is on, don't turn off lights (oven coverage gap protection)
+          - condition: state
+            entity_id: input_boolean.cooking_mode
+            state: "off"
           - wait_for_trigger:
               - platform: state
                 entity_id: binary_sensor.kitchen_presence_kitchen

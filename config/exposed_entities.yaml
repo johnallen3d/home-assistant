@@ -34,11 +34,13 @@ script.charlie_eating: true
 script.eating: true
 script.good_morning: true
 script.kitchen_chill: true
+script.toggle_cooking: true
 script.tv_time: true
 script.winding_down: true
 
 # Helpers
 input_boolean.charlie_presence: true
+input_boolean.cooking_mode: true
 
 # Charlie presence scripts
 script.charlies_home: true

@@ -7,27 +7,12 @@ triggers:
 conditions: []
 actions:
   - choose:
+      # Single press: Toggle cooking mode (scene + helper that protects from auto-off)
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_1'' }}'
         sequence:
-          - choose:
-              - conditions:
-                  - condition: state
-                    entity_id: group.kitchen_all
-                    state: 'off'
-                sequence:
-                  - action: scene.turn_on
-                    target:
-                      entity_id: scene.cooking
-              - conditions:
-                  - condition: state
-                    entity_id: group.kitchen_all
-                    state: 'on'
-                sequence:
-                  - action: homeassistant.turn_off
-                    target:
-                      entity_id: group.kitchen_all
+          - action: script.toggle_cooking
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.smart_button_button'', ''event_type'') == ''multi_press_2'' }}'
