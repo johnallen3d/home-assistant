@@ -14,9 +14,7 @@ triggers:
     to:
       - 'off'
     for:
-      hours: 0
-      minutes: 2
-      seconds: 0
+      seconds: "{{ states('input_number.presence_delay') | int(5) }}"
     trigger: state
 actions:
   - choose:

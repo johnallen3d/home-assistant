@@ -2,7 +2,7 @@
 # Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns lights off after 30s delay (unless presence returns or cooking_mode is active)
+# On exit: Turns lights off after presence_delay seconds (unless presence returns or cooking_mode is active)
 #
 # Note: Charlie Meal zone is inside Kitchen zone. Island light is shared:
 # - Kitchen turns it ON (via kitchen_lights group)
@@ -47,7 +47,7 @@ actions:
                   night_mode: dim_warm
                   night_brightness: 15
 
-      # Presence cleared - turn off after 30s delay (unless presence returns or cooking_mode is on)
+      # Presence cleared - turn off after presence_delay seconds (unless presence returns or cooking_mode is on)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -57,10 +57,11 @@ actions:
             entity_id: input_boolean.cooking_mode
             state: "off"
           - wait_for_trigger:
-              - platform: state
+              - trigger: state
                 entity_id: binary_sensor.kitchen_presence_kitchen
                 to: "on"
-            timeout: "00:00:30"
+            timeout:
+              seconds: "{{ states('input_number.presence_delay') | int(5) }}"
           - if:
               - condition: template
                 value_template: "{{ wait.trigger is none }}"
