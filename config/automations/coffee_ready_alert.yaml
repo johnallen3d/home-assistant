@@ -4,16 +4,13 @@ description: >-
   Notify once when coffee enters the drinkable zone (target ±3°F).
   Uses input_boolean.coffee_ready_notified to prevent repeated alerts.
 triggers:
-  # Trigger when cooling down into zone from above (hot coffee cooling)
-  - trigger: numeric_state
-    entity_id: sensor.ember_mug_e87720e9d7b9_current_temp
-    below: "{{ states('number.ember_mug_e87720e9d7b9_target_temp') | float + 3 }}"
-    id: cooling
-  # Trigger when heating up into zone from below (cold coffee warming)
-  - trigger: numeric_state
-    entity_id: sensor.ember_mug_e87720e9d7b9_current_temp
-    above: "{{ states('number.ember_mug_e87720e9d7b9_target_temp') | float - 3 }}"
-    id: heating
+  # Trigger when coffee enters the drinkable zone (target ±3°F)
+  # Template triggers fire when result changes from false to true
+  - trigger: template
+    value_template: >-
+      {% set current = states('sensor.ember_mug_e87720e9d7b9_current_temp') | float(0) %}
+      {% set target = states('number.ember_mug_e87720e9d7b9_target_temp') | float(0) %}
+      {{ (target - 3) <= current <= (target + 3) }}
 conditions:
   # Haven't already notified for this cup
   - condition: state
@@ -47,10 +44,5 @@ actions:
   - action: notify.mobile_app_john_allens_iphone
     data:
       title: "☕ Coffee Ready!"
-      message: >-
-        {% if trigger.id == 'cooling' %}
-        Cooled to drinking temp ({{ states('sensor.ember_mug_e87720e9d7b9_current_temp') | round(0) }}°F)
-        {% else %}
-        Warmed to drinking temp ({{ states('sensor.ember_mug_e87720e9d7b9_current_temp') | round(0) }}°F)
-        {% endif %}
+      message: "Ready at {{ states('sensor.ember_mug_e87720e9d7b9_current_temp') | round(0) }}°F"
 mode: single
