@@ -35,6 +35,8 @@ include_entities:
   # Helpers
   - input_boolean.charlie_presence
   - input_boolean.cooking_mode
+  - input_boolean.meditation_mode
+  - script.toggle_meditation
   # Charlie presence scripts
   - script.charlies_home
   - script.charlies_away

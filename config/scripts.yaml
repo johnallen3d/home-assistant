@@ -50,6 +50,91 @@ toggle_cooking:
 
 
 # =============================================================================
+# Meditation Mode Toggle
+# =============================================================================
+# Toggles meditation mode. When active, creates a calm environment for meditation
+# by turning off lights and disabling presence automation.
+#
+# Behavior:
+#   - If meditation_mode OFF: Turn off bedroom, bathroom, living room, kitchen
+#     lights (except island if someone is in meal zone), disable living room
+#     presence automation
+#   - If meditation_mode ON: Turn off meditation_mode, re-enable living room
+#     presence automation
+#
+# Use Cases:
+#   - Voice command: "meditation" or "meditation mode"
+
+toggle_meditation:
+  alias: "Toggle Meditation"
+  description: "Toggle meditation mode - dims environment for meditation"
+  icon: mdi:meditation
+  mode: single
+  sequence:
+    - choose:
+        # Meditation mode is currently OFF -> turn it ON
+        - conditions:
+            - condition: state
+              entity_id: input_boolean.meditation_mode
+              state: "off"
+          sequence:
+            - action: input_boolean.turn_on
+              target:
+                entity_id: input_boolean.meditation_mode
+            # Turn off lights in dad's bedroom
+            - action: light.turn_off
+              target:
+                entity_id: light.bedroom_lights
+            # Turn off lights in dad's bathroom
+            - action: light.turn_off
+              target:
+                entity_id: light.bathroom_lights
+            # Turn off lights in living room
+            - action: light.turn_off
+              target:
+                entity_id: light.living_room_lights
+            # Turn off kitchen lights, but keep island if presence in meal zone
+            - choose:
+                - conditions:
+                    - condition: state
+                      entity_id: binary_sensor.charlie_meal
+                      state: "on"
+                  sequence:
+                    # Meal zone active - turn off everything except island bulb
+                    - action: light.turn_off
+                      target:
+                        entity_id:
+                          - light.sink_bulb
+                          - light.hue_lightstrip_plus_1
+                    - action: switch.turn_off
+                      target:
+                        entity_id: switch.kitchen_counter_switch
+              default:
+                # No meal zone presence - turn off all kitchen lights
+                - action: homeassistant.turn_off
+                  target:
+                    entity_id: group.kitchen_all
+            # Disable living room presence automation
+            - action: automation.turn_off
+              target:
+                entity_id: automation.living_room_presence_lighting
+
+        # Meditation mode is currently ON -> turn it OFF
+        - conditions:
+            - condition: state
+              entity_id: input_boolean.meditation_mode
+              state: "on"
+          sequence:
+            - action: input_boolean.turn_off
+              target:
+                entity_id: input_boolean.meditation_mode
+            # Re-enable living room presence automation
+            - action: automation.turn_on
+              target:
+                entity_id: automation.living_room_presence_lighting
+
+
+# =============================================================================
 # Adaptive Lighting - General Purpose
 # =============================================================================
 # Uses template sensors for brightness/color temp based on sun position,
