@@ -1,0 +1,14 @@
+id: "1766336368665"
+alias: "Airversa Departure"
+description: >-
+  Turn off air purifier when Dad leaves home.
+triggers:
+  - trigger: zone
+    entity_id: person.john_allen
+    zone: zone.home
+    event: leave
+actions:
+  - action: fan.turn_off
+    target:
+      entity_id: fan.airversa_ap2_1120_airpurifier
+mode: single

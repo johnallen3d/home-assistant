@@ -125,6 +125,11 @@ input_datetime:
     has_time: true
     icon: mdi:shield-lock-open
     initial: "07:00:00"
+  airversa_last_purge:
+    name: Airversa Last Purge
+    has_date: true
+    has_time: true
+    icon: mdi:air-purifier
 
 # Adaptive Lighting Template Sensors
 # Color temp: 2200K (night) -> 2400K (below horizon) -> up to 4500K (midday)

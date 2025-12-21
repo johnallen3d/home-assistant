@@ -1038,3 +1038,51 @@ lock_down:
             entity_id:
               - media_player.lg_webos_tv_oled65c3aua
               - media_player.living_room
+
+
+# =============================================================================
+# Airversa Purge - Run max fan speed purge cycle
+# =============================================================================
+# Runs the air purifier at max fan speed (100%) for 15 minutes to quickly
+# clean the air, then returns to automatic mode.
+#
+# Used by arrival automation to clean air after returning home.
+# Updates last_purge timestamp to enable 12-hour debounce.
+
+airversa_purge:
+  alias: "Airversa Purge"
+  description: "Run max fan for 15 min then back to auto"
+  icon: mdi:air-purifier
+  mode: single
+  sequence:
+    # Record purge start time
+    - action: input_datetime.set_datetime
+      target:
+        entity_id: input_datetime.airversa_last_purge
+      data:
+        datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
+
+    # Set to manual mode
+    - action: select.select_option
+      target:
+        entity_id: select.airversa_ap2_1120_air_purifier_mode
+      data:
+        option: manual
+
+    # Set fan to max (100%)
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.airversa_ap2_1120_airpurifier
+      data:
+        percentage: 100
+
+    # Wait 15 minutes
+    - delay:
+        minutes: 15
+
+    # Return to automatic mode
+    - action: select.select_option
+      target:
+        entity_id: select.airversa_ap2_1120_air_purifier_mode
+      data:
+        option: automatic
