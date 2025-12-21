@@ -1,0 +1,20 @@
+id: "1766335134882"
+alias: "Charlie Shapes Watchdog"
+description: >-
+  Enforce shapes stay off when Charlie is away. Catches cases where
+  the light restores to 'on' after a network reconnect.
+triggers:
+  - trigger: state
+    entity_id: light.charlie_s_shapes
+    to: "on"
+conditions:
+  - condition: state
+    entity_id: input_boolean.charlie_presence
+    state: "off"
+actions:
+  - delay:
+      seconds: 2
+  - action: light.turn_off
+    target:
+      entity_id: light.charlie_s_shapes
+mode: single
