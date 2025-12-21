@@ -3,50 +3,24 @@
 # =============================================================================
 # Cooking Mode Toggle
 # =============================================================================
-# Toggles cooking mode for the kitchen. When cooking mode is active, the
-# kitchen presence automation will not turn off the lights when you leave
-# the detection zone (useful when standing at the oven which has a coverage gap).
+# Simple toggle for cooking mode. The actual lighting logic is handled by
+# automation.cooking_mode_changed which reacts to the boolean state.
 #
-# Behavior:
-#   - If cooking_mode OFF: Activate cooking scene + enable cooking_mode
-#   - If cooking_mode ON: Turn off cooking_mode + turn off kitchen lights
-#
-# Use Cases:
+# This script exists for:
 #   - Kitchen button single press
-#   - Voice command: "cooking mode"
+#   - Voice command backup: "toggle cooking"
+#
+# Preferred interaction: Use input_boolean.cooking_mode directly (shows state)
 
 toggle_cooking:
   alias: "Toggle Cooking"
-  description: "Toggle cooking mode - locks kitchen lights on while cooking"
+  description: "Toggle cooking mode boolean"
   icon: mdi:chef-hat
   mode: single
   sequence:
-    - choose:
-        # Cooking mode is currently OFF -> turn it ON
-        - conditions:
-            - condition: state
-              entity_id: input_boolean.cooking_mode
-              state: "off"
-          sequence:
-            - action: input_boolean.turn_on
-              target:
-                entity_id: input_boolean.cooking_mode
-            - action: scene.turn_on
-              target:
-                entity_id: scene.cooking
-
-        # Cooking mode is currently ON -> turn it OFF
-        - conditions:
-            - condition: state
-              entity_id: input_boolean.cooking_mode
-              state: "on"
-          sequence:
-            - action: input_boolean.turn_off
-              target:
-                entity_id: input_boolean.cooking_mode
-            - action: homeassistant.turn_off
-              target:
-                entity_id: group.kitchen_all
+    - action: input_boolean.toggle
+      target:
+        entity_id: input_boolean.cooking_mode
 
 
 # =============================================================================

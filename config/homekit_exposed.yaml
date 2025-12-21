@@ -25,14 +25,14 @@ include_entities:
   - script.eating
   - script.good_morning
   - script.kitchen_chill
-  - script.toggle_cooking
   - script.tv_time
   - script.winding_down
+  # Note: toggle_cooking removed - use input_boolean.cooking_mode instead (shows state)
   # Switches (only useful ones, not camera/vacuum controls)
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
   - switch.sound_machine_outlet
-  # Helpers
+  # Helpers (booleans show as switches with ON/OFF state)
   - input_boolean.charlie_presence
   - input_boolean.cooking_mode
   - input_boolean.meditation_mode

@@ -1,0 +1,87 @@
+# Cooking Mode State Handler
+# Reacts to cooking_mode boolean changes to control kitchen lighting.
+#
+# The boolean (input_boolean.cooking_mode) is the user-facing switch:
+# - Exposed to HomeKit as a switch (shows ON/OFF state)
+# - Visible on dashboards as a toggle
+#
+# This automation handles the lighting logic:
+# - ON: Activate cooking scene (bright task lighting)
+# - OFF: Check presence and turn off lights appropriately
+#   - If presence detected: lights stay on
+#   - If no presence: wait presence_delay, then turn off (like presence automation)
+#
+# Note: When cooking_mode is ON, kitchen_presence_lighting automation
+# won't turn off lights (protects against FP2 oven coverage gap).
+
+id: '1766328476431'
+alias: "Cooking Mode Changed"
+description: "Handle cooking mode state changes - activate scene or check presence for off"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.cooking_mode
+    to: "on"
+    id: cooking_on
+  - trigger: state
+    entity_id: input_boolean.cooking_mode
+    to: "off"
+    id: cooking_off
+
+actions:
+  - choose:
+      # Cooking mode turned ON - activate cooking scene
+      - conditions:
+          - condition: trigger
+            id: cooking_on
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.cooking
+
+      # Cooking mode turned OFF - check presence for light control
+      - conditions:
+          - condition: trigger
+            id: cooking_off
+        sequence:
+          - choose:
+              # Kitchen presence detected - lights stay on
+              - conditions:
+                  - condition: state
+                    entity_id: binary_sensor.kitchen_presence_kitchen
+                    state: "on"
+                sequence: []
+              # Charlie meal zone active - keep island on, turn off rest
+              - conditions:
+                  - condition: state
+                    entity_id: binary_sensor.charlie_meal
+                    state: "on"
+                sequence:
+                  - action: light.turn_off
+                    target:
+                      entity_id:
+                        - light.sink_bulb
+                        - light.hue_lightstrip_plus_1
+                  - action: switch.turn_off
+                    target:
+                      entity_id: switch.kitchen_counter_switch
+            # No presence detected - wait for presence_delay before turning off
+            # This gives time to walk into detection zone after toggling
+            default:
+              - wait_for_trigger:
+                  - trigger: state
+                    entity_id:
+                      - binary_sensor.kitchen_presence_kitchen
+                      - binary_sensor.charlie_meal
+                    to: "on"
+                timeout:
+                  seconds: "{{ states('input_number.presence_delay') | int(5) }}"
+              # Only turn off if no presence detected during wait
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger is none }}"
+                then:
+                  - action: homeassistant.turn_off
+                    target:
+                      entity_id: group.kitchen_all
