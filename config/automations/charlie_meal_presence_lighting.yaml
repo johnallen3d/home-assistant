@@ -5,6 +5,8 @@
 # On exit: No action - kitchen automation handles turn-off since charlie_meal
 #          zone is inside kitchen zone (can't leave charlie_meal without
 #          either being in kitchen or leaving kitchen entirely)
+#
+# Note: Skips if cooking_mode is on (cooking takes priority)
 
 id: '1765995078078'
 alias: "Charlie Meal Presence Lighting"
@@ -15,6 +17,11 @@ triggers:
   - trigger: state
     entity_id: binary_sensor.charlie_meal
     to: "on"
+
+conditions:
+  - condition: state
+    entity_id: input_boolean.cooking_mode
+    state: "off"
 
 actions:
   - action: script.lights
