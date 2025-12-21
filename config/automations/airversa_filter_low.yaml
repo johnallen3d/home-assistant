@@ -1,0 +1,15 @@
+id: "1766334401338"
+alias: "Airversa Filter Low"
+description: >-
+  Notify when Airversa air purifier filter drops below 10% lifetime.
+  Triggers once when crossing the threshold.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.airversa_ap2_1120_filter_lifetime
+    below: 10
+actions:
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "🌬️ Air Purifier Filter Low"
+      message: "Airversa filter at {{ states('sensor.airversa_ap2_1120_filter_lifetime') | round(0) }}% - time to order a replacement"
+mode: single
