@@ -292,11 +292,13 @@ bd sync               # Commit and push changes
 ```bash
 git status              # Check what changed
 git add <files>         # Stage code changes
-bd sync                 # Commit beads changes
-git commit -m "..."     # Commit code
-bd sync                 # Commit any new beads changes
+git commit -m "..."     # Commit code BEFORE bd sync
+bd sync                 # Sync beads (pulls, which fails with staged changes)
 git push                # Push to remote
 ```
+
+**IMPORTANT:** Always `git commit` before `bd sync`. The sync command pulls from remote,
+which fails if you have staged but uncommitted changes.
 
 ### Best Practices
 
