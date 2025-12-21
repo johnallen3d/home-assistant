@@ -1,0 +1,52 @@
+id: "1766343502957"
+alias: "Charlie Shapes Time-Based Effects"
+description: >-
+  Sets different effects on Charlie's shapes based on time of day
+  when Charlie is home and the light is on.
+triggers:
+  - trigger: sun
+    event: sunset
+    id: sunset
+  - trigger: time
+    at: "07:00:00"
+    id: morning
+  - trigger: time
+    at: "12:00:00"
+    id: noon
+conditions:
+  - condition: state
+    entity_id: input_boolean.charlie_presence
+    state: "on"
+  - condition: state
+    entity_id: light.charlie_s_shapes
+    state: "on"
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: sunset
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.charlie_s_shapes
+            data:
+              effect: Sundown
+      - conditions:
+          - condition: trigger
+            id: morning
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.charlie_s_shapes
+            data:
+              effect: Morning Sky
+      - conditions:
+          - condition: trigger
+            id: noon
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.charlie_s_shapes
+            data:
+              effect: Hip Hop
+mode: single
