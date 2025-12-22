@@ -9,9 +9,9 @@
 #   just config::check-homekit    - Dry run, show what would change
 
 # Domains to include (all entities in these domains are exposed)
+# Note: lock domain removed - Nuki lock is exposed directly via Matter fabric sharing
 include_domains:
   - light
-  - lock
 
 # Specific entities to include (from domains NOT in include_domains)
 include_entities:
