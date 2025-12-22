@@ -282,6 +282,19 @@
                       "tap_action": {
                         "action": "toggle"
                       }
+                    },
+                    {
+                      "entity": "scene.working",
+                      "icon": "mdi:laptop",
+                      "name": "Working",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.working"
+                        }
+                      }
                     }
                   ]
                 },

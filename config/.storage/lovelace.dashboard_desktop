@@ -21,7 +21,7 @@
                 },
                 {
                   "type": "grid",
-                  "columns": 9,
+                  "columns": 10,
                   "square": false,
                   "cards": [
                     {
@@ -66,6 +66,17 @@
                         "action": "call-service",
                         "service": "script.turn_on",
                         "target": { "entity_id": "script.winding_down" }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "entity": "scene.working",
+                      "name": "Working",
+                      "icon": "mdi:laptop",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": { "entity_id": "scene.working" }
                       }
                     },
                     {
