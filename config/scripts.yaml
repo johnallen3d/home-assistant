@@ -1086,3 +1086,36 @@ airversa_purge:
         entity_id: select.airversa_ap2_1120_air_purifier_mode
       data:
         option: automatic
+
+
+# =============================================================================
+# Clean Charlie's Room - Vacuum Charlie's bedroom, bathroom, and closet
+# =============================================================================
+# Sends the Roborock vacuum to clean Charlie's areas.
+#
+# Roborock room segment mapping (roborock.get_maps):
+#   16: Dad's Closet
+#   17: Laundry
+#   18: Charlie's Closet
+#   19: Kitchen
+#   20: Charlie's Bathroom
+#   21: Charlie's Bedroom
+#   22: Living Room
+#   23: Dad's Bedroom
+#   24: Dad's Bathroom
+
+clean_charlies_room:
+  alias: "Clean Charlie's Room"
+  description: "Vacuum Charlie's bedroom, bathroom, and closet"
+  icon: mdi:robot-vacuum
+  mode: single
+  sequence:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_q5_max
+      data:
+        command: app_segment_clean
+        params:
+          - 21  # Charlie's Bedroom
+          - 20  # Charlie's Bathroom
+          - 18  # Charlie's Closet
