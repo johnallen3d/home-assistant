@@ -1119,3 +1119,24 @@ clean_charlies_room:
           - 21  # Charlie's Bedroom
           - 20  # Charlie's Bathroom
           - 18  # Charlie's Closet
+
+
+# =============================================================================
+# Done Shaving - Vacuum Dad's Bathroom
+# =============================================================================
+# Trigger after shaving to clean up hair clippings from the bathroom floor.
+# Sends the Roborock vacuum to clean Dad's bathroom only.
+
+done_shaving:
+  alias: "Done Shaving"
+  description: "Vacuum Dad's bathroom after shaving"
+  icon: mdi:face-man-shimmer
+  mode: single
+  sequence:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_q5_max
+      data:
+        command: app_segment_clean
+        params:
+          - 24  # Dad's Bathroom

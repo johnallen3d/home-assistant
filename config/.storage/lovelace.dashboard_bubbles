@@ -206,7 +206,9 @@
                       "icon": "mdi:rotate-3d-variant",
                       "name": "Anim",
                       "show_name": true,
-                      "tap_action": { "action": "toggle" }
+                      "tap_action": {
+                        "action": "toggle"
+                      }
                     }
                   ]
                 },
@@ -355,6 +357,19 @@
                       "entity": "sensor.bathroom_presence_sensor_temperature",
                       "show_name": false,
                       "show_state": true
+                    },
+                    {
+                      "entity": "script.done_shaving",
+                      "icon": "mdi:face-man-shimmer",
+                      "name": "Shave",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.done_shaving"
+                        }
+                      }
                     }
                   ]
                 },
