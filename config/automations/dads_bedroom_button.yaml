@@ -30,7 +30,7 @@ actions:
           - condition: template
             value_template: '{{ state_attr(''event.bedside_button_button'', ''event_type'') == ''multi_press_2'' }}'
         sequence:
-          - action: script.bedroom_lights
+          - action: script.bedroom_sunrise
       - conditions:
           - condition: template
             value_template: '{{ state_attr(''event.bedside_button_button'', ''event_type'') == ''long_press'' }}'
