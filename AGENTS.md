@@ -226,6 +226,45 @@ Presence automations (kitchen, living room) also use these values.
 - If night mode is too dim, increase the `hour >= 23 or hour < 6` value
 - The ramp multiplier (currently `× 2`) controls how quickly brightness increases with sun elevation
 
+## External Network Monitoring (pi-01)
+
+The pi-cielo project on pi-01 runs a network outage detector that monitors connectivity to key network infrastructure. This can be useful for correlating Home Assistant device availability issues with network outages.
+
+### Outage Detector Service
+
+**Location**: pi-01 (`ssh pi@pi-01.local`)
+
+| Command | Description |
+|---------|-------------|
+| `ssh pi@pi-01.local "systemctl status outage-detector"` | Service status |
+| `ssh pi@pi-01.local "journalctl -u outage-detector -f"` | Live logs |
+| `ssh pi@pi-01.local "journalctl -u outage-detector --since '1 hour ago'"` | Recent history |
+
+**Script**: `/opt/outage-detector/outage_detector.py`
+**Data**: `/var/lib/outage-detector/`
+
+### Monitored Endpoints
+
+| Endpoint | IP | Purpose |
+|----------|-----|---------|
+| tplink_router | 192.168.0.1 | Primary router |
+| att_gateway | 192.168.1.254 | ISP gateway |
+| internet | 8.8.8.8 | External connectivity |
+
+The detector pings each endpoint every 5 seconds and logs when connectivity is lost/restored, including outage duration.
+
+### Correlation with Home Assistant
+
+When investigating device unavailability in HA:
+1. Note the timestamp of unavailable states
+2. Check outage detector logs for the same window
+3. If all three endpoints were down, it's a network issue (not device-specific)
+4. TP-Link router outages may cause brief HA device disconnections
+
+**Related project**: `~/dev/src/playground/pi-cielo/` (see `docs/network-outage-*.md` for investigation examples)
+
+---
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below.
