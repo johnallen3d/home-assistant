@@ -74,6 +74,9 @@ input_boolean:
   meditation_mode:
     name: "Meditation Mode"
     icon: mdi:meditation
+  alarm_enabled:
+    name: "Alarm Enabled"
+    icon: mdi:alarm-light
 
 # Helpers
 input_number:
@@ -95,12 +98,6 @@ input_number:
     initial: 11
 
 input_datetime:
-  potty_time:
-    name: Potty Time
-    has_date: false
-    has_time: true
-    icon: mdi:clock-outline
-    initial: "02:30:00"
   daytime_start:
     name: Daytime Start
     has_date: false
@@ -113,18 +110,6 @@ input_datetime:
     has_time: true
     icon: mdi:weather-sunset-down
     initial: "23:00:00"
-  alarm_window_start:
-    name: Alarm Window Start
-    has_date: false
-    has_time: true
-    icon: mdi:shield-lock
-    initial: "20:00:00"
-  alarm_window_end:
-    name: Alarm Window End
-    has_date: false
-    has_time: true
-    icon: mdi:shield-lock-open
-    initial: "07:00:00"
   airversa_last_purge:
     name: Airversa Last Purge
     has_date: true

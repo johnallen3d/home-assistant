@@ -257,13 +257,16 @@ lights:
 # Room-Specific Shortcuts (optional convenience wrappers)
 # =============================================================================
 
-# Bedroom Sunrise - Hue sunrise effect on all bedroom lights
+# Bedroom Sunrise - Hue sunrise effect on all bedroom lights + disable alarm
 bedroom_sunrise:
   alias: "Bedroom Sunrise"
-  description: "Activate sunrise effect on bedroom lights"
+  description: "Activate sunrise effect on bedroom lights and disable alarm"
   icon: mdi:weather-sunset-up
   mode: single
   sequence:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.alarm_enabled
     - action: light.turn_on
       target:
         entity_id: light.bedroom_lamp
@@ -298,23 +301,33 @@ bedroom_lights:
         night_brightness: 10
 
 
-# Bathroom - uses dim pink RGB at night, only strip light
+# Bathroom - uses dim pink RGB when alarm enabled, adaptive otherwise
 bathroom_lights:
   alias: "Bathroom Lights"
-  description: "Bathroom adaptive lighting with pink night mode"
+  description: "Bathroom adaptive lighting with pink mode when alarm enabled"
   icon: mdi:toilet
   mode: single
   sequence:
-    - action: script.lights
-      data:
-        lights:
-          - light.bathroom_lamp
-          - light.bathroom_strip
-        night_mode: dim_rgb
-        night_lights:
-          - light.bathroom_strip
-        night_rgb: [255, 159, 242]
-        night_brightness: 10
+    - choose:
+        # Alarm enabled: dim pink on strip only
+        - conditions:
+            - condition: state
+              entity_id: input_boolean.alarm_enabled
+              state: "on"
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.bathroom_strip
+              data:
+                brightness_pct: 10
+                rgb_color: [255, 159, 242]
+      # Alarm disabled: adaptive lighting on both
+      default:
+        - action: script.lights
+          data:
+            lights:
+              - light.bathroom_lamp
+              - light.bathroom_strip
 
 
 # =============================================================================
@@ -1046,7 +1059,7 @@ charlies_away:
 
 lock_down:
   alias: "Lock Down"
-  description: "Bedtime lock down: lock door, turn off lights and media"
+  description: "Bedtime lock down: lock door, turn off all lights, enable alarm"
   icon: mdi:shield-lock
   mode: single
   sequence:
@@ -1054,14 +1067,25 @@ lock_down:
         - action: lock.lock
           target:
             entity_id: lock.nuki_smart_lock
-        - action: scene.turn_on
+        - action: light.turn_off
           target:
-            entity_id: scene.lights_out
+            entity_id:
+              - light.kitchen_lights
+              - light.living_room_lights
+              - light.bedroom_lights
+              - light.bathroom_lights
+              - light.charlie_s_shapes
+        - action: switch.turn_off
+          target:
+            entity_id: switch.kitchen_counter_switch
         - action: media_player.turn_off
           target:
             entity_id:
               - media_player.lg_webos_tv_oled65c3aua
               - media_player.living_room
+        - action: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.alarm_enabled
 
 
 # =============================================================================

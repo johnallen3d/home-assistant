@@ -1,6 +1,6 @@
 id: '1763165064021'
 alias: Trigger alarm
-description: ''
+description: 'Triggers alarm lights when lock is unlocked while alarm is enabled'
 triggers:
   - trigger: state
     entity_id:
@@ -10,21 +10,11 @@ triggers:
     to:
       - unlocked
 conditions:
-  - condition: time
-    after: '20:00:00'
-    before: 07:00:00
-    weekday:
-      - sun
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
-      - sat
+  - condition: state
+    entity_id: input_boolean.alarm_enabled
+    state: 'on'
 actions:
   - action: scene.turn_on
-    metadata: {}
-    data: {}
     target:
       entity_id: scene.alarm
 mode: single
