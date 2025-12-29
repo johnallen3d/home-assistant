@@ -1,0 +1,25 @@
+id: "1767042910028"
+alias: "Backup Failure Notification"
+description: >-
+  Send push notification when automatic backup fails.
+  Uses the event.backup_automatic_backup entity which fires
+  with event_type 'failed' when a backup doesn't complete.
+triggers:
+  - trigger: state
+    entity_id: event.backup_automatic_backup
+    attribute: event_type
+    to: "failed"
+conditions: []
+actions:
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "Backup Failed"
+      message: >-
+        Home Assistant backup failed: {{ state_attr('event.backup_automatic_backup', 'failed_reason') or 'Unknown reason' }}
+      data:
+        push:
+          sound:
+            name: default
+            critical: 0
+            volume: 0.5
+mode: single
