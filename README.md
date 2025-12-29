@@ -5,7 +5,7 @@
 ### Network
 
 via tailscale, hostname: `homeassistant`
-via ip address, `192.168.0.182`
+via ip address, `192.168.5.10`
 port: `8123`
 
 ### SSH
