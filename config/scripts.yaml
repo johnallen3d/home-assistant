@@ -24,6 +24,29 @@ toggle_cooking:
 
 
 # =============================================================================
+# Hobby Mode Toggle
+# =============================================================================
+# Simple toggle for hobby mode. The actual lighting logic is handled by
+# automation.hobby_mode_changed which reacts to the boolean state.
+#
+# This script exists for:
+#   - Living room Atom S3 button single press
+#   - Voice command: "toggle hobby"
+#
+# Preferred interaction: Use input_boolean.hobby_mode directly (shows state)
+
+toggle_hobby:
+  alias: "Toggle Hobby"
+  description: "Toggle hobby mode boolean"
+  icon: mdi:palette
+  mode: single
+  sequence:
+    - action: input_boolean.toggle
+      target:
+        entity_id: input_boolean.hobby_mode
+
+
+# =============================================================================
 # Meditation Mode Toggle
 # =============================================================================
 # Toggles meditation mode. When active, creates a calm environment for meditation

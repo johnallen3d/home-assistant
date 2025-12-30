@@ -1,7 +1,7 @@
 id: '1762718475350'
 alias: Living Room – Atom S3 Multi-Click Button
 description: >-
-  Single press → toggle living room light. Double press → activate TV time script. Long press → activate lights out scene.
+  Single press → toggle hobby mode. Double press → activate TV time script. Long press → activate lights out scene.
 triggers:
   - event_type: esphome.button_pressed
     event_data:
@@ -15,39 +15,17 @@ actions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''single'' }}'
         sequence:
-          - choose:
-              - conditions:
-                  - condition: state
-                    entity_id: light.living_room_light
-                    state: 'on'
-                sequence:
-                  - target:
-                      entity_id: light.living_room_light
-                    action: light.turn_off
-              - conditions:
-                  - condition: state
-                    entity_id: light.living_room_light
-                    state: 'off'
-                sequence:
-                  - target:
-                      entity_id: light.living_room_light
-                    action: light.turn_on
-            default:
-              - target:
-                  entity_id: light.living_room_light
-                action: light.toggle
+          - action: script.toggle_hobby
       - conditions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''double'' }}'
         sequence:
-          - target:
-              entity_id: script.tv_time
-            action: script.turn_on
+          - action: script.tv_time
       - conditions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''long'' }}'
         sequence:
-          - target:
+          - action: scene.turn_on
+            target:
               entity_id: scene.lights_out
-            action: scene.turn_on
 mode: single

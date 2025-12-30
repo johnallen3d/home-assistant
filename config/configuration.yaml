@@ -71,6 +71,9 @@ input_boolean:
   cooking_mode:
     name: "Cooking Mode"
     icon: mdi:chef-hat
+  hobby_mode:
+    name: "Hobby Mode"
+    icon: mdi:palette
   meditation_mode:
     name: "Meditation Mode"
     icon: mdi:meditation

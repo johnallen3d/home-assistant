@@ -71,11 +71,21 @@ actions:
                   brightness_pct: "{{ overhead_brightness }}"
                   color_temp_kelvin: "{{ color_temp }}"
 
-      # Presence cleared - turn off
+      # Presence cleared - turn off (unless hobby mode or TV is on)
       - conditions:
           - condition: trigger
             id: presence_off
         sequence:
+          # Skip if hobby mode is on (user is working on a project)
+          - condition: state
+            entity_id: input_boolean.hobby_mode
+            state: "off"
+          # Skip if TV is on (tv_time script handles lighting)
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: media_player.lg_webos_tv_oled65c3aua
+                state: "on"
           - action: light.turn_off
             target:
               entity_id: light.living_room_lights
