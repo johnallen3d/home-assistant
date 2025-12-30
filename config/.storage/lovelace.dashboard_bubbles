@@ -129,6 +129,15 @@
                       "tap_action": {
                         "action": "toggle"
                       }
+                    },
+                    {
+                      "entity": "input_boolean.hobby_mode",
+                      "icon": "mdi:palette",
+                      "name": "Hobby",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
                     }
                   ]
                 },
@@ -294,6 +303,15 @@
                         "target": {
                           "entity_id": "scene.working"
                         }
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.alarm_enabled",
+                      "icon": "mdi:shield-lock",
+                      "name": "Alarm",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
                       }
                     }
                   ]
