@@ -2,14 +2,17 @@ id: '1765997019747'
 alias: TV Time
 description: Adaptive ambient lighting when TV turns on. Adjusts based on time of day - no changes during daytime, dim ambient in evening, very dim late night.
 triggers:
-  - device_id: d84fc60fb0c4792dc4298fd90634e465
-    domain: media_player
-    entity_id: 7a6841cdc2e9f7d226e5ba84e9f741e4
-    type: turned_on
-    trigger: device
+  # Trigger when Apple TV turns on (from off to any active state)
+  - trigger: state
+    entity_id: media_player.living_room
+    from: "off"
+    to:
+      - "playing"
+      - "paused"
+      - "idle"
 conditions: []
+mode: restart
 actions:
   - action: script.tv_time
     data:
       transition: '{{ states(''input_number.tv_time_transition_duration'') | int(11) }}'
-mode: single
