@@ -276,13 +276,30 @@ When investigating device unavailability in HA:
 3. **Update issue status** - Close finished work, update in-progress items
 4. **Prepare commit** - Stage changes and prepare commit message
 5. **ASK USER FOR CONFIRMATION** - Show staged files and commit message, wait for approval
-6. **After user approves** - Commit, sync beads, push to remote
+6. **After user approves commit** - Commit and sync beads
+7. **ASK USER FOR PUSH CONFIRMATION** - Ask "Ready to push to remote?"
+8. **After user approves push** - Push to remote
 
-**CRITICAL RULES:**
-- **NEVER commit without user confirmation** - Always show what will be committed and ask first
-- **NEVER push without user confirmation** - Always ask before pushing
-- Show `git status` and proposed commit message, then ask "Ready to commit and push?"
-- Only proceed after explicit user approval
+## ⛔ GIT SAFETY - READ THIS ⛔
+
+**NEVER EVER push without EXPLICIT user approval.** This is non-negotiable.
+
+"Commit these changes" = permission to COMMIT ONLY, NOT to push.
+"Push" or "push it" = permission to push.
+
+**Before ANY `git push`:**
+1. STOP
+2. ASK: "Ready to push to remote?"
+3. WAIT for explicit "yes", "push", "do it", or similar approval
+4. Only THEN run `git push`
+
+**If user says "commit" without mentioning "push":**
+- Commit the changes
+- Then ASK: "Committed. Ready to push to remote?"
+- WAIT for approval before pushing
+
+This applies even if the workflow feels obvious or the user seems to expect it.
+ALWAYS ASK before pushing. NO EXCEPTIONS.
 
 <!-- bv-agent-instructions-v1 -->
 
