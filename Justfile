@@ -13,3 +13,8 @@ default:
 # Extract config from server
 sync: config::extract
     @echo "✅ Sync complete!"
+
+# Sync HA devices to Homebox inventory
+# Usage: just homebox-sync [--dry-run] [--force-update]
+homebox-sync *args:
+    python3 scripts/ha_to_homebox.py {{args}}
