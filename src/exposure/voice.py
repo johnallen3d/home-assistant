@@ -9,7 +9,7 @@ This script:
 4. Uploads the modified registry back to the server
 
 Usage:
-    python update_exposed_entities.py [--dry-run]
+    uv run src/exposure/voice.py [--dry-run]
 """
 
 import argparse
@@ -165,9 +165,9 @@ def main():
     )
     args = parser.parse_args()
 
-    # Determine paths
-    script_dir = Path(__file__).parent
-    config_path = script_dir / "config" / "exposed_entities.yaml"
+    # Determine paths (script is in src/exposure/, config is in config/)
+    project_root = Path(__file__).parent.parent.parent
+    config_path = project_root / "config" / "exposed_entities.yaml"
 
     if not config_path.exists():
         print(f"Error: {config_path} not found")

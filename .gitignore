@@ -1,6 +1,9 @@
 .env
 .envrc
 
+# Audible sync data
+scripts/audible_library.json
+
 # Config extraction temporary files (downloaded then split)
 config/automations.yaml
 config/scenes.yaml

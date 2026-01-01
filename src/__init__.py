@@ -1,0 +1,1 @@
+# Home Assistant management scripts

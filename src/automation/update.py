@@ -5,10 +5,10 @@ Workflow: Pull from server → Edit locally → Push back
 
 Usage:
   # Update from a local split file
-  python update_automation.py automations/bathroom_presence.yaml
+  uv run src/automation/update.py config/automations/bathroom_presence.yaml
 
   # Update multiple files
-  python update_automation.py automations/*.yaml
+  uv run src/automation/update.py config/automations/*.yaml
 """
 
 import yaml

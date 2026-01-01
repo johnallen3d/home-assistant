@@ -5,10 +5,10 @@ Workflow: Pull from server → Update from local file → Push back
 
 Usage:
   # Update from a local split file
-  python update_scene.py scenes/alarm.yaml
+  uv run src/scene/update.py config/scenes/alarm.yaml
 
   # Update multiple files
-  python update_scene.py scenes/*.yaml
+  uv run src/scene/update.py config/scenes/*.yaml
 """
 
 import yaml

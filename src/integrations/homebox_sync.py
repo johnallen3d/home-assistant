@@ -16,13 +16,13 @@ Usage:
     export HA_TOKEN="your-long-lived-access-token"
 
     # Dry run (show what would change)
-    python ha_to_homebox.py --dry-run
+    uv run src/integrations/homebox_sync.py --dry-run
 
     # Sync devices
-    python ha_to_homebox.py
+    uv run src/integrations/homebox_sync.py
 
     # Force update all items (even if they exist)
-    python ha_to_homebox.py --force-update
+    uv run src/integrations/homebox_sync.py --force-update
 """
 
 import argparse
@@ -38,7 +38,8 @@ import requests
 # Try to load .env file if python-dotenv is available
 try:
     from dotenv import load_dotenv
-    load_dotenv(Path(__file__).parent.parent / ".env")
+    # Script is in src/integrations/, .env is in project root
+    load_dotenv(Path(__file__).parent.parent.parent / ".env")
 except ImportError:
     pass
 

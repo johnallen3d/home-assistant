@@ -5,10 +5,10 @@ Workflow: Pull from server → Delete matching scenes → Push back
 
 Usage:
   # Delete by name
-  python delete_scene.py "Daytime potty"
+  uv run src/scene/delete.py "Daytime potty"
 
   # Delete multiple scenes
-  python delete_scene.py "Daytime potty" "Nighttime potty" "TV Time"
+  uv run src/scene/delete.py "Daytime potty" "Nighttime potty" "TV Time"
 """
 
 import yaml

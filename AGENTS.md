@@ -1,5 +1,29 @@
 # AGENTS.md
 
+## Development Preferences
+
+- **Use `uv`** for Python package management, not pip
+
+## Project Structure
+
+```
+src/
+├── automation/        # Automation management scripts
+│   └── update.py      # Push local automation files to HA server
+├── scene/             # Scene management scripts
+│   ├── update.py      # Push local scene files to HA server
+│   └── delete.py      # Delete scenes from HA server by name
+├── exposure/          # Entity exposure for voice assistants
+│   ├── voice.py       # Update voice assistant (Assist) exposure
+│   └── homekit.py     # Update HomeKit Bridge exposure
+├── config/            # Configuration extraction
+│   └── extract.sh     # Download and split HA config files
+└── integrations/      # Third-party integrations
+    └── homebox_sync.py # Sync HA devices to Homebox inventory
+```
+
+All scripts are invoked via `just` commands from `config/Justfile` or the root `Justfile`.
+
 ## Todo List
 
 Use `/todo` command for todo list queries. This queries `todo.ha_enhancements` (not the internal `todoread`/`todowrite` tools).
@@ -169,7 +193,7 @@ After modifying automations that respond to physical triggers (buttons, sensors)
 
 ### Voice Assistant Exposed Entities
 - **Config file**: `config/exposed_entities.yaml` - simple YAML list of entities to expose
-- **Script**: `update_exposed_entities.py` - applies YAML config to entity registry
+- **Script**: `src/exposure/voice.py` - applies YAML config to entity registry
 - **Critical**: HA must be **stopped** before modifying `core.entity_registry`
 - **Commands**:
   - `just config::deploy-exposed` - Apply settings and restart HA
@@ -178,7 +202,7 @@ After modifying automations that respond to physical triggers (buttons, sensors)
 
 ### HomeKit Bridge Exposed Entities
 - **Config file**: `config/homekit_exposed.yaml` - domain-based filter config
-- **Script**: `update_homekit_entities.py` - applies YAML config to HomeKit config entry
+- **Script**: `src/exposure/homekit.py` - applies YAML config to HomeKit config entry
 - **Critical**: HA must be **stopped** before modifying `core.config_entries`
 - **Model**: Unlike voice assistant (per-entity), HomeKit uses domain includes + entity excludes
 - **Commands**:

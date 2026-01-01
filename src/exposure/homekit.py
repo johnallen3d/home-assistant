@@ -9,7 +9,7 @@ This script:
 4. Uploads the modified config entries back to the server
 
 Usage:
-    python update_homekit_entities.py [--dry-run]
+    uv run src/exposure/homekit.py [--dry-run]
 
 Note: Unlike voice assistant exposure (entity registry), HomeKit uses the
 config entry's filter options. This requires HA to be stopped before modification.
@@ -178,9 +178,9 @@ def main():
     )
     args = parser.parse_args()
 
-    # Determine paths
-    script_dir = Path(__file__).parent
-    config_path = script_dir / "config" / "homekit_exposed.yaml"
+    # Determine paths (script is in src/exposure/, config is in config/)
+    project_root = Path(__file__).parent.parent.parent
+    config_path = project_root / "config" / "homekit_exposed.yaml"
 
     if not config_path.exists():
         print(f"Error: {config_path} not found")

@@ -17,4 +17,4 @@ sync: config::extract
 # Sync HA devices to Homebox inventory
 # Usage: just homebox-sync [--dry-run] [--force-update]
 homebox-sync *args:
-    python3 scripts/ha_to_homebox.py {{args}}
+    uv run src/integrations/homebox_sync.py {{args}}
