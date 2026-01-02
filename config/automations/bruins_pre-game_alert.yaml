@@ -5,7 +5,13 @@ triggers:
   - entity_id: sensor.boston_bruins
     to: PRE
     trigger: state
-conditions: []
+conditions:
+  - condition: template
+    alias: Game starts within 60 minutes
+    value_template: >-
+      {% set game_time = state_attr('sensor.boston_bruins', 'date') | as_datetime %}
+      {% set diff_minutes = ((game_time - now()).total_seconds() / 60) %}
+      {{ 0 <= diff_minutes <= 60 }}
 actions:
   - data:
       title: "Bruins Game Incoming 🥅"
