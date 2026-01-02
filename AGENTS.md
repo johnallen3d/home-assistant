@@ -30,10 +30,27 @@ Use `/todo` command for todo list queries. This queries `todo.ha_enhancements` (
 
 ## Core Tenets
 
-1. **Make changes locally** - Edit files in this repo, not in HA UI
+1. **Make changes locally FIRST** - Edit files in this repo, not in HA UI or via MCP write tools
 2. **Push local changes to HA** - Use `just` commands or scp
 3. **Reload HA when necessary** - Use MCP `ha_call_service` for reloads, or `just config::restart`
 4. **Never make changes in HA UI** - For things managed here (automations, scripts, scenes, configuration.yaml)
+
+## ⛔ MCP WRITE TOOLS - READ THIS ⛔
+
+**For anything in the "What We Manage Locally" table below, NEVER use MCP write tools directly.**
+
+This means: Do NOT use `ha_config_set_dashboard`, `ha_config_set_automation`, etc. to make changes.
+
+**Correct workflow:**
+1. Edit the local file (e.g., `config/.storage/lovelace.charlie_shapes`)
+2. Deploy via `just` command (e.g., `just config::deploy-dashboard charlie_shapes`)
+
+**Wrong workflow:**
+1. ~~Use MCP `ha_config_set_dashboard` to change the server~~
+2. ~~Then create/update the local file~~
+
+MCP write tools bypass local files and create drift between repo and server.
+**Use MCP tools only for reading/querying, not writing, for locally-managed config.**
 
 ## What We Manage Locally
 
@@ -306,24 +323,28 @@ When investigating device unavailability in HA:
 
 ## ⛔ GIT SAFETY - READ THIS ⛔
 
-**NEVER EVER push without EXPLICIT user approval.** This is non-negotiable.
+**NEVER commit or push without EXPLICIT user approval.** This is non-negotiable.
 
-"Commit these changes" = permission to COMMIT ONLY, NOT to push.
-"Push" or "push it" = permission to push.
+**You must ask before:**
+- `git commit` - Ask: "Ready to commit?" and show staged files + proposed message
+- `git push` - Ask: "Ready to push to remote?"
+- `bd sync` - Ask: "Ready to push?" (bd sync pushes internally!)
 
-**Before ANY `git push`:**
+**Commands that push (require explicit approval):**
+- `git push`
+- `bd sync` ← THIS PUSHES! It runs `git push` internally!
+
+**Before ANY push command:**
 1. STOP
 2. ASK: "Ready to push to remote?"
 3. WAIT for explicit "yes", "push", "do it", or similar approval
-4. Only THEN run `git push`
+4. Only THEN run the push command
 
-**If user says "commit" without mentioning "push":**
-- Commit the changes
-- Then ASK: "Committed. Ready to push to remote?"
-- WAIT for approval before pushing
+**Do NOT run `bd sync` without push approval.** Use `bd close` to close issues,
+then wait for push approval before running `bd sync`.
 
 This applies even if the workflow feels obvious or the user seems to expect it.
-ALWAYS ASK before pushing. NO EXCEPTIONS.
+ALWAYS ASK before committing or pushing. NO EXCEPTIONS.
 
 <!-- bv-agent-instructions-v1 -->
 
@@ -347,7 +368,7 @@ bd create --title="..." --type=task --priority=2
 bd update <id> --status=in_progress
 bd close <id> --reason="Completed"
 bd close <id1> <id2>  # Close multiple issues at once
-bd sync               # Commit and push changes
+bd sync               # ⚠️ PUSHES TO REMOTE - requires user approval first!
 ```
 
 ### Workflow Pattern
@@ -356,7 +377,7 @@ bd sync               # Commit and push changes
 2. **Claim**: Use `bd update <id> --status=in_progress`
 3. **Work**: Implement the task
 4. **Complete**: Use `bd close <id>`
-5. **Sync**: Always run `bd sync` at session end
+5. **Ask before sync**: `bd sync` pushes to remote - get user approval first!
 
 ### Key Concepts
 
@@ -372,13 +393,15 @@ bd sync               # Commit and push changes
 ```bash
 git status              # Check what changed
 git add <files>         # Stage code changes
-git commit -m "..."     # Commit code BEFORE bd sync
-bd sync                 # Sync beads (pulls, which fails with staged changes)
-git push                # Push to remote
+git commit -m "..."     # Commit code
+# ⛔ STOP HERE - ASK USER: "Ready to push to remote?"
+# Only after approval:
+bd sync                 # Syncs beads AND pushes to remote
 ```
 
-**IMPORTANT:** Always `git commit` before `bd sync`. The sync command pulls from remote,
-which fails if you have staged but uncommitted changes.
+**IMPORTANT:**
+- Always `git commit` before `bd sync` (sync pulls, which fails with staged changes)
+- **NEVER run `bd sync` or `git push` without explicit user approval**
 
 ### Best Practices
 
@@ -386,6 +409,6 @@ which fails if you have staged but uncommitted changes.
 - Update status as you work (in_progress → closed)
 - Create new issues with `bd create` when you discover tasks
 - Use descriptive titles and set appropriate priority/type
-- Always `bd sync` before ending session
+- Ask user before running `bd sync` (it pushes to remote)
 
 <!-- end-bv-agent-instructions -->
