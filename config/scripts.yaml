@@ -1215,3 +1215,63 @@ done_shaving:
         command: app_segment_clean
         params:
           - 24  # Dad's Bathroom
+
+
+# =============================================================================
+# Vacuum All Rooms - Full house clean
+# =============================================================================
+# Cleans all rooms in the apartment. Used by scheduled vacuum automation.
+#
+# Roborock room segment mapping:
+#   16: Dad's Closet      20: Charlie's Bathroom   24: Dad's Bathroom
+#   17: Laundry           21: Charlie's Bedroom
+#   18: Charlie's Closet  22: Living Room
+#   19: Kitchen           23: Dad's Bedroom
+
+vacuum_all_rooms:
+  alias: "Vacuum All Rooms"
+  description: "Clean all rooms in the apartment"
+  icon: mdi:robot-vacuum
+  mode: single
+  sequence:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_q5_max
+      data:
+        command: app_segment_clean
+        params:
+          - 16  # Dad's Closet
+          - 17  # Laundry
+          - 18  # Charlie's Closet
+          - 19  # Kitchen
+          - 20  # Charlie's Bathroom
+          - 21  # Charlie's Bedroom
+          - 22  # Living Room
+          - 23  # Dad's Bedroom
+          - 24  # Dad's Bathroom
+
+
+# =============================================================================
+# Vacuum Non-Charlie Rooms - Clean common areas and Dad's spaces
+# =============================================================================
+# Cleans all rooms except Charlie's bedroom, bathroom, and closet.
+# Used by scheduled vacuum automation on Tue/Wed/Fri.
+
+vacuum_non_charlie_rooms:
+  alias: "Vacuum Non-Charlie Rooms"
+  description: "Clean common areas and Dad's spaces (excludes Charlie's rooms)"
+  icon: mdi:robot-vacuum
+  mode: single
+  sequence:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_q5_max
+      data:
+        command: app_segment_clean
+        params:
+          - 16  # Dad's Closet
+          - 17  # Laundry
+          - 19  # Kitchen
+          - 22  # Living Room
+          - 23  # Dad's Bedroom
+          - 24  # Dad's Bathroom

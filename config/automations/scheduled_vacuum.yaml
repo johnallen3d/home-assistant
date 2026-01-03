@@ -1,0 +1,73 @@
+# Scheduled Vacuum - Automated cleaning when nobody is home
+# =============================================================================
+# Runs the vacuum on a schedule based on day of week:
+#   - Sunday: No cleaning
+#   - Monday: All rooms
+#   - Tuesday: Non-Charlie rooms
+#   - Wednesday: Non-Charlie rooms
+#   - Thursday: All rooms
+#   - Friday: Non-Charlie rooms
+#   - Saturday: No cleaning
+#
+# Triggers every 15 minutes from 8am-6pm on scheduled days.
+# Only runs when nobody is home and vacuum isn't already cleaning.
+
+id: "1767454229654"
+alias: "Scheduled Vacuum"
+description: "Automated vacuum schedule - runs when nobody is home"
+mode: single
+
+trigger:
+  - platform: time_pattern
+    minutes: "/15"
+
+condition:
+  # Only run between 8am and 6pm
+  - condition: time
+    after: "08:00:00"
+    before: "18:00:00"
+  # Only on scheduled days (Mon=0, Tue=1, Wed=2, Thu=3, Fri=4)
+  - condition: template
+    value_template: "{{ now().weekday() in [0, 1, 2, 3, 4] }}"
+  # Nobody is home
+  - condition: state
+    entity_id: zone.home
+    state: "0"
+  # Vacuum is not already cleaning
+  - condition: state
+    entity_id: binary_sensor.roborock_q5_max_cleaning
+    state: "off"
+  # Vacuum is docked (ready to clean)
+  - condition: state
+    entity_id: vacuum.roborock_q5_max
+    state: "docked"
+
+action:
+  # Send notification
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "Vacuum Starting"
+      message: >-
+        {% if now().weekday() in [0, 3] %}
+        Starting full house clean (all rooms)
+        {% else %}
+        Starting partial clean (non-Charlie rooms)
+        {% endif %}
+  # Run appropriate script based on day
+  - choose:
+      # Monday (0) or Thursday (3) - All rooms
+      - conditions:
+          - condition: template
+            value_template: "{{ now().weekday() in [0, 3] }}"
+        sequence:
+          - action: script.turn_on
+            target:
+              entity_id: script.vacuum_all_rooms
+      # Tuesday (1), Wednesday (2), Friday (4) - Non-Charlie rooms
+      - conditions:
+          - condition: template
+            value_template: "{{ now().weekday() in [1, 2, 4] }}"
+        sequence:
+          - action: script.turn_on
+            target:
+              entity_id: script.vacuum_non_charlie_rooms
