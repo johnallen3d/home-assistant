@@ -80,6 +80,9 @@ input_boolean:
   alarm_enabled:
     name: "Alarm Enabled"
     icon: mdi:alarm-light
+  eating_mode:
+    name: "Eating Mode"
+    icon: mdi:silverware-fork-knife
 
 # Helpers
 input_number:

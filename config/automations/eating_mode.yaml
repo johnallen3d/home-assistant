@@ -1,0 +1,104 @@
+# Eating Mode State Handler
+# Reacts to eating_mode boolean changes to control island lighting.
+#
+# The boolean (input_boolean.eating_mode) is the user-facing switch:
+# - Visible on Charlie's shapes dashboard as a toggle
+# - Manual override for island light during meals
+#
+# This automation handles the lighting logic:
+# - ON: Set island to 80% brightness, warm white (2700K)
+# - OFF: Check presence and turn off lights appropriately
+#   - If charlie_meal zone active: keep island on at adaptive
+#   - If no presence: wait presence_delay, then turn off
+# - AUTO-OFF: If eating_mode is on but no presence for 60s, turn off eating_mode
+
+id: '1767457440986'
+alias: "Eating Mode Changed"
+description: "Handle eating mode state changes - bright island for meals"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.eating_mode
+    to: "on"
+    id: eating_on
+  - trigger: state
+    entity_id: input_boolean.eating_mode
+    to: "off"
+    id: eating_off
+  - trigger: state
+    entity_id: binary_sensor.charlie_meal
+    to: "off"
+    id: presence_cleared
+
+actions:
+  - choose:
+      # Eating mode turned ON - bright warm island light
+      - conditions:
+          - condition: trigger
+            id: eating_on
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.island_bulb
+            data:
+              brightness_pct: 80
+              color_temp_kelvin: 2700
+
+      # Eating mode turned OFF - check presence for light control
+      - conditions:
+          - condition: trigger
+            id: eating_off
+        sequence:
+          - choose:
+              # Charlie meal zone active - switch to adaptive lighting
+              - conditions:
+                  - condition: state
+                    entity_id: binary_sensor.charlie_meal
+                    state: "on"
+                sequence:
+                  - action: script.lights
+                    data:
+                      lights:
+                        - light.island_bulb
+                      night_mode: dim_warm
+                      night_brightness: 15
+            # No presence detected - wait for presence_delay before turning off
+            default:
+              - wait_for_trigger:
+                  - trigger: state
+                    entity_id: binary_sensor.charlie_meal
+                    to: "on"
+                timeout:
+                  seconds: "{{ states('input_number.presence_delay') | int(5) }}"
+              # Only turn off if no presence detected during wait
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger is none }}"
+                then:
+                  - action: light.turn_off
+                    target:
+                      entity_id: light.island_bulb
+
+      # Presence cleared while eating mode is on - auto-timeout after 60s
+      - conditions:
+          - condition: trigger
+            id: presence_cleared
+          - condition: state
+            entity_id: input_boolean.eating_mode
+            state: "on"
+        sequence:
+          - wait_for_trigger:
+              - trigger: state
+                entity_id: binary_sensor.charlie_meal
+                to: "on"
+            timeout:
+              seconds: 60
+          # If no presence returned within 60s, turn off eating mode
+          - if:
+              - condition: template
+                value_template: "{{ wait.trigger is none }}"
+            then:
+              - action: input_boolean.turn_off
+                target:
+                  entity_id: input_boolean.eating_mode

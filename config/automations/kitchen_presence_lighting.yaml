@@ -75,10 +75,13 @@ actions:
               - action: switch.turn_off
                 target:
                   entity_id: switch.kitchen_counter_switch
-              # Turn off island only if charlie_meal zone is also clear
+              # Turn off island only if charlie_meal zone is also clear AND eating_mode is off
               - if:
                   - condition: state
                     entity_id: binary_sensor.charlie_meal
+                    state: "off"
+                  - condition: state
+                    entity_id: input_boolean.eating_mode
                     state: "off"
                 then:
                   - action: light.turn_off
