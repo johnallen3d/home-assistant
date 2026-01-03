@@ -78,6 +78,10 @@ toggle_meditation:
             - action: input_boolean.turn_on
               target:
                 entity_id: input_boolean.meditation_mode
+            # Turn off cooking mode if enabled
+            - action: input_boolean.turn_off
+              target:
+                entity_id: input_boolean.cooking_mode
             # Turn off lights in dad's bedroom
             - action: light.turn_off
               target:
