@@ -1,22 +1,32 @@
 id: '1763742898599'
 alias: Bruins Pre-Game Alert
-description: Notify me when the Bruins are about to play (pre-game).
+description: >-
+  Notify 60 minutes before game time. Triggers on time pattern and checks
+  if a game is starting within the next 60-65 minutes.
 triggers:
-  - entity_id: sensor.boston_bruins
-    to: PRE
-    trigger: state
+  - trigger: time_pattern
+    minutes: "/5"
 conditions:
+  - condition: state
+    entity_id: sensor.boston_bruins
+    state: PRE
   - condition: template
-    alias: Game starts within 60 minutes
+    alias: Game starts in 60-65 minutes
     value_template: >-
-      {% set game_time = state_attr('sensor.boston_bruins', 'date') | as_datetime %}
-      {% set diff_minutes = ((game_time - now()).total_seconds() / 60) %}
-      {{ 0 <= diff_minutes <= 60 }}
+      {% set date_str = state_attr('sensor.boston_bruins', 'date') %}
+      {% if date_str %}
+        {% set game_time = date_str | as_datetime %}
+        {% set diff_minutes = ((game_time - now()).total_seconds() / 60) %}
+        {{ 60 <= diff_minutes <= 65 }}
+      {% else %}
+        false
+      {% endif %}
 actions:
   - data:
       title: "Bruins Game Incoming 🥅"
       message: >-
-        Bruins about to start! Opponent: {{ state_attr('sensor.boston_bruins', 'opponent_name') }} Starts: {{ (state_attr('sensor.boston_bruins', 'date') | as_datetime).strftime('%-I:%M %p') }} ({{ state_attr('sensor.boston_bruins', 'kickoff_in') }})
+        Game starts in ~1 hour! Opponent: {{ state_attr('sensor.boston_bruins', 'opponent_name') }}.
+        Starts at {{ (state_attr('sensor.boston_bruins', 'date') | as_datetime | as_local).strftime('%-I:%M %p') }}.
       data:
         push:
           sound: default
