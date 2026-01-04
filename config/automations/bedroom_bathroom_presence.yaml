@@ -1,0 +1,40 @@
+id: '1735999999999'
+alias: Bedroom-Bathroom presence coupling
+description: Control Dad's bedroom lights based on bathroom presence (disabled when alarm is enabled)
+triggers:
+  - id: presence_on
+    entity_id:
+      - binary_sensor.bathroom_presence_sensor_occupancy
+    to:
+      - 'on'
+    trigger: state
+  - id: presence_off
+    entity_id:
+      - binary_sensor.bathroom_presence_sensor_occupancy
+    to:
+      - 'off'
+    for:
+      seconds: "{{ states('input_number.presence_delay') | int(5) }}"
+    trigger: state
+conditions:
+  - condition: state
+    entity_id: input_boolean.alarm_enabled
+    state: 'off'
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: presence_on
+          - condition: state
+            entity_id: light.bedroom_lights
+            state: 'off'
+        sequence:
+          - action: script.bedroom_lights
+      - conditions:
+          - condition: trigger
+            id: presence_off
+        sequence:
+          - target:
+              entity_id: light.bedroom_lights
+            action: light.turn_off
+mode: restart

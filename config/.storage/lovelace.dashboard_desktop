@@ -416,6 +416,39 @@
                         {
                           "type": "custom:ember-mug-card",
                           "entity": "sensor.ember_mug_e87720e9d7b9_state"
+                        },
+                        {
+                          "type": "heading",
+                          "heading": "Occupancy",
+                          "heading_style": "subtitle"
+                        },
+                        {
+                          "type": "glance",
+                          "entities": [
+                            {
+                              "entity": "binary_sensor.kitchen_presence_kitchen",
+                              "name": "Kitchen"
+                            },
+                            {
+                              "entity": "binary_sensor.kitchen_presence_living_room",
+                              "name": "Living"
+                            },
+                            {
+                              "entity": "binary_sensor.bathroom_presence_sensor_occupancy",
+                              "name": "Bathroom"
+                            },
+                            {
+                              "entity": "binary_sensor.laundry_room_sensor_motion",
+                              "name": "Laundry"
+                            },
+                            {
+                              "entity": "binary_sensor.charlie_meal",
+                              "name": "Charlie"
+                            }
+                          ],
+                          "show_name": true,
+                          "show_state": false,
+                          "state_color": true
                         }
                       ]
                     }
