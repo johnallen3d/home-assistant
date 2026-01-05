@@ -41,6 +41,11 @@ condition:
   - condition: state
     entity_id: vacuum.roborock_q5_max
     state: "docked"
+  # Hasn't already run today
+  - condition: template
+    value_template: >-
+      {{ state_attr('automation.scheduled_vacuum', 'last_triggered') is none or
+         state_attr('automation.scheduled_vacuum', 'last_triggered').date() != now().date() }}
 
 action:
   # Send notification
