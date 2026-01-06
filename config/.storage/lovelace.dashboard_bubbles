@@ -34,42 +34,12 @@
                       }
                     },
                     {
-                      "entity": "script.good_morning",
-                      "icon": "mdi:weather-sunny",
-                      "name": "Morning",
+                      "entity": "input_boolean.cleaning_mode",
+                      "icon": "mdi:broom",
+                      "name": "Clean",
                       "show_name": true,
                       "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.good_morning"
-                        }
-                      }
-                    },
-                    {
-                      "entity": "script.tv_time",
-                      "icon": "mdi:television",
-                      "name": "TV",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.tv_time"
-                        }
-                      }
-                    },
-                    {
-                      "entity": "script.winding_down",
-                      "icon": "mdi:weather-sunset-down",
-                      "name": "Wind Down",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.winding_down"
-                        }
+                        "action": "toggle"
                       }
                     }
                   ]

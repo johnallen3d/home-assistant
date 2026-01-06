@@ -83,6 +83,9 @@ input_boolean:
   eating_mode:
     name: "Eating Mode"
     icon: mdi:silverware-fork-knife
+  cleaning_mode:
+    name: "Cleaning Mode"
+    icon: mdi:broom
 
 # Helpers
 input_number:

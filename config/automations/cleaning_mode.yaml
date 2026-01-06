@@ -1,0 +1,120 @@
+# Cleaning Mode State Handler
+# Reacts to cleaning_mode boolean changes to set up full-brightness lighting
+# and disable presence/motion automations while cleaning.
+#
+# The boolean (input_boolean.cleaning_mode) is the user-facing switch:
+# - Visible on dashboards as a toggle
+#
+# This automation handles:
+# - ON: Turn on all lights at 100% brightness, full white (6500K)
+#       Disable presence automations (bathroom, kitchen, living room, charlie meal, bedroom-bathroom)
+#       Skip laundry room
+# - OFF: Turn off all lights, re-enable presence automations
+#
+# Excluded: Laundry room motion/switch (per user preference)
+
+id: '1767710078995'
+alias: "Cleaning Mode Changed"
+description: "Handle cleaning mode - full brightness lights, disable presence automations"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.cleaning_mode
+    to: "on"
+    id: cleaning_on
+  - trigger: state
+    entity_id: input_boolean.cleaning_mode
+    to: "off"
+    id: cleaning_off
+
+actions:
+  - choose:
+      # Cleaning mode turned ON - full brightness everywhere
+      - conditions:
+          - condition: trigger
+            id: cleaning_on
+        sequence:
+          # Disable mode automations FIRST (before turning off modes)
+          # This prevents them from reacting and turning off lights
+          - action: automation.turn_off
+            target:
+              entity_id:
+                - automation.hobby_mode_changed
+                - automation.cooking_mode_changed
+                - automation.eating_mode_changed
+
+          # Now turn off other modes (automations won't react)
+          - action: input_boolean.turn_off
+            target:
+              entity_id:
+                - input_boolean.hobby_mode
+                - input_boolean.cooking_mode
+                - input_boolean.eating_mode
+                - input_boolean.meditation_mode
+
+          # Disable presence automations (skip laundry)
+          - action: automation.turn_off
+            target:
+              entity_id:
+                - automation.bathroom_motion
+                - automation.living_room_presence_lighting
+                - automation.kitchen_presence_lighting
+                - automation.charlie_meal_presence_lighting
+                - automation.bedroom_bathroom_presence_coupling
+
+          # Turn on all lights at 100% brightness, max white (6500K)
+          - action: light.turn_on
+            target:
+              entity_id:
+                - light.kitchen_lights
+                - light.living_room_lights
+                - light.bedroom_lights
+                - light.bathroom_lights
+                - light.charlie_s_shapes
+            data:
+              brightness_pct: 100
+              color_temp_kelvin: 6500
+
+          # Turn on counter switch
+          - action: switch.turn_on
+            target:
+              entity_id: switch.kitchen_counter_switch
+
+      # Cleaning mode turned OFF - restore normal state
+      - conditions:
+          - condition: trigger
+            id: cleaning_off
+        sequence:
+          # Turn off all lights
+          - action: light.turn_off
+            target:
+              entity_id:
+                - light.kitchen_lights
+                - light.living_room_lights
+                - light.bedroom_lights
+                - light.bathroom_lights
+                - light.charlie_s_shapes
+
+          # Turn off counter switch
+          - action: switch.turn_off
+            target:
+              entity_id: switch.kitchen_counter_switch
+
+          # Re-enable presence automations
+          - action: automation.turn_on
+            target:
+              entity_id:
+                - automation.bathroom_motion
+                - automation.living_room_presence_lighting
+                - automation.kitchen_presence_lighting
+                - automation.charlie_meal_presence_lighting
+                - automation.bedroom_bathroom_presence_coupling
+
+          # Re-enable mode automations
+          - action: automation.turn_on
+            target:
+              entity_id:
+                - automation.hobby_mode_changed
+                - automation.cooking_mode_changed
+                - automation.eating_mode_changed
