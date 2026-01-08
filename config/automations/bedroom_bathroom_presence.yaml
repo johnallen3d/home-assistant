@@ -20,6 +20,9 @@ conditions:
   - condition: state
     entity_id: input_boolean.alarm_enabled
     state: 'off'
+  - condition: state
+    entity_id: input_boolean.working_mode
+    state: 'off'
 actions:
   - choose:
       - conditions:

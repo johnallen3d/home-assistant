@@ -86,6 +86,9 @@ input_boolean:
   cleaning_mode:
     name: "Cleaning Mode"
     icon: mdi:broom
+  working_mode:
+    name: "Working Mode"
+    icon: mdi:laptop
 
 # Helpers
 input_number:

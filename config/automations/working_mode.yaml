@@ -1,0 +1,48 @@
+# Working Mode State Handler
+# Reacts to working_mode boolean changes to control bedroom lighting.
+#
+# The boolean (input_boolean.working_mode) is the user-facing switch:
+# - Exposed to HomeKit as a switch (shows ON/OFF state)
+# - Visible on dashboards as a toggle
+#
+# This automation handles the lighting logic:
+# - ON: Activate working scene (bedroom lights on, others off)
+# - OFF: Turn off bedroom lights
+#
+# Note: When working_mode is ON, bedroom_bathroom_presence automation
+# won't control bedroom lights (prevents lights turning off after bathroom visits).
+
+id: '1736362000000'
+alias: "Working Mode Changed"
+description: "Handle working mode state changes - activate scene or turn off lights"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.working_mode
+    to: "on"
+    id: working_on
+  - trigger: state
+    entity_id: input_boolean.working_mode
+    to: "off"
+    id: working_off
+
+actions:
+  - choose:
+      # Working mode turned ON - activate working scene
+      - conditions:
+          - condition: trigger
+            id: working_on
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.working
+
+      # Working mode turned OFF - turn off bedroom lights
+      - conditions:
+          - condition: trigger
+            id: working_off
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id: light.bedroom_lights

@@ -40,6 +40,7 @@ script.winding_down: true
 # Helpers
 input_boolean.charlie_presence: true
 input_boolean.cooking_mode: true
+input_boolean.working_mode: true
 
 # Charlie presence scripts
 script.charlies_home: true
