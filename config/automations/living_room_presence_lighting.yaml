@@ -27,7 +27,7 @@ actions:
             id: presence_on
           # Apple TV states: playing, paused, idle = TV in use; off, unknown = TV not in use
           - condition: template
-            value_template: "{{ states('media_player.living_room') in ['off', 'unknown', 'unavailable'] }}"
+            value_template: "{{ states('media_player.living_room') in ['off', 'unavailable'] }}"
         sequence:
           - variables:
               brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
@@ -81,7 +81,7 @@ actions:
           # Skip if TV is in use (tv_time script handles lighting)
           # Apple TV states: playing, paused, idle = TV in use
           - condition: template
-            value_template: "{{ states('media_player.living_room') in ['off', 'unknown', 'unavailable'] }}"
+            value_template: "{{ states('media_player.living_room') in ['off', 'unavailable'] }}"
           - action: light.turn_off
             target:
               entity_id: light.living_room_lights
