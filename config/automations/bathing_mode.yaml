@@ -1,0 +1,70 @@
+# Bathing Mode State Handler
+# Reacts to bathing_mode boolean changes to control bathroom lighting.
+#
+# The boolean (input_boolean.bathing_mode) is the user-facing switch:
+# - Exposed to HomeKit as a switch (shows ON/OFF state)
+# - Visible on dashboards as a toggle
+#
+# This automation handles the lighting logic:
+# - ON: Activate bathing scene (low brightness, warm color)
+# - OFF: Check presence and turn off lights appropriately
+#
+# Note: When bathing_mode is ON, bathroom_presence automation
+# won't turn off lights (bypasses presence sensor).
+
+id: '1737842400001'
+alias: "Bathing Mode Changed"
+description: "Handle bathing mode state changes - activate scene or check presence for off"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.bathing_mode
+    to: "on"
+    id: bathing_on
+  - trigger: state
+    entity_id: input_boolean.bathing_mode
+    to: "off"
+    id: bathing_off
+
+actions:
+  - choose:
+      # Bathing mode turned ON - activate bathing scene
+      - conditions:
+          - condition: trigger
+            id: bathing_on
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.bathing
+
+      # Bathing mode turned OFF - check presence for light control
+      - conditions:
+          - condition: trigger
+            id: bathing_off
+        sequence:
+          - choose:
+              # Bathroom presence detected - lights stay on
+              - conditions:
+                  - condition: state
+                    entity_id: binary_sensor.bathroom_presence_sensor_occupancy
+                    state: "on"
+                sequence: []
+            # No presence detected - wait for presence_delay before turning off
+            default:
+              - wait_for_trigger:
+                  - trigger: state
+                    entity_id: binary_sensor.bathroom_presence_sensor_occupancy
+                    to: "on"
+                timeout:
+                  seconds: "{{ states('input_number.presence_delay') | int(5) }}"
+              # Only turn off if no presence detected during wait
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger is none }}"
+                then:
+                  - action: light.turn_off
+                    target:
+                      entity_id:
+                        - light.bathroom_strip
+                        - light.bathroom_lamp

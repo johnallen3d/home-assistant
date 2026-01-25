@@ -32,6 +32,9 @@ actions:
       - conditions:
           - condition: trigger
             id: motion_off
+          - condition: state
+            entity_id: input_boolean.bathing_mode
+            state: 'off'
         sequence:
           - target:
               entity_id: light.bathroom_strip

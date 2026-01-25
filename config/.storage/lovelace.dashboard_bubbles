@@ -367,6 +367,15 @@
                           "entity_id": "script.done_shaving"
                         }
                       }
+                    },
+                    {
+                      "entity": "input_boolean.bathing_mode",
+                      "icon": "mdi:bathtub",
+                      "name": "Bath",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
                     }
                   ]
                 },

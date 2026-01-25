@@ -89,6 +89,9 @@ input_boolean:
   working_mode:
     name: "Working Mode"
     icon: mdi:laptop
+  bathing_mode:
+    name: "Bathing Mode"
+    icon: mdi:shower
 
 # Helpers
 input_number:

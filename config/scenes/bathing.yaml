@@ -1,0 +1,12 @@
+id: '1737842400000'
+name: Bathing
+entities:
+  light.bathroom_strip:
+    state: 'on'
+    brightness: 64
+    color_temp_kelvin: 2400
+  light.bathroom_lamp:
+    state: 'on'
+    brightness: 64
+    color_temp_kelvin: 2400
+metadata: {}
