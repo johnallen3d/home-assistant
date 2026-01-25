@@ -25,13 +25,15 @@ actions:
       - conditions:
           - condition: trigger
             id: presence_on
-          # Check both Apple TV and LG TV - skip if either is in use
+          # Check Apple TV, LG TV, and SuperBOX - skip if any is in use
           # Apple TV: playing/paused/idle = in use; off/unavailable = not in use
           # LG TV: on/playing = in use; off/unavailable = not in use
+          # SuperBOX: on = in use; off/unavailable = not in use
           - condition: template
             value_template: >-
               {{ states('media_player.living_room') in ['off', 'unavailable']
-                 and states('media_player.lg_webos_tv_oled65c3aua') in ['off', 'unavailable'] }}
+                 and states('media_player.lg_webos_tv_oled65c3aua') in ['off', 'unavailable']
+                 and states('media_player.superbox') in ['off', 'unavailable'] }}
         sequence:
           - variables:
               brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
@@ -83,11 +85,12 @@ actions:
             entity_id: input_boolean.hobby_mode
             state: "off"
           # Skip if TV is in use (tv_time script handles lighting)
-          # Check both Apple TV and LG TV
+          # Check Apple TV, LG TV, and SuperBOX
           - condition: template
             value_template: >-
               {{ states('media_player.living_room') in ['off', 'unavailable']
-                 and states('media_player.lg_webos_tv_oled65c3aua') in ['off', 'unavailable'] }}
+                 and states('media_player.lg_webos_tv_oled65c3aua') in ['off', 'unavailable']
+                 and states('media_player.superbox') in ['off', 'unavailable'] }}
           - action: light.turn_off
             target:
               entity_id: light.living_room_lights
