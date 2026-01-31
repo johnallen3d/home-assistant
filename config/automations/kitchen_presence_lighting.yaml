@@ -47,7 +47,7 @@ actions:
                   night_mode: dim_warm
                   night_brightness: 15
 
-      # Presence cleared - turn off after presence_delay seconds (unless presence returns or cooking_mode is on)
+      # Presence cleared - turn off after presence_delay seconds (unless presence returns or cooking/eating mode is on)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -55,6 +55,10 @@ actions:
           # If cooking_mode is on, don't turn off lights (oven coverage gap protection)
           - condition: state
             entity_id: input_boolean.cooking_mode
+            state: "off"
+          # If eating_mode is on, don't turn off lights
+          - condition: state
+            entity_id: input_boolean.eating_mode
             state: "off"
           - wait_for_trigger:
               - trigger: state

@@ -51,7 +51,7 @@
                   "styles": "ha-card { margin-bottom: 8px; }",
                   "sub_button": [
                     {
-                      "entity": "input_boolean.eating_mode",
+                      "entity": "input_boolean.dad_eating_mode",
                       "icon": "mdi:food",
                       "name": "Eat",
                       "show_name": true,

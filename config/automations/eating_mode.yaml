@@ -15,7 +15,7 @@
 id: '1767457440986'
 alias: "Eating Mode Changed"
 description: "Handle eating mode state changes - bright island for meals"
-mode: single
+mode: restart
 
 triggers:
   - trigger: state

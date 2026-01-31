@@ -75,7 +75,7 @@ actions:
                   brightness_pct: "{{ overhead_brightness }}"
                   color_temp_kelvin: "{{ color_temp }}"
 
-      # Presence cleared - turn off (unless hobby mode or TV is on)
+      # Presence cleared - turn off (unless hobby mode, eating mode, or TV is on)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -83,6 +83,14 @@ actions:
           # Skip if hobby mode is on (user is working on a project)
           - condition: state
             entity_id: input_boolean.hobby_mode
+            state: "off"
+          # Skip if eating mode is on (Charlie's meal in progress)
+          - condition: state
+            entity_id: input_boolean.eating_mode
+            state: "off"
+          # Skip if dad eating mode is on (Dad's meal in progress)
+          - condition: state
+            entity_id: input_boolean.dad_eating_mode
             state: "off"
           # Skip if TV is in use (tv_time script handles lighting)
           # Check Apple TV, LG TV, and SuperBOX

@@ -83,6 +83,9 @@ input_boolean:
   eating_mode:
     name: "Eating Mode"
     icon: mdi:silverware-fork-knife
+  dad_eating_mode:
+    name: "Dad Eating Mode"
+    icon: mdi:food-fork-drink
   cleaning_mode:
     name: "Cleaning Mode"
     icon: mdi:broom

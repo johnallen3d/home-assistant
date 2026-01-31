@@ -406,22 +406,45 @@ tv_time:
         ambient_color: [255, 180, 107]
         # Charlie meal zone - protect island bulb when FP2 detects presence
         charlie_meal_active: "{{ is_state('binary_sensor.charlie_meal', 'on') }}"
+        # Eating mode - protect all kitchen lights when eating_mode is on
+        eating_mode_active: "{{ is_state('input_boolean.eating_mode', 'on') }}"
+        # Dad eating mode - protect living room lights when dad_eating_mode is on
+        dad_eating_mode_active: "{{ is_state('input_boolean.dad_eating_mode', 'on') }}"
 
-    # Always turn off glare-causing lights
+    # Turn off glare-causing lights (skip living room if dad eating mode)
+    - if:
+        - condition: template
+          value_template: "{{ not dad_eating_mode_active }}"
+      then:
+        - action: light.turn_off
+          target:
+            entity_id:
+              - light.living_room_light
+              - light.living_room_overhead_light
+          data:
+            transition: "{{ trans }}"
+
+    # Always turn off bedroom lights (these cause glare regardless)
     - action: light.turn_off
       target:
         entity_id:
-          - light.living_room_light
-          - light.living_room_overhead_light
           - light.bedroom_lamp
           - light.bedroom_overhead_left
           - light.bedroom_overhead_right
       data:
         transition: "{{ trans }}"
 
-    - action: switch.turn_off
-      target:
-        entity_id: switch.kitchen_counter_switch
+    - if:
+        - condition: template
+          value_template: "{{ not eating_mode_active }}"
+      then:
+        - action: switch.turn_off
+          target:
+            entity_id: switch.kitchen_counter_switch
+
+    # Skip kitchen light modifications if eating mode is active
+    - condition: template
+      value_template: "{{ not eating_mode_active }}"
 
     - choose:
         # Daytime: Turn off kitchen lights (no ambient needed, reduce distraction)

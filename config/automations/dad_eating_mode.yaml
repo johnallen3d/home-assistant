@@ -1,0 +1,72 @@
+# Dad Eating Mode State Handler
+# Reacts to dad_eating_mode boolean changes to control living room lighting.
+#
+# The boolean (input_boolean.dad_eating_mode) is the user-facing switch:
+# - Visible on mobile dashboard as the "Eat" toggle
+# - Manual override for living room lights during meals
+#
+# This automation handles the lighting logic:
+# - ON: Set living room to cozy dining ambiance (warm, dim)
+# - OFF: Check presence and turn off lights appropriately
+#
+# Note: When dad_eating_mode is ON, presence automations and tv_time
+# won't turn off lights (bypasses those controls).
+
+id: '1769890777419'
+alias: "Dad Eating Mode Changed"
+description: "Handle Dad's eating mode state changes - cozy living room for meals"
+mode: restart
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.dad_eating_mode
+    to: "on"
+    id: eating_on
+  - trigger: state
+    entity_id: input_boolean.dad_eating_mode
+    to: "off"
+    id: eating_off
+
+actions:
+  - choose:
+      # Eating mode turned ON - cozy warm living room
+      - conditions:
+          - condition: trigger
+            id: eating_on
+        sequence:
+          - action: script.eating
+
+      # Eating mode turned OFF - check presence for light control
+      - conditions:
+          - condition: trigger
+            id: eating_off
+        sequence:
+          - choose:
+              # Living room presence detected - switch to adaptive lighting
+              - conditions:
+                  - condition: state
+                    entity_id: binary_sensor.kitchen_presence_living_room
+                    state: "on"
+                sequence:
+                  - action: script.lights
+                    data:
+                      lights:
+                        - light.living_room_lights
+                      night_mode: dim_warm
+                      night_brightness: 15
+            # No presence detected - wait for presence_delay before turning off
+            default:
+              - wait_for_trigger:
+                  - trigger: state
+                    entity_id: binary_sensor.kitchen_presence_living_room
+                    to: "on"
+                timeout:
+                  seconds: "{{ states('input_number.presence_delay') | int(5) }}"
+              # Only turn off if no presence detected during wait
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger is none }}"
+                then:
+                  - action: light.turn_off
+                    target:
+                      entity_id: light.living_room_lights
