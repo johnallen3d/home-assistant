@@ -51,35 +51,18 @@
                   "styles": "ha-card { margin-bottom: 8px; }",
                   "sub_button": [
                     {
-                      "entity": "script.eating",
+                      "entity": "input_boolean.eating_mode",
                       "icon": "mdi:food",
                       "name": "Eat",
                       "show_name": true,
                       "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.eating"
-                        }
+                        "action": "toggle"
                       }
                     },
                     {
-                      "entity": "script.charlie_eating",
+                      "entity": "input_boolean.eating_mode",
                       "icon": "mdi:baby-face-outline",
                       "name": "Charlie",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.charlie_eating"
-                        }
-                      }
-                    },
-                    {
-                      "entity": "input_boolean.cooking_mode",
-                      "icon": "mdi:pot-steam",
-                      "name": "Cook",
                       "show_name": true,
                       "tap_action": {
                         "action": "toggle"
@@ -155,35 +138,9 @@
                       }
                     },
                     {
-                      "entity": "script.kitchen_chill",
-                      "icon": "mdi:sofa",
-                      "name": "Chill",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "script.turn_on",
-                        "target": {
-                          "entity_id": "script.kitchen_chill"
-                        }
-                      }
-                    },
-                    {
-                      "entity": "scene.bruins",
-                      "icon": "mdi:hockey-puck",
-                      "name": "B's",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "scene.turn_on",
-                        "target": {
-                          "entity_id": "scene.bruins"
-                        }
-                      }
-                    },
-                    {
-                      "entity": "script.bruins_animation",
-                      "icon": "mdi:rotate-3d-variant",
-                      "name": "Anim",
+                      "entity": "input_boolean.cooking_mode",
+                      "icon": "mdi:pot-steam",
+                      "name": "Cook",
                       "show_name": true,
                       "tap_action": {
                         "action": "toggle"
@@ -308,31 +265,6 @@
                   "entity": "light.dad_s_overhead_lights",
                   "name": "Overhead Lights",
                   "icon": "mdi:ceiling-light",
-                  "button_type": "slider",
-                  "show_state": true,
-                  "show_attribute": "brightness"
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "separator",
-                  "name": "Charlie's Bedroom",
-                  "icon": "mdi:teddy-bear",
-                  "sub_button": [
-                    {
-                      "entity": "light.charlie_s_shapes",
-                      "icon": "mdi:lightbulb-group",
-                      "tap_action": {
-                        "action": "toggle"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "button",
-                  "entity": "light.charlie_s_shapes",
-                  "name": "Charlie's Shapes",
-                  "icon": "mdi:shape",
                   "button_type": "slider",
                   "show_state": true,
                   "show_attribute": "brightness"
