@@ -323,28 +323,23 @@ When investigating device unavailability in HA:
 
 ## ⛔ GIT SAFETY - READ THIS ⛔
 
-**NEVER commit or push without EXPLICIT user approval.** This is non-negotiable.
+**NEVER commit or push without user approval.** But recognize what approval looks like.
 
-**You must ask before:**
-- `git commit` - Ask: "Ready to commit?" and show staged files + proposed message
-- `git push` - Ask: "Ready to push to remote?"
-- `bd sync` - Ask: "Ready to push?" (bd sync pushes internally!)
+**These phrases ARE approval - just do it, don't ask again:**
+- "commit the changes", "commit it", "please commit"
+- "push it", "push to remote", "go ahead and push"
+- "yes", "do it", "go ahead", "ship it"
 
-**Commands that push (require explicit approval):**
+**Only ask for confirmation when:**
+- You're about to commit/push and the user hasn't requested it
+- The user asked a question (not gave an instruction)
+
+**Commands that push (be aware):**
 - `git push`
 - `bd sync` ← THIS PUSHES! It runs `git push` internally!
 
-**Before ANY push command:**
-1. STOP
-2. ASK: "Ready to push to remote?"
-3. WAIT for explicit "yes", "push", "do it", or similar approval
-4. Only THEN run the push command
-
-**Do NOT run `bd sync` without push approval.** Use `bd close` to close issues,
+**Do NOT run `bd sync` without approval.** Use `bd close` to close issues,
 then wait for push approval before running `bd sync`.
-
-This applies even if the workflow feels obvious or the user seems to expect it.
-ALWAYS ASK before committing or pushing. NO EXCEPTIONS.
 
 <!-- bv-agent-instructions-v1 -->
 
