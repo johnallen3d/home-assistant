@@ -47,38 +47,21 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "separator",
-                  "icon": "mdi:silverware-fork-knife",
-                  "styles": "ha-card { margin-bottom: 8px; }",
-                  "sub_button": [
-                    {
-                      "entity": "input_boolean.dad_eating_mode",
-                      "icon": "mdi:food",
-                      "name": "Eat",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "toggle"
-                      }
-                    },
-                    {
-                      "entity": "input_boolean.eating_mode",
-                      "icon": "mdi:baby-face-outline",
-                      "name": "Charlie",
-                      "show_name": true,
-                      "tap_action": {
-                        "action": "toggle"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:bubble-card",
-                  "card_type": "separator",
                   "name": "Living Room",
                   "icon": "mdi:sofa",
                   "sub_button": [
                     {
                       "entity": "light.living_room_lights",
                       "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.dad_eating_mode",
+                      "icon": "mdi:food",
+                      "name": "Eat",
+                      "show_name": true,
                       "tap_action": {
                         "action": "toggle"
                       }
@@ -133,6 +116,15 @@
                     {
                       "entity": "light.kitchen_lights",
                       "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.eating_mode",
+                      "icon": "mdi:baby-face-outline",
+                      "name": "Charlie",
+                      "show_name": true,
                       "tap_action": {
                         "action": "toggle"
                       }

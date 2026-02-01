@@ -1,23 +1,29 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+#MISE description="Update automations on HA server from local files"
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pyyaml"]
+# ///
 """
-Generic script to update Home Assistant automations.yaml
-Workflow: Pull from server → Edit locally → Push back
+Update Home Assistant automations.yaml
+Workflow: Pull from server → Update from local file → Push back
 
 Usage:
-  # Update from a local split file
-  uv run src/automation/update.py config/automations/bathroom_presence.yaml
-
-  # Update multiple files
-  uv run src/automation/update.py config/automations/*.yaml
+  mise run automation-update config/automations/bathroom_presence.yaml
+  mise run automation-update config/automations/*.yaml
 """
 
-import yaml
-import sys
-import subprocess
 import os
+import subprocess
+import sys
 from pathlib import Path
 
-# Use environment variables from .env (loaded by justfile)
+import yaml
+
+# Load secrets via Doppler if not already loaded
+if not os.environ.get("HA_SERVER"):
+    os.execvp("doppler", ["doppler", "run", "--", sys.executable, *sys.argv])
+
 SERVER = os.environ["HA_SERVER"]
 CONFIG_PATH = os.environ["HA_CONFIG_PATH"]
 SERVER_PATH = f"{CONFIG_PATH}/automations.yaml"
@@ -49,18 +55,12 @@ def upload_automations():
 
 
 def update_automation_from_file(local_file):
-    """
-    Update an automation in the server file using a local split file as source
-
-    Args:
-        local_file: Path to local split automation file (e.g., automations/bathroom_presence.yaml)
-    """
+    """Update an automation in the server file using a local split file as source"""
     local_path = Path(local_file)
     if not local_path.exists():
         print(f"❌ Local file not found: {local_file}")
         return False
 
-    # Read the local automation file (single automation)
     with open(local_path) as f:
         local_auto = yaml.safe_load(f)
 
@@ -71,7 +71,6 @@ def update_automation_from_file(local_file):
     automation_id = local_auto["id"]
     automation_alias = local_auto.get("alias", "Unknown")
 
-    # Read server automations (list of automations)
     with open(LOCAL_TEMP) as f:
         server_autos = yaml.safe_load(f)
 
@@ -79,7 +78,6 @@ def update_automation_from_file(local_file):
         print("❌ Server automations.yaml is not a list")
         return False
 
-    # Find and replace the automation by ID
     found = False
     for i, auto in enumerate(server_autos):
         if auto.get("id") == automation_id:
@@ -89,20 +87,11 @@ def update_automation_from_file(local_file):
             break
 
     if not found:
-        print(
-            f"❌ Automation not found on server: {automation_alias} (id: {automation_id})"
-        )
+        print(f"❌ Automation not found on server: {automation_alias} (id: {automation_id})")
         return False
 
-    # Write back to temp file
     with open(LOCAL_TEMP, "w") as f:
-        yaml.dump(
-            server_autos,
-            f,
-            default_flow_style=False,
-            allow_unicode=True,
-            sort_keys=False,
-        )
+        yaml.dump(server_autos, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
     print(f"✅ Updated: {automation_alias}")
     return True
@@ -110,23 +99,18 @@ def update_automation_from_file(local_file):
 
 def main():
     if len(sys.argv) < 2:
-        print(
-            "Usage: python update_automation.py <automation_file> [<automation_file2> ...]"
-        )
-        print("Example: python update_automation.py automations/bathroom_presence.yaml")
+        print("Usage: mise run automation-update <file> [<file2> ...]")
+        print("Example: mise run automation-update config/automations/bathroom_presence.yaml")
         sys.exit(1)
 
-    # Download current automations from server
     download_automations()
 
-    # Process each file
     updated_count = 0
     for file_path in sys.argv[1:]:
         if update_automation_from_file(file_path):
             updated_count += 1
 
     if updated_count > 0:
-        # Upload modified automations back to server
         upload_automations()
         print(f"✅ Successfully updated {updated_count} automation(s)")
     else:

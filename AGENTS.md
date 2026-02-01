@@ -7,22 +7,29 @@
 ## Project Structure
 
 ```
-src/
-├── automation/        # Automation management scripts
-│   └── update.py      # Push local automation files to HA server
-├── scene/             # Scene management scripts
-│   ├── update.py      # Push local scene files to HA server
-│   └── delete.py      # Delete scenes from HA server by name
-├── exposure/          # Entity exposure for voice assistants
-│   ├── voice.py       # Update voice assistant (Assist) exposure
-│   └── homekit.py     # Update HomeKit Bridge exposure
-├── config/            # Configuration extraction
-│   └── extract.sh     # Download and split HA config files
-└── integrations/      # Third-party integrations
-    └── homebox_sync.py # Sync HA devices to Homebox inventory
+mise/tasks/              # All executable tasks (mise run <task>)
+├── automation-update    # Update automations on HA server from local files
+├── scene-update         # Update scenes on HA server from local files
+├── scene-delete         # Delete scenes from HA server by name
+├── exposure-voice       # Update voice assistant entity exposure
+├── exposure-homekit     # Update HomeKit Bridge entity exposure
+├── homebox-sync         # Sync HA devices to Homebox inventory
+├── sync                 # Extract config from HA server
+├── config               # HA config management (deploy, restart, etc.)
+├── esphome              # ESPHome device management
+└── esphome-secrets      # Generate esphome/secrets.yaml from Doppler
+
+config/                  # Local HA configuration files
+├── automations/         # Individual automation YAML files
+├── scenes/              # Individual scene YAML files
+├── configuration.yaml   # Main HA config
+├── scripts.yaml         # Scripts
+└── .storage/            # Dashboard JSON files
 ```
 
-All scripts are invoked via `just` commands from `config/Justfile` or the root `Justfile`.
+All scripts are invoked via `mise run <task>` commands. Secrets are managed via **Doppler** (not .envrc).
+
+**Tools managed by mise**: `uv`, `doppler`, `yq`
 
 ## Todo List
 
@@ -31,8 +38,8 @@ Use `/todo` command for todo list queries. This queries `todo.ha_enhancements` (
 ## Core Tenets
 
 1. **Make changes locally FIRST** - Edit files in this repo, not in HA UI or via MCP write tools
-2. **Push local changes to HA** - Use `just` commands or scp
-3. **Reload HA when necessary** - Use MCP `ha_call_service` for reloads, or `just config::restart`
+2. **Push local changes to HA** - Use `mise run config <command>` or scp
+3. **Reload HA when necessary** - Use MCP `ha_call_service` for reloads, or `mise run config restart`
 4. **Never make changes in HA UI** - For things managed here (automations, scripts, scenes, configuration.yaml)
 
 ## ⛔ MCP WRITE TOOLS - READ THIS ⛔
@@ -43,7 +50,7 @@ This means: Do NOT use `ha_config_set_dashboard`, `ha_config_set_automation`, et
 
 **Correct workflow:**
 1. Edit the local file (e.g., `config/.storage/lovelace.charlie_shapes`)
-2. Deploy via `just` command (e.g., `just config::deploy-dashboard charlie_shapes`)
+2. Deploy via `mise` command (e.g., `mise run config deploy-dashboard charlie_shapes`)
 
 **Wrong workflow:**
 1. ~~Use MCP `ha_config_set_dashboard` to change the server~~
@@ -56,16 +63,16 @@ MCP write tools bypass local files and create drift between repo and server.
 
 | Type | Local File(s) | Deploy Command | Reload Command |
 |------|---------------|----------------|----------------|
-| Automations | `config/automations/*.yaml` | `just config::update-automation <file>` | auto |
-| Scenes | `config/scenes/*.yaml` | `just config::update-scene <file>` | auto |
-| Scripts | `config/scripts.yaml` | `just config::deploy-scripts` | `ha_call_service("script", "reload")` |
-| Configuration | `config/configuration.yaml` | `just config::deploy` | restart required |
-| Blueprints | `config/blueprints/` | `just config::upload-blueprint <file>` | `ha_call_service("automation", "reload")` |
-| Dashboards | `config/.storage/lovelace.*` | `just config::deploy-dashboard <name>` | restart required |
-| Exposed entities (voice) | `config/exposed_entities.yaml` | `just config::deploy-exposed` | restart required |
-| Exposed entities (HomeKit) | `config/homekit_exposed.yaml` | `just config::deploy-homekit` | restart required |
+| Automations | `config/automations/*.yaml` | `mise run automation-update <file>` | auto |
+| Scenes | `config/scenes/*.yaml` | `mise run scene-update <file>` | auto |
+| Scripts | `config/scripts.yaml` | `mise run config deploy-scripts` | `ha_call_service("script", "reload")` |
+| Configuration | `config/configuration.yaml` | `mise run config deploy` | restart required |
+| Blueprints | `config/blueprints/` | `mise run config upload-blueprint <file>` | `ha_call_service("automation", "reload")` |
+| Dashboards | `config/.storage/lovelace.*` | `mise run config deploy-dashboard <name>` | restart required |
+| Exposed entities (voice) | `config/exposed_entities.yaml` | `mise run exposure-voice` | restart required |
+| Exposed entities (HomeKit) | `config/homekit_exposed.yaml` | `mise run exposure-homekit` | restart required |
 
-**Defined in `configuration.yaml`** (deploy via `just config::deploy`):
+**Defined in `configuration.yaml`** (deploy via `mise run config deploy`):
 - Light groups (`light:` section)
 - Entity groups (`group:` section)  
 - Input helpers (`input_number:`, `input_datetime:`, etc.)
@@ -91,18 +98,20 @@ This project has three layers of Home Assistant tooling:
    - Use for: config validation (`ha core check`), log analysis, rapid scp iteration
    - Covers: reload vs restart decisions, dashboard JSON debugging, template testing
 
-3. **`just` commands** - Convenience wrappers (see `just --list`)
-   - `just config::deploy` - Upload configuration.yaml and restart
-   - `just config::restart` - Restart HA core
+3. **`mise` tasks** - Deployment automation (see `mise tasks`)
+   - `mise run config deploy` - Upload configuration.yaml and restart
+   - `mise run config restart` - Restart HA core
+   - `mise run esphome <cmd>` - ESPHome device management
+   - Secrets loaded on-demand from **Doppler** (no .envrc needed)
 
 **Decision guide:**
 - Query/modify entities, automations, dashboards → Use MCP tools
 - Check config validity, view logs, rapid file deployment → Use skill (SSH/scp)
-- Routine tasks with established patterns → Use `just` commands
+- Routine tasks with established patterns → Use `mise run` commands
 
 ### Known Issues
 
-**`just config::update-automation` only updates existing automations.**  
+**`mise run automation-update` only updates existing automations.**
 For NEW automations, use MCP `ha_config_set_automation()` to create them first, then update the local YAML file with the generated `id` from the response. The `update-automation` command downloads the server's automation list and merges changes - it won't add automations that don't already exist on the server.
 
 **`ha core reload-scripts` via SSH doesn't reliably reload new scripts.**  
@@ -197,7 +206,7 @@ After modifying automations that respond to physical triggers (buttons, sensors)
   - Display offsets: `offset_height: 3`, `offset_width: 1`
   - Pins: CLK=GPIO17, MOSI=GPIO21, CS=GPIO15, DC=GPIO33, RST=GPIO34, BL=GPIO16
 - **Troubleshooting**: When adding new sensor types, do clean build:
-  `rm -rf esphome/.esphome/build/tiny-button && cd esphome && just compile`
+  `mise run esphome clean && mise run esphome compile`
 - **Features**:
   - Displays time, date, bathroom temp, outdoor temp
   - Sends button events to HA: `esphome.button_pressed` with `click_type` data
@@ -210,22 +219,22 @@ After modifying automations that respond to physical triggers (buttons, sensors)
 
 ### Voice Assistant Exposed Entities
 - **Config file**: `config/exposed_entities.yaml` - simple YAML list of entities to expose
-- **Script**: `src/exposure/voice.py` - applies YAML config to entity registry
+- **Task**: `mise run exposure-voice` - applies YAML config to entity registry
 - **Critical**: HA must be **stopped** before modifying `core.entity_registry`
 - **Commands**:
-  - `just config::deploy-exposed` - Apply settings and restart HA
-  - `just config::check-exposed` - Dry run, show what would change
+  - `mise run exposure-voice` - Apply settings (requires HA stopped)
+  - `mise run exposure-voice --dry-run` - Dry run, show what would change
 - **Note**: Light groups may need `homeassistant.exposed_entities` for legacy handling
 
 ### HomeKit Bridge Exposed Entities
 - **Config file**: `config/homekit_exposed.yaml` - domain-based filter config
-- **Script**: `src/exposure/homekit.py` - applies YAML config to HomeKit config entry
+- **Task**: `mise run exposure-homekit` - applies YAML config to HomeKit config entry
 - **Critical**: HA must be **stopped** before modifying `core.config_entries`
 - **Model**: Unlike voice assistant (per-entity), HomeKit uses domain includes + entity excludes
 - **Commands**:
-  - `just config::deploy-homekit` - Apply settings and restart HA
-  - `just config::check-homekit` - Dry run, show what would change
-  - `just config::list-homekit-server` - Show current filter on server
+  - `mise run exposure-homekit` - Apply settings (requires HA stopped)
+  - `mise run exposure-homekit --dry-run` - Dry run, show what would change
+  - `mise run config list-homekit-server` - Show current filter on server
 - **Config structure**:
   ```yaml
   include_domains: [light, lock]  # expose all entities in these domains

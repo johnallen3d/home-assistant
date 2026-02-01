@@ -1,22 +1,28 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+#MISE description="Delete scenes from HA server by name"
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pyyaml"]
+# ///
 """
-Script to delete scenes from Home Assistant scenes.yaml by name.
+Delete scenes from Home Assistant scenes.yaml by name.
 Workflow: Pull from server → Delete matching scenes → Push back
 
 Usage:
-  # Delete by name
-  uv run src/scene/delete.py "Daytime potty"
-
-  # Delete multiple scenes
-  uv run src/scene/delete.py "Daytime potty" "Nighttime potty" "TV Time"
+  mise run scene-delete "Daytime potty"
+  mise run scene-delete "Daytime potty" "Nighttime potty" "TV Time"
 """
 
-import yaml
-import sys
-import subprocess
 import os
+import subprocess
+import sys
 
-# Use environment variables from .env (loaded by justfile)
+import yaml
+
+# Load secrets via Doppler if not already loaded
+if not os.environ.get("HA_SERVER"):
+    os.execvp("doppler", ["doppler", "run", "--", sys.executable, *sys.argv])
+
 SERVER = os.environ["HA_SERVER"]
 CONFIG_PATH = os.environ["HA_CONFIG_PATH"]
 SERVER_PATH = f"{CONFIG_PATH}/scenes.yaml"
@@ -48,16 +54,7 @@ def upload_scenes():
 
 
 def delete_scenes_by_name(names_to_delete: list[str]) -> int:
-    """
-    Delete scenes from the server file by name.
-
-    Args:
-        names_to_delete: List of scene names to delete
-
-    Returns:
-        Number of scenes deleted
-    """
-    # Read server scenes
+    """Delete scenes from the server file by name."""
     with open(LOCAL_TEMP) as f:
         scenes = yaml.safe_load(f)
 
@@ -68,7 +65,6 @@ def delete_scenes_by_name(names_to_delete: list[str]) -> int:
     original_count = len(scenes)
     names_set = set(names_to_delete)
 
-    # Filter out scenes to delete
     remaining_scenes = []
     deleted_names = []
     for scene in scenes:
@@ -85,36 +81,26 @@ def delete_scenes_by_name(names_to_delete: list[str]) -> int:
         print(f"⚠️  No matching scenes found for: {names_to_delete}")
         return 0
 
-    # Report any names that weren't found
     not_found = names_set - set(deleted_names)
     for name in not_found:
         print(f"⚠️  Scene not found: {name}")
 
-    # Write back
     with open(LOCAL_TEMP, "w") as f:
-        yaml.dump(
-            remaining_scenes,
-            f,
-            default_flow_style=False,
-            allow_unicode=True,
-            sort_keys=False,
-        )
+        yaml.dump(remaining_scenes, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
     return deleted_count
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python delete_scene.py <scene_name> [<scene_name2> ...]")
-        print('Example: python delete_scene.py "Daytime potty" "Nighttime potty"')
+        print("Usage: mise run scene-delete <name> [<name2> ...]")
+        print('Example: mise run scene-delete "Daytime potty" "Nighttime potty"')
         sys.exit(1)
 
     scene_names = sys.argv[1:]
 
-    # Download current scenes from server
     download_scenes()
 
-    # Delete scenes
     deleted_count = delete_scenes_by_name(scene_names)
 
     if deleted_count > 0:

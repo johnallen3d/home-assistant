@@ -1,0 +1,169 @@
+#!/bin/bash
+#MISE description="Home Assistant configuration management"
+#USAGE arg "<command>" help="Command to run" { choices "upload-config" "upload-scripts" "deploy-scripts" "restart" "deploy" "status" "logs" "backup" "info" "upload-blueprint" "pull-blueprints" "pull-dashboards" "deploy-dashboard" "deploy-dashboards" "list-dashboards" "list-exposed" "list-exposed-server" "list-homekit-server" }
+#USAGE arg "[args]..." help="Additional arguments"
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+CONFIG_DIR="$REPO_ROOT/config"
+
+# Load secrets via Doppler if not already loaded
+if [[ -z "${HA_SERVER:-}" ]]; then
+    exec doppler run -- "$0" "$@"
+fi
+
+cd "$CONFIG_DIR"
+
+case "$usage_command" in
+    upload-config)
+        echo "📤 Uploading configuration.yaml..."
+        scp configuration.yaml "$HA_SERVER:$HA_CONFIG_PATH/configuration.yaml"
+        echo "✅ Configuration uploaded"
+        ;;
+
+    upload-scripts)
+        echo "📤 Uploading scripts.yaml..."
+        scp scripts.yaml "$HA_SERVER:$HA_CONFIG_PATH/scripts.yaml"
+        echo "✅ Scripts uploaded"
+        echo "💡 Run 'mise run config deploy-scripts' to reload"
+        ;;
+
+    deploy-scripts)
+        echo "📤 Uploading scripts.yaml..."
+        scp scripts.yaml "$HA_SERVER:$HA_CONFIG_PATH/scripts.yaml"
+        echo "✅ Scripts uploaded"
+        echo "🔄 Reloading scripts..."
+        ssh "$HA_SERVER" "ha core reload-scripts" || true
+        echo "✅ Scripts deployed"
+        ;;
+
+    restart)
+        echo "🔄 Restarting Home Assistant core..."
+        ssh "$HA_SERVER" "ha core restart" || true
+        echo "⏳ Waiting 30s for restart..."
+        sleep 30
+        ssh "$HA_SERVER" "ha info | head -3"
+        echo "✅ Home Assistant restarted"
+        ;;
+
+    deploy)
+        echo "📤 Uploading configuration.yaml..."
+        scp configuration.yaml "$HA_SERVER:$HA_CONFIG_PATH/configuration.yaml"
+        echo "✅ Configuration uploaded"
+        echo "🔄 Restarting Home Assistant core..."
+        ssh "$HA_SERVER" "ha core restart" || true
+        echo "⏳ Waiting 30s for restart..."
+        sleep 30
+        ssh "$HA_SERVER" "ha info | head -3"
+        echo "✅ Configuration deployed and Home Assistant restarted"
+        ;;
+
+    status)
+        echo "📊 Home Assistant status:"
+        ssh "$HA_SERVER" "ha info"
+        ;;
+
+    logs)
+        echo "📋 Streaming Home Assistant logs..."
+        ssh "$HA_SERVER" "ha core logs -f"
+        ;;
+
+    backup)
+        echo "💾 Backing up automations..."
+        ssh "$HA_SERVER" "cp $HA_CONFIG_PATH/automations.yaml $HA_CONFIG_PATH/automations.yaml.backup"
+        echo "✅ Backup created: automations.yaml.backup"
+        ;;
+
+    info)
+        echo "Server: $HA_SERVER"
+        echo "Config path: $HA_CONFIG_PATH"
+        echo "Local automations: $(ls automations/*.yaml 2>/dev/null | wc -l | tr -d ' ') files"
+        ;;
+
+    upload-blueprint)
+        FILE="${usage_args[0]}"
+        if [[ -z "$FILE" ]]; then
+            echo "❌ Usage: mise run config upload-blueprint <file>"
+            exit 1
+        fi
+        echo "📤 Uploading blueprint $FILE..."
+        ssh "$HA_SERVER" "mkdir -p $HA_CONFIG_PATH/blueprints/automation"
+        scp "$FILE" "$HA_SERVER:$HA_CONFIG_PATH/$FILE"
+        echo "✅ Blueprint uploaded"
+        ;;
+
+    pull-blueprints)
+        echo "📥 Downloading blueprints from server..."
+        mkdir -p blueprints/automation
+        scp -r "$HA_SERVER:$HA_CONFIG_PATH/blueprints/automation/*.yaml" blueprints/automation/ 2>/dev/null || echo "No custom blueprints found on server"
+        echo "✅ Blueprints synced"
+        ;;
+
+    pull-dashboards)
+        echo "📥 Downloading dashboards from server..."
+        mkdir -p .storage
+        scp "$HA_SERVER:$HA_CONFIG_PATH/.storage/lovelace.dashboard_*" .storage/ 2>/dev/null || echo "No dashboards found on server"
+        scp "$HA_SERVER:$HA_CONFIG_PATH/.storage/lovelace_dashboards" .storage/ 2>/dev/null || echo "No dashboard registry found"
+        echo "✅ Dashboards synced"
+        ls -la .storage/lovelace* 2>/dev/null || true
+        ;;
+
+    deploy-dashboard)
+        NAME="${usage_args[0]}"
+        if [[ -z "$NAME" ]]; then
+            echo "❌ Usage: mise run config deploy-dashboard <name>"
+            exit 1
+        fi
+        echo "📤 Uploading dashboard '$NAME'..."
+        uv run python -m json.tool ".storage/lovelace.dashboard_$NAME" > /dev/null || { echo "❌ Invalid JSON in dashboard file"; exit 1; }
+        scp ".storage/lovelace.dashboard_$NAME" "$HA_SERVER:$HA_CONFIG_PATH/.storage/"
+        echo "✅ Dashboard '$NAME' uploaded"
+        echo "🔄 Restarting Home Assistant core..."
+        ssh "$HA_SERVER" "ha core restart" || true
+        echo "⏳ Waiting 30s for restart..."
+        sleep 30
+        ssh "$HA_SERVER" "ha info | head -3"
+        echo "✅ Dashboard '$NAME' deployed and Home Assistant restarted"
+        ;;
+
+    deploy-dashboards)
+        echo "📤 Uploading all dashboards..."
+        for f in .storage/lovelace.dashboard_*; do
+            uv run python -m json.tool "$f" > /dev/null || { echo "❌ Invalid JSON in $f"; exit 1; }
+        done
+        scp .storage/lovelace.dashboard_* "$HA_SERVER:$HA_CONFIG_PATH/.storage/"
+        scp .storage/lovelace_dashboards "$HA_SERVER:$HA_CONFIG_PATH/.storage/"
+        echo "✅ All dashboards uploaded"
+        echo "🔄 Restarting Home Assistant core..."
+        ssh "$HA_SERVER" "ha core restart" || true
+        echo "⏳ Waiting 30s for restart..."
+        sleep 30
+        ssh "$HA_SERVER" "ha info | head -3"
+        echo "✅ All dashboards deployed and Home Assistant restarted"
+        ;;
+
+    list-dashboards)
+        echo "📋 Dashboards on server:"
+        ssh "$HA_SERVER" "ls -la $HA_CONFIG_PATH/.storage/lovelace.dashboard_* 2>/dev/null" || echo "No dashboards found"
+        ;;
+
+    list-exposed)
+        echo "📋 Entities configured to expose (from exposed_entities.yaml):"
+        uv run python -c "import yaml; d=yaml.safe_load(open('exposed_entities.yaml')); [print(f'  ✅ {k}') for k,v in d.items() if v]"
+        ;;
+
+    list-exposed-server)
+        echo "📋 Entities currently exposed on server:"
+        ssh "$HA_SERVER" "cat $HA_CONFIG_PATH/.storage/core.entity_registry" | uv run python -c "import sys,json; d=json.load(sys.stdin); [print(f'  ✅ {e[\"entity_id\"]}') for e in d['data']['entities'] if e.get('options',{}).get('conversation',{}).get('should_expose')==True]"
+        ;;
+
+    list-homekit-server)
+        echo "📋 HomeKit Bridge filter config on server:"
+        ssh "$HA_SERVER" "cat $HA_CONFIG_PATH/.storage/core.config_entries" | uv run python -c "import sys,json; d=json.load(sys.stdin); e=[x for x in d['data']['entries'] if x.get('domain')=='homekit' and x.get('options',{}).get('mode')=='bridge'][0]; f=e['options']['filter']; print(f'  include_domains: {f.get(\"include_domains\",[])}'); print(f'  include_entities: {f.get(\"include_entities\",[])}'); print(f'  exclude_entities: {f.get(\"exclude_entities\",[])}')"
+        ;;
+
+    *)
+        echo "❌ Unknown command: $usage_command"
+        exit 1
+        ;;
+esac

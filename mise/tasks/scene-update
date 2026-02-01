@@ -1,23 +1,29 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+#MISE description="Update scenes on HA server from local files"
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pyyaml"]
+# ///
 """
-Script to update Home Assistant scenes.yaml
+Update Home Assistant scenes.yaml
 Workflow: Pull from server → Update from local file → Push back
 
 Usage:
-  # Update from a local split file
-  uv run src/scene/update.py config/scenes/alarm.yaml
-
-  # Update multiple files
-  uv run src/scene/update.py config/scenes/*.yaml
+  mise run scene-update config/scenes/alarm.yaml
+  mise run scene-update config/scenes/*.yaml
 """
 
-import yaml
-import sys
-import subprocess
 import os
+import subprocess
+import sys
 from pathlib import Path
 
-# Use environment variables from .env (loaded by justfile)
+import yaml
+
+# Load secrets via Doppler if not already loaded
+if not os.environ.get("HA_SERVER"):
+    os.execvp("doppler", ["doppler", "run", "--", sys.executable, *sys.argv])
+
 SERVER = os.environ["HA_SERVER"]
 CONFIG_PATH = os.environ["HA_CONFIG_PATH"]
 SERVER_PATH = f"{CONFIG_PATH}/scenes.yaml"
@@ -49,18 +55,12 @@ def upload_scenes():
 
 
 def update_scene_from_file(local_file):
-    """
-    Update a scene in the server file using a local split file as source
-
-    Args:
-        local_file: Path to local split scene file (e.g., scenes/alarm.yaml)
-    """
+    """Update a scene in the server file using a local split file as source"""
     local_path = Path(local_file)
     if not local_path.exists():
         print(f"❌ Local file not found: {local_file}")
         return False
 
-    # Read the local scene file (single scene)
     with open(local_path) as f:
         local_scene = yaml.safe_load(f)
 
@@ -71,7 +71,6 @@ def update_scene_from_file(local_file):
     scene_id = local_scene["id"]
     scene_name = local_scene.get("name", "Unknown")
 
-    # Read server scenes (list of scenes)
     with open(LOCAL_TEMP) as f:
         server_scenes = yaml.safe_load(f)
 
@@ -79,7 +78,6 @@ def update_scene_from_file(local_file):
         print("❌ Server scenes.yaml is not a list")
         return False
 
-    # Find and replace the scene by ID
     found = False
     for i, scene in enumerate(server_scenes):
         if scene.get("id") == scene_id:
@@ -92,15 +90,8 @@ def update_scene_from_file(local_file):
         print(f"❌ Scene not found on server: {scene_name} (id: {scene_id})")
         return False
 
-    # Write back to temp file
     with open(LOCAL_TEMP, "w") as f:
-        yaml.dump(
-            server_scenes,
-            f,
-            default_flow_style=False,
-            allow_unicode=True,
-            sort_keys=False,
-        )
+        yaml.dump(server_scenes, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
     print(f"✅ Updated: {scene_name}")
     return True
@@ -108,21 +99,18 @@ def update_scene_from_file(local_file):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python update_scene.py <scene_file> [<scene_file2> ...]")
-        print("Example: python update_scene.py scenes/alarm.yaml")
+        print("Usage: mise run scene-update <file> [<file2> ...]")
+        print("Example: mise run scene-update config/scenes/alarm.yaml")
         sys.exit(1)
 
-    # Download current scenes from server
     download_scenes()
 
-    # Process each file
     updated_count = 0
     for file_path in sys.argv[1:]:
         if update_scene_from_file(file_path):
             updated_count += 1
 
     if updated_count > 0:
-        # Upload modified scenes back to server
         upload_scenes()
         print(f"✅ Successfully updated {updated_count} scene(s)")
     else:

@@ -1,0 +1,47 @@
+#!/bin/bash
+#MISE description="ESPHome device management"
+#USAGE arg "<command>" help="Command to run" { choices "validate" "compile" "upload" "logs" "run" "ping" "clean" "info" }
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+DEVICE="tiny-button.yaml"
+DEVICE_IP="192.168.0.87"
+
+cd "$REPO_ROOT"
+
+case "$usage_command" in
+    validate)
+        echo "✅ Validating configuration..."
+        uv run esphome config "esphome/$DEVICE"
+        ;;
+    compile)
+        echo "🔨 Compiling firmware..."
+        uv run esphome compile "esphome/$DEVICE"
+        ;;
+    upload)
+        echo "📤 Uploading to device via OTA..."
+        uv run esphome upload "esphome/$DEVICE" --device "$DEVICE_IP"
+        ;;
+    logs)
+        echo "📋 Streaming logs from device..."
+        uv run esphome logs "esphome/$DEVICE" --device "$DEVICE_IP"
+        ;;
+    run)
+        echo "🚀 Compile, upload, and stream logs..."
+        uv run esphome run "esphome/$DEVICE" --device "$DEVICE_IP"
+        ;;
+    ping)
+        echo "🔍 Checking device connectivity..."
+        ping -c 3 "$DEVICE_IP"
+        ;;
+    clean)
+        echo "🧹 Cleaning build artifacts..."
+        rm -rf esphome/build/
+        rm -rf esphome/.esphome/
+        ;;
+    info)
+        echo "Device: $DEVICE"
+        echo "IP: $DEVICE_IP"
+        echo "Board: ESP32-S3 (Atom S3)"
+        ;;
+esac

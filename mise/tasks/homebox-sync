@@ -1,0 +1,347 @@
+#!/usr/bin/env -S uv run --script
+#MISE description="Sync HA devices to Homebox inventory"
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["requests", "websocket-client"]
+# ///
+"""
+Sync Home Assistant devices to Homebox inventory.
+
+Usage:
+    mise run homebox-sync [--dry-run] [--force-update]
+"""
+
+import argparse
+import json
+import os
+import re
+import ssl
+import sys
+from dataclasses import dataclass
+from typing import Optional
+
+import requests
+import websocket
+
+# Load secrets via Doppler if not already loaded
+if not os.environ.get("HOMEBOX_TOKEN"):
+    os.execvp("doppler", ["doppler", "run", "--", sys.executable, *sys.argv])
+
+# Patterns for filtering out virtual/system devices
+EXCLUDE_PATTERNS = [
+    r"^Home Assistant", r"^HASS Bridge:", r"^Backup$",
+    r"^HACS$", r"model.*plugin$", r"model.*theme$", r"model.*integration$",
+    r"^(Tailscale|Studio Code Server|Terminal & SSH|Whisper|Piper|openWakeWord)$",
+    r"^(Matter Server|Mosquitto broker|Music Assistant|ESPHome Device Builder)$",
+    r"^(Claude Terminal|Beszel-Agent)$",
+    r"^Sun$", r"^Forecast$",
+    r"iPhone", r"iPad", r"Watch",
+    r"^[A-Z0-9]{8,}", r"^Nuki_[A-F0-9]+$", r"^hci\d", r"\([0-9A-F]{2}:[0-9A-F]{2}:",
+    r"^(Kitchen|Bathroom|Bedroom|Living Room)$", r"^\[LG\]",
+    r"macbook", r"\.local$", r"-net$",
+    r"^[\U0001F300-\U0001F9FF]+$", r"^(eero|beltalowda)",
+]
+
+EXCLUDE_MANUFACTURERS = [
+    "piitaya", "basnijholt", "vasqued2", "Madelena", "Clooos", "krahabb",
+    "sopelj", "AlexandrErohin", "koush", "schmittx", "andrew-codechimp",
+    "PiotrMachowski", "homeassistant-extras", "NemesisRE", "Flight-Lab", "bauer-group",
+]
+
+EXCLUDE_MODELS = ["plugin", "theme", "integration", "Home Assistant Add-on"]
+
+
+@dataclass
+class HomeboxConfig:
+    url: str
+    token: str
+
+    @property
+    def api_url(self) -> str:
+        return f"{self.url.rstrip('/')}/api/v1"
+
+    @property
+    def headers(self) -> dict:
+        return {"Authorization": f"Bearer {self.token}", "Content-Type": "application/json"}
+
+
+class HomeboxClient:
+    def __init__(self, config: HomeboxConfig):
+        self.config = config
+        self.session = requests.Session()
+        self.session.headers.update(self.config.headers)
+
+    def _get(self, endpoint: str) -> dict:
+        resp = self.session.get(f"{self.config.api_url}{endpoint}")
+        resp.raise_for_status()
+        return resp.json()
+
+    def _post(self, endpoint: str, data: dict) -> dict:
+        resp = self.session.post(f"{self.config.api_url}{endpoint}", json=data)
+        resp.raise_for_status()
+        return resp.json()
+
+    def _put(self, endpoint: str, data: dict) -> dict:
+        resp = self.session.put(f"{self.config.api_url}{endpoint}", json=data)
+        resp.raise_for_status()
+        return resp.json()
+
+    def get_locations(self) -> list[dict]:
+        return self._get("/locations")
+
+    def create_location(self, name: str, description: str = "") -> dict:
+        return self._post("/locations", {"name": name, "description": description})
+
+    def get_items(self) -> list[dict]:
+        response = self._get("/items")
+        if isinstance(response, dict) and "items" in response:
+            return response["items"]
+        return response
+
+    def create_item(self, name: str, location_id: Optional[str] = None, description: str = "",
+                    manufacturer: str = "", model: str = "", serial_number: str = "",
+                    notes: str = "", quantity: int = 1) -> dict:
+        item_data = {"name": name, "description": description, "quantity": quantity}
+        if location_id:
+            item_data["locationId"] = location_id
+
+        item = self._post("/items", item_data)
+        item_id = item["id"]
+
+        update_data = {
+            "id": item_id, "name": name, "description": description,
+            "manufacturer": manufacturer or "", "modelNumber": model or "",
+            "serialNumber": serial_number or "", "notes": notes or "", "quantity": quantity,
+        }
+        if location_id:
+            update_data["locationId"] = location_id
+
+        return self._put(f"/items/{item_id}", update_data)
+
+    def update_item(self, item_id: str, name: str, location_id: Optional[str] = None,
+                    description: str = "", manufacturer: str = "", model: str = "",
+                    notes: str = "", quantity: int = 1) -> dict:
+        update_data = {
+            "id": item_id, "name": name, "description": description,
+            "manufacturer": manufacturer or "", "modelNumber": model or "",
+            "notes": notes or "", "quantity": quantity,
+        }
+        if location_id:
+            update_data["locationId"] = location_id
+
+        return self._put(f"/items/{item_id}", update_data)
+
+
+def fetch_ha_data_via_websocket(ha_url: str, ha_token: str) -> tuple[list[dict], list[dict]]:
+    ws_url = ha_url.replace("http://", "ws://").replace("https://", "wss://")
+    ws_url = f"{ws_url}/api/websocket"
+
+    devices = []
+    areas = []
+    msg_id = 1
+
+    def send_and_receive(ws, msg_type: str) -> dict:
+        nonlocal msg_id
+        ws.send(json.dumps({"id": msg_id, "type": msg_type}))
+        while True:
+            result = json.loads(ws.recv())
+            if result.get("id") == msg_id:
+                msg_id += 1
+                return result
+
+    ws = websocket.create_connection(
+        ws_url, sslopt={"cert_reqs": ssl.CERT_NONE} if "wss://" in ws_url else {}
+    )
+
+    auth_msg = json.loads(ws.recv())
+    if auth_msg["type"] == "auth_required":
+        ws.send(json.dumps({"type": "auth", "access_token": ha_token}))
+        auth_result = json.loads(ws.recv())
+        if auth_result["type"] != "auth_ok":
+            raise Exception(f"Auth failed: {auth_result}")
+
+    result = send_and_receive(ws, "config/device_registry/list")
+    if result.get("success"):
+        devices = result.get("result", [])
+
+    result = send_and_receive(ws, "config/area_registry/list")
+    if result.get("success"):
+        areas = result.get("result", [])
+
+    ws.close()
+    return devices, areas
+
+
+def is_physical_device(device: dict) -> bool:
+    name = device.get("name") or device.get("name_by_user") or ""
+    manufacturer = device.get("manufacturer") or ""
+    model = device.get("model") or ""
+
+    for pattern in EXCLUDE_PATTERNS:
+        if re.search(pattern, name, re.IGNORECASE):
+            return False
+
+    if manufacturer in EXCLUDE_MANUFACTURERS:
+        return False
+
+    for excluded_model in EXCLUDE_MODELS:
+        if excluded_model.lower() in (model or "").lower():
+            return False
+
+    if not name or device.get("disabled_by"):
+        return False
+
+    return True
+
+
+def sync_locations(client: HomeboxClient, areas: list[dict], dry_run: bool = False) -> dict[str, str]:
+    print("\n=== Syncing Locations ===")
+    existing = {loc["name"]: loc["id"] for loc in client.get_locations()}
+    print(f"Found {len(existing)} existing locations in Homebox")
+
+    area_to_location = {}
+
+    for area in areas:
+        name = area.get("name", "")
+        area_id = area.get("area_id", "")
+
+        if not name:
+            continue
+
+        if name in existing:
+            print(f"  [EXISTS] {name}")
+            area_to_location[area_id] = existing[name]
+        else:
+            if dry_run:
+                print(f"  [DRY-RUN] Would create: {name}")
+                area_to_location[area_id] = f"dry-run-{area_id}"
+            else:
+                print(f"  [CREATE] {name}")
+                location = client.create_location(name, f"Imported from Home Assistant area: {area_id}")
+                area_to_location[area_id] = location["id"]
+
+    return area_to_location
+
+
+def sync_devices(client: HomeboxClient, devices: list[dict], area_to_location: dict[str, str],
+                 dry_run: bool = False, force_update: bool = False) -> None:
+    print("\n=== Syncing Devices ===")
+    existing_items = client.get_items()
+    existing_by_name = {item["name"]: item for item in existing_items}
+    print(f"Found {len(existing_items)} existing items in Homebox")
+
+    physical_devices = [d for d in devices if is_physical_device(d)]
+    print(f"Processing {len(physical_devices)} physical devices (filtered from {len(devices)} total)")
+
+    created = updated = skipped = 0
+
+    for device in physical_devices:
+        name = device.get("name_by_user") or device.get("name") or ""
+        if not name:
+            continue
+
+        manufacturer = device.get("manufacturer") or ""
+        model = device.get("model") or ""
+        area_id = device.get("area_id")
+        device_id = device.get("id") or device.get("device_id") or ""
+
+        location_id = area_to_location.get(area_id) if area_id else None
+
+        notes_parts = []
+        if device_id:
+            notes_parts.append(f"HA Device ID: {device_id}")
+        labels = device.get("labels", [])
+        if labels:
+            notes_parts.append(f"HA Labels: {', '.join(labels)}")
+        notes = "\n".join(notes_parts)
+
+        description = f"{manufacturer} {model}".strip()
+
+        if name in existing_by_name:
+            existing = existing_by_name[name]
+            existing_loc_id = existing.get("location", {}).get("id")
+            existing_qty = existing.get("quantity", 0)
+
+            needs_update = (force_update or (location_id and existing_loc_id != location_id) or existing_qty == 0)
+
+            if needs_update:
+                if dry_run:
+                    old_loc = existing.get("location", {}).get("name", "None")
+                    print(f"  [DRY-RUN] Would update: {name} ({old_loc} -> {area_id or 'None'})")
+                else:
+                    print(f"  [UPDATE] {name}")
+                    try:
+                        client.update_item(item_id=existing["id"], name=name, location_id=location_id,
+                                           description=description, manufacturer=manufacturer, model=model, notes=notes)
+                        updated += 1
+                    except requests.HTTPError as e:
+                        print(f"    [ERROR] Failed to update {name}: {e}")
+            else:
+                print(f"  [EXISTS] {name}")
+                skipped += 1
+        else:
+            if dry_run:
+                print(f"  [DRY-RUN] Would create: {name} ({manufacturer}) -> {area_id or 'None'}")
+            else:
+                print(f"  [CREATE] {name}")
+                try:
+                    client.create_item(name=name, location_id=location_id, description=description,
+                                       manufacturer=manufacturer, model=model, notes=notes)
+                    created += 1
+                except requests.HTTPError as e:
+                    print(f"    [ERROR] Failed to create {name}: {e}")
+
+    print(f"\nSummary: Created {created}, Updated {updated}, Skipped {skipped}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Sync Home Assistant devices to Homebox inventory")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be changed without making changes")
+    parser.add_argument("--force-update", action="store_true", help="Update all existing items")
+    args = parser.parse_args()
+
+    homebox_url = os.environ.get("HOMEBOX_URL")
+    homebox_token = os.environ.get("HOMEBOX_TOKEN")
+    ha_url = os.environ.get("HA_URL", "http://homeassistant.local:8123")
+    ha_token = os.environ.get("HA_TOKEN") or os.environ.get("HOME_ASSISTANT_API_KEY")
+
+    if not homebox_url or not homebox_token:
+        print("Error: HOMEBOX_URL and HOMEBOX_TOKEN required")
+        sys.exit(1)
+    if not ha_token:
+        print("Error: HA_TOKEN or HOME_ASSISTANT_API_KEY required")
+        sys.exit(1)
+
+    if homebox_token.startswith("Bearer "):
+        homebox_token = homebox_token[7:]
+
+    hb_config = HomeboxConfig(url=homebox_url, token=homebox_token)
+    hb_client = HomeboxClient(hb_config)
+
+    print(f"Connecting to Homebox at {hb_config.api_url}...")
+    try:
+        locations = hb_client.get_locations()
+        print(f"Connected! Found {len(locations)} existing locations.")
+    except requests.HTTPError as e:
+        print(f"Error connecting to Homebox: {e}")
+        sys.exit(1)
+
+    print(f"\nFetching data from Home Assistant at {ha_url}...")
+    try:
+        devices, areas = fetch_ha_data_via_websocket(ha_url, ha_token)
+        print(f"Loaded {len(devices)} devices and {len(areas)} areas from Home Assistant")
+    except Exception as e:
+        print(f"Error fetching HA data: {e}")
+        sys.exit(1)
+
+    if args.dry_run:
+        print("\n*** DRY RUN MODE - No changes will be made ***")
+
+    area_to_location = sync_locations(hb_client, areas, dry_run=args.dry_run)
+    sync_devices(hb_client, devices, area_to_location, dry_run=args.dry_run, force_update=args.force_update)
+
+    print("\nDone!")
+
+
+if __name__ == "__main__":
+    main()
