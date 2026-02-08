@@ -34,6 +34,33 @@ actions:
           - condition: trigger
             id: working_on
         sequence:
+          # Per mode conflict matrix: working ON turns off cooking, hobby, dad_eating, meditation, bathing, cleaning
+          # Disable automations first to prevent their OFF handlers from running
+          - action: automation.turn_off
+            target:
+              entity_id:
+                - automation.cooking_mode_changed
+                - automation.hobby_mode_changed
+                - automation.dad_eating_mode_changed
+                - automation.bathing_mode_changed
+                - automation.cleaning_mode_changed
+          - action: input_boolean.turn_off
+            target:
+              entity_id:
+                - input_boolean.cooking_mode
+                - input_boolean.hobby_mode
+                - input_boolean.dad_eating_mode
+                - input_boolean.meditation_mode
+                - input_boolean.bathing_mode
+                - input_boolean.cleaning_mode
+          - action: automation.turn_on
+            target:
+              entity_id:
+                - automation.cooking_mode_changed
+                - automation.hobby_mode_changed
+                - automation.dad_eating_mode_changed
+                - automation.bathing_mode_changed
+                - automation.cleaning_mode_changed
           - action: scene.turn_on
             target:
               entity_id: scene.working

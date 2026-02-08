@@ -1,0 +1,68 @@
+# TV Mode Auto Handler
+# Automatically sets tv_mode based on media player state.
+#
+# The boolean (input_boolean.tv_mode) tracks whether the TV is in active use:
+# - Visible on dashboards as a toggle (for manual override)
+# - Used by other automations to check if TV is active
+#
+# This automation handles state sync:
+# - TV turns on (playing/paused/idle): Set tv_mode ON, clear conflicting modes, call tv_time script
+# - TV turns off: Set tv_mode OFF
+#
+# Per mode conflict matrix, tv ON turns off:
+# - hobby_mode (focus on TV, not projects)
+# - meditation_mode (TV is not meditation)
+
+id: 'tv_mode_auto'
+alias: "TV Mode Auto"
+description: "Sets tv_mode based on media player state"
+mode: restart
+
+triggers:
+  - trigger: state
+    entity_id: media_player.living_room
+    from: "off"
+    to:
+      - "playing"
+      - "paused"
+      - "idle"
+    id: tv_on
+  - trigger: state
+    entity_id: media_player.living_room
+    to: "off"
+    id: tv_off
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: tv_on
+        sequence:
+          - action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.tv_mode
+          # Per matrix: tv ON turns off hobby_mode, meditation_mode
+          # Disable automation first to prevent its OFF handler from running
+          - action: automation.turn_off
+            target:
+              entity_id: automation.hobby_mode_changed
+          - action: input_boolean.turn_off
+            target:
+              entity_id:
+                - input_boolean.hobby_mode
+                - input_boolean.meditation_mode
+          - action: automation.turn_on
+            target:
+              entity_id: automation.hobby_mode_changed
+          # Call tv_time script
+          - action: script.tv_time
+            data:
+              transition: "{{ states('input_number.tv_time_transition_duration') | int(11) }}"
+
+      - conditions:
+          - condition: trigger
+            id: tv_off
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.tv_mode

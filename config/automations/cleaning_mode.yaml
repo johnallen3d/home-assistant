@@ -42,16 +42,24 @@ actions:
               entity_id:
                 - automation.hobby_mode_changed
                 - automation.cooking_mode_changed
-                - automation.eating_mode_changed
+                - automation.charlie_eating_mode_changed
+                - automation.dad_eating_mode_changed
+                - automation.working_mode_changed
+                - automation.bathing_mode_changed
+                - automation.tv_mode_auto
 
-          # Now turn off other modes (automations won't react)
+          # Per mode conflict matrix: cleaning ON turns off ALL other modes
           - action: input_boolean.turn_off
             target:
               entity_id:
-                - input_boolean.hobby_mode
                 - input_boolean.cooking_mode
-                - input_boolean.eating_mode
+                - input_boolean.hobby_mode
+                - input_boolean.charlie_eating_mode
+                - input_boolean.dad_eating_mode
                 - input_boolean.meditation_mode
+                - input_boolean.working_mode
+                - input_boolean.bathing_mode
+                - input_boolean.tv_mode
 
           # Disable presence automations (skip laundry)
           - action: automation.turn_off
@@ -117,4 +125,8 @@ actions:
               entity_id:
                 - automation.hobby_mode_changed
                 - automation.cooking_mode_changed
-                - automation.eating_mode_changed
+                - automation.charlie_eating_mode_changed
+                - automation.dad_eating_mode_changed
+                - automation.working_mode_changed
+                - automation.bathing_mode_changed
+                - automation.tv_mode_auto

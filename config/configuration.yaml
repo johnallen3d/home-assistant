@@ -80,8 +80,8 @@ input_boolean:
   alarm_enabled:
     name: "Alarm Enabled"
     icon: mdi:alarm-light
-  eating_mode:
-    name: "Eating Mode"
+  charlie_eating_mode:
+    name: "Charlie Eating Mode"
     icon: mdi:silverware-fork-knife
   dad_eating_mode:
     name: "Dad Eating Mode"
@@ -95,6 +95,9 @@ input_boolean:
   bathing_mode:
     name: "Bathing Mode"
     icon: mdi:shower
+  tv_mode:
+    name: "TV Mode"
+    icon: mdi:television
 
 # Helpers
 input_number:

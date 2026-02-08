@@ -86,7 +86,7 @@ actions:
             state: "off"
           # Skip if eating mode is on (Charlie's meal in progress)
           - condition: state
-            entity_id: input_boolean.eating_mode
+            entity_id: input_boolean.charlie_eating_mode
             state: "off"
           # Skip if dad eating mode is on (Dad's meal in progress)
           - condition: state

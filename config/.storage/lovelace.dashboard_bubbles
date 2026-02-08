@@ -74,6 +74,15 @@
                       "tap_action": {
                         "action": "toggle"
                       }
+                    },
+                    {
+                      "entity": "input_boolean.tv_mode",
+                      "icon": "mdi:television",
+                      "name": "TV",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
                     }
                   ]
                 },
@@ -121,7 +130,7 @@
                       }
                     },
                     {
-                      "entity": "input_boolean.eating_mode",
+                      "entity": "input_boolean.charlie_eating_mode",
                       "icon": "mdi:baby-face-outline",
                       "name": "Charlie",
                       "show_name": true,

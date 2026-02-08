@@ -58,7 +58,7 @@ actions:
             state: "off"
           # If eating_mode is on, don't turn off lights
           - condition: state
-            entity_id: input_boolean.eating_mode
+            entity_id: input_boolean.charlie_eating_mode
             state: "off"
           - wait_for_trigger:
               - trigger: state
@@ -85,7 +85,7 @@ actions:
                     entity_id: binary_sensor.charlie_meal
                     state: "off"
                   - condition: state
-                    entity_id: input_boolean.eating_mode
+                    entity_id: input_boolean.charlie_eating_mode
                     state: "off"
                 then:
                   - action: light.turn_off

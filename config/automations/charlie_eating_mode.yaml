@@ -1,7 +1,7 @@
-# Eating Mode State Handler
-# Reacts to eating_mode boolean changes to control island lighting.
+# Charlie Eating Mode State Handler
+# Reacts to charlie_eating_mode boolean changes to control island lighting.
 #
-# The boolean (input_boolean.eating_mode) is the user-facing switch:
+# The boolean (input_boolean.charlie_eating_mode) is the user-facing switch:
 # - Visible on Charlie's shapes dashboard as a toggle
 # - Manual override for island light during meals
 #
@@ -10,20 +10,20 @@
 # - OFF: Check presence and turn off lights appropriately
 #   - If charlie_meal zone active: keep island on at adaptive
 #   - If no presence: wait presence_delay, then turn off
-# - AUTO-OFF: If eating_mode is on but no presence for 60s, turn off eating_mode
+# - AUTO-OFF: If charlie_eating_mode is on but no presence for 60s, turn off charlie_eating_mode
 
 id: '1767457440986'
-alias: "Eating Mode Changed"
-description: "Handle eating mode state changes - bright island for meals"
+alias: "Charlie Eating Mode Changed"
+description: "Handle Charlie eating mode state changes - bright island for meals"
 mode: restart
 
 triggers:
   - trigger: state
-    entity_id: input_boolean.eating_mode
+    entity_id: input_boolean.charlie_eating_mode
     to: "on"
     id: eating_on
   - trigger: state
-    entity_id: input_boolean.eating_mode
+    entity_id: input_boolean.charlie_eating_mode
     to: "off"
     id: eating_off
   - trigger: state
@@ -38,6 +38,17 @@ actions:
           - condition: trigger
             id: eating_on
         sequence:
+          # Per mode conflict matrix: charlie_eating ON turns off cleaning
+          # Disable automation first to prevent its OFF handler from running
+          - action: automation.turn_off
+            target:
+              entity_id: automation.cleaning_mode_changed
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.cleaning_mode
+          - action: automation.turn_on
+            target:
+              entity_id: automation.cleaning_mode_changed
           - action: light.turn_on
             target:
               entity_id: light.island_bulb
@@ -85,7 +96,7 @@ actions:
           - condition: trigger
             id: presence_cleared
           - condition: state
-            entity_id: input_boolean.eating_mode
+            entity_id: input_boolean.charlie_eating_mode
             state: "on"
         sequence:
           - wait_for_trigger:
@@ -101,4 +112,4 @@ actions:
             then:
               - action: input_boolean.turn_off
                 target:
-                  entity_id: input_boolean.eating_mode
+                  entity_id: input_boolean.charlie_eating_mode

@@ -36,6 +36,24 @@ actions:
           - condition: trigger
             id: cooking_on
         sequence:
+          # Per mode conflict matrix: cooking ON turns off meditation, bathing, cleaning
+          # Disable automations first to prevent their OFF handlers from running
+          - action: automation.turn_off
+            target:
+              entity_id:
+                - automation.bathing_mode_changed
+                - automation.cleaning_mode_changed
+          - action: input_boolean.turn_off
+            target:
+              entity_id:
+                - input_boolean.meditation_mode
+                - input_boolean.bathing_mode
+                - input_boolean.cleaning_mode
+          - action: automation.turn_on
+            target:
+              entity_id:
+                - automation.bathing_mode_changed
+                - automation.cleaning_mode_changed
           - action: scene.turn_on
             target:
               entity_id: scene.cooking
@@ -52,6 +70,20 @@ actions:
                     entity_id: binary_sensor.kitchen_presence_kitchen
                     state: "on"
                 sequence: []
+              # Charlie eating mode active - keep island on, turn off rest
+              - conditions:
+                  - condition: state
+                    entity_id: input_boolean.charlie_eating_mode
+                    state: "on"
+                sequence:
+                  - action: light.turn_off
+                    target:
+                      entity_id:
+                        - light.sink_bulb
+                        - light.hue_lightstrip_plus_1
+                  - action: switch.turn_off
+                    target:
+                      entity_id: switch.kitchen_counter_switch
               # Charlie meal zone active - keep island on, turn off rest
               - conditions:
                   - condition: state
@@ -82,6 +114,21 @@ actions:
                   - condition: template
                     value_template: "{{ wait.trigger is none }}"
                 then:
-                  - action: homeassistant.turn_off
-                    target:
-                      entity_id: group.kitchen_all
+                  # Check charlie_eating_mode one more time before turning off island
+                  - if:
+                      - condition: state
+                        entity_id: input_boolean.charlie_eating_mode
+                        state: "on"
+                    then:
+                      - action: light.turn_off
+                        target:
+                          entity_id:
+                            - light.sink_bulb
+                            - light.hue_lightstrip_plus_1
+                      - action: switch.turn_off
+                        target:
+                          entity_id: switch.kitchen_counter_switch
+                    else:
+                      - action: homeassistant.turn_off
+                        target:
+                          entity_id: group.kitchen_all

@@ -78,10 +78,38 @@ toggle_meditation:
             - action: input_boolean.turn_on
               target:
                 entity_id: input_boolean.meditation_mode
-            # Turn off cooking mode if enabled
+            # Per mode conflict matrix: meditation ON turns off all other modes (except charlie_eating)
+            # Disable automations first to prevent their OFF handlers from running
+            - action: automation.turn_off
+              target:
+                entity_id:
+                  - automation.cooking_mode_changed
+                  - automation.hobby_mode_changed
+                  - automation.dad_eating_mode_changed
+                  - automation.working_mode_changed
+                  - automation.bathing_mode_changed
+                  - automation.tv_mode_auto
+                  - automation.cleaning_mode_changed
             - action: input_boolean.turn_off
               target:
-                entity_id: input_boolean.cooking_mode
+                entity_id:
+                  - input_boolean.cooking_mode
+                  - input_boolean.hobby_mode
+                  - input_boolean.dad_eating_mode
+                  - input_boolean.working_mode
+                  - input_boolean.bathing_mode
+                  - input_boolean.tv_mode
+                  - input_boolean.cleaning_mode
+            - action: automation.turn_on
+              target:
+                entity_id:
+                  - automation.cooking_mode_changed
+                  - automation.hobby_mode_changed
+                  - automation.dad_eating_mode_changed
+                  - automation.working_mode_changed
+                  - automation.bathing_mode_changed
+                  - automation.tv_mode_auto
+                  - automation.cleaning_mode_changed
             # Turn off lights in dad's bedroom
             - action: light.turn_off
               target:
@@ -407,9 +435,21 @@ tv_time:
         # Charlie meal zone - protect island bulb when FP2 detects presence
         charlie_meal_active: "{{ is_state('binary_sensor.charlie_meal', 'on') }}"
         # Eating mode - protect all kitchen lights when eating_mode is on
-        eating_mode_active: "{{ is_state('input_boolean.eating_mode', 'on') }}"
+        eating_mode_active: "{{ is_state('input_boolean.charlie_eating_mode', 'on') }}"
         # Dad eating mode - protect living room lights when dad_eating_mode is on
         dad_eating_mode_active: "{{ is_state('input_boolean.dad_eating_mode', 'on') }}"
+
+    # Per mode conflict matrix: tv_time clears hobby_mode (focus on TV, not projects)
+    # Disable automation first to prevent its OFF handler from running
+    - action: automation.turn_off
+      target:
+        entity_id: automation.hobby_mode_changed
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.hobby_mode
+    - action: automation.turn_on
+      target:
+        entity_id: automation.hobby_mode_changed
 
     # Turn off glare-causing lights (skip living room if dad eating mode)
     - if:

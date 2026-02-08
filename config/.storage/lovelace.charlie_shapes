@@ -21,7 +21,7 @@
               "cards": [
                 {
                   "type": "button",
-                  "entity": "input_boolean.eating_mode",
+                  "entity": "input_boolean.charlie_eating_mode",
                   "name": "I'm Eating",
                   "icon": "mdi:silverware-fork-knife",
                   "show_state": true,
