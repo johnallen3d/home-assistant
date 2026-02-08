@@ -130,6 +130,11 @@
                       }
                     },
                     {
+                      "entity": "sensor.alpstuga_air_quality_monitor_temperature",
+                      "show_name": false,
+                      "show_state": true
+                    },
+                    {
                       "entity": "input_boolean.charlie_eating_mode",
                       "icon": "mdi:baby-face-outline",
                       "name": "Charlie",
