@@ -1,0 +1,43 @@
+id: '1770580838432'
+alias: Kitchen High CO2 Alert
+description: >-
+  Notify when kitchen CO2 levels are unhealthy. 1000ppm = stuffy/drowsy,
+  1500ppm = poor ventilation. Requires sustained reading for 5 minutes
+  to avoid false alarms from brief cooking spikes.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
+    above: 1000
+    below: 1500
+    for:
+      minutes: 5
+    id: elevated
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
+    above: 1500
+    for:
+      minutes: 2
+    id: high
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: high
+        sequence:
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "\U0001FAC1 High CO2 in Kitchen"
+              message: >-
+                CO2 is {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide')
+                | round(0) }} ppm — open windows now
+      - conditions:
+          - condition: trigger
+            id: elevated
+        sequence:
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "\U0001F32C\uFE0F Kitchen CO2 Elevated"
+              message: >-
+                CO2 is {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide')
+                | round(0) }} ppm — consider opening a window
+mode: single

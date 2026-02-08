@@ -1,0 +1,42 @@
+id: '1770580848291'
+alias: Kitchen Humidity Alert
+description: >-
+  Notify when kitchen humidity is too high (>65%, mold/steam risk) or
+  too low (<25%, dry air). Requires sustained reading for 15 minutes
+  to avoid transient cooking spikes.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_humidity
+    above: 65
+    for:
+      minutes: 15
+    id: high_humidity
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_humidity
+    below: 25
+    for:
+      minutes: 15
+    id: low_humidity
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: high_humidity
+        sequence:
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "\U0001F4A7 Kitchen Humidity High"
+              message: >-
+                Humidity is {{ states('sensor.alpstuga_air_quality_monitor_humidity')
+                | round(0) }}% — open a window to ventilate
+      - conditions:
+          - condition: trigger
+            id: low_humidity
+        sequence:
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "\U0001F3DC\uFE0F Kitchen Air Dry"
+              message: >-
+                Humidity is {{ states('sensor.alpstuga_air_quality_monitor_humidity')
+                | round(0) }}% — consider a humidifier
+mode: single

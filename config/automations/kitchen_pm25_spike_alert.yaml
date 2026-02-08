@@ -1,0 +1,19 @@
+id: '1770580850827'
+alias: Kitchen PM2.5 Spike Alert
+description: >-
+  Notify when kitchen PM2.5 exceeds WHO guideline of 25 µg/m³.
+  Sustained for 5 minutes to avoid brief cooking spikes.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_pm2_5
+    above: 25
+    for:
+      minutes: 5
+actions:
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "\U0001F637 Kitchen PM2.5 High"
+      message: >-
+        PM2.5 is {{ states('sensor.alpstuga_air_quality_monitor_pm2_5')
+        | round(0) }} µg/m³ — open windows to clear particulates
+mode: single

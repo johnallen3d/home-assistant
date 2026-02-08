@@ -1,0 +1,38 @@
+id: '1770580843422'
+alias: Cooking Air Quality Monitor
+description: >-
+  Monitor air quality during cooking. Notify when air quality degrades
+  from good, and notify again when it recovers (safe to close windows).
+triggers:
+  - trigger: state
+    entity_id: sensor.alpstuga_air_quality_monitor_air_quality
+    from: good
+    id: degraded
+  - trigger: state
+    entity_id: sensor.alpstuga_air_quality_monitor_air_quality
+    to: good
+    id: recovered
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: degraded
+          - condition: state
+            entity_id: input_boolean.cooking_mode
+            state: "on"
+        sequence:
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "\U0001F373 Kitchen Air Quality Dropping"
+              message: >-
+                Air quality is now {{ states('sensor.alpstuga_air_quality_monitor_air_quality') }}
+                while cooking — open a window or turn on ventilation
+      - conditions:
+          - condition: trigger
+            id: recovered
+        sequence:
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "\u2705 Kitchen Air Cleared"
+              message: "Air quality is back to good — safe to close windows"
+mode: single
