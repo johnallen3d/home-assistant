@@ -1,0 +1,33 @@
+id: '1770581394282'
+alias: Door lock switch control
+description: >-
+  When the door lock virtual switch is toggled, lock or unlock the Nuki.
+  This allows HomeKit automations to control the lock via a switch
+  (bypassing HomeKit's lock security restrictions).
+triggers:
+  - entity_id: input_boolean.door_lock
+    trigger: state
+    to: "on"
+    id: lock
+  - entity_id: input_boolean.door_lock
+    trigger: state
+    to: "off"
+    id: unlock
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: lock
+        sequence:
+          - action: lock.lock
+            target:
+              entity_id: lock.nuki_smart_lock
+      - conditions:
+          - condition: trigger
+            id: unlock
+        sequence:
+          - action: lock.unlock
+            target:
+              entity_id: lock.nuki_smart_lock
+mode: single

@@ -38,6 +38,7 @@ include_entities:
   - input_boolean.hobby_mode
   - input_boolean.meditation_mode
   - input_boolean.working_mode
+  - input_boolean.door_lock
   - script.toggle_meditation
   # Charlie presence scripts
   - script.charlies_home

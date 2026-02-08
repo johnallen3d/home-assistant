@@ -98,6 +98,9 @@ input_boolean:
   tv_mode:
     name: "TV Mode"
     icon: mdi:television
+  door_lock:
+    name: "Door Lock"
+    icon: mdi:lock
 
 # Helpers
 input_number:

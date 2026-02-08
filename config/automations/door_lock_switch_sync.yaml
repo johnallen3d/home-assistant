@@ -1,0 +1,39 @@
+id: '1770581397021'
+alias: Door lock switch sync
+description: >-
+  Keep the door lock virtual switch in sync with the actual Nuki lock state.
+  When the lock is operated physically, via app, or by another automation,
+  the switch reflects the current state.
+triggers:
+  - entity_id: lock.nuki_smart_lock
+    trigger: state
+    to: locked
+    id: locked
+  - entity_id: lock.nuki_smart_lock
+    trigger: state
+    to: unlocked
+    id: unlocked
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: locked
+        sequence:
+          - condition: state
+            entity_id: input_boolean.door_lock
+            state: "off"
+          - action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.door_lock
+      - conditions:
+          - condition: trigger
+            id: unlocked
+        sequence:
+          - condition: state
+            entity_id: input_boolean.door_lock
+            state: "on"
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.door_lock
+mode: single
