@@ -4,6 +4,12 @@ description: Handle single, double, and long presses for the kitchen button
 triggers:
   - trigger: state
     entity_id: event.smart_button_button
+    not_from:
+      - unknown
+      - unavailable
+    not_to:
+      - unknown
+      - unavailable
 conditions: []
 actions:
   - choose:
