@@ -26,7 +26,9 @@ actions:
               title: "\U0001F373 Kitchen Air Quality Dropping"
               message: >-
                 Air quality is now {{ states('sensor.alpstuga_air_quality_monitor_air_quality') }}
-                while cooking — open a window or turn on ventilation
+                while cooking — PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³,
+                CO2: {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm.
+                Open a window or turn on ventilation.
       - conditions:
           - condition: trigger
             id: recovered
@@ -34,5 +36,8 @@ actions:
           - action: notify.mobile_app_john_allens_iphone
             data:
               title: "\u2705 Kitchen Air Cleared"
-              message: "Air quality is back to good — safe to close windows"
+              message: >-
+                Air quality is back to good — PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³,
+                CO2: {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm.
+                Safe to close windows.
 mode: single

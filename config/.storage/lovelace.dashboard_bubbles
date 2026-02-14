@@ -7,7 +7,7 @@
       "views": [
         {
           "type": "panel",
-          "title": "Mobile",
+          "title": "Lights",
           "path": "mobile",
           "icon": "mdi:lightbulb-group",
           "cards": [
@@ -398,6 +398,349 @@
                   "entity": "sensor.ember_travel_mug_c2f5f790c51d_state",
                   "layout": "minimal",
                   "mug_scale": 0.5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "title": "Air Quality",
+          "path": "air-quality",
+          "icon": "mdi:air-filter",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Kitchen Air Quality",
+                  "icon": "mdi:air-filter",
+                  "sub_button": [
+                    {
+                      "entity": "input_boolean.cooking_mode",
+                      "icon": "mdi:pot-steam",
+                      "name": "Cook",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_air_quality",
+                  "name": "Overall",
+                  "icon": "mdi:leaf",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_pm2_5",
+                  "name": "PM2.5",
+                  "icon": "mdi:blur",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_carbon_dioxide",
+                  "name": "CO2",
+                  "icon": "mdi:molecule-co2",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_temperature",
+                  "name": "Temperature",
+                  "icon": "mdi:thermometer",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_humidity",
+                  "name": "Humidity",
+                  "icon": "mdi:water-percent",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "PM2.5 (24h)",
+                  "icon": "mdi:blur"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "graph_span": "24h",
+                  "header": {
+                    "show": false
+                  },
+                  "yaxis": [
+                    {
+                      "min": 0,
+                      "max": "auto",
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_pm2_5",
+                      "name": "PM2.5",
+                      "color": "#4CAF50",
+                      "stroke_width": 2,
+                      "fill_raw": "last"
+                    }
+                  ],
+                  "apex_config": {
+                    "annotations": {
+                      "yaxis": [
+                        {
+                          "y": 0,
+                          "y2": 12,
+                          "fillColor": "#4CAF50",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Good",
+                            "style": {
+                              "color": "#4CAF50",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 12,
+                          "y2": 25,
+                          "fillColor": "#FF9800",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Fair",
+                            "style": {
+                              "color": "#FF9800",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 25,
+                          "y2": 50,
+                          "fillColor": "#F44336",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Poor",
+                            "style": {
+                              "color": "#F44336",
+                              "fontSize": "11px"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "CO2 (24h)",
+                  "icon": "mdi:molecule-co2"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "graph_span": "24h",
+                  "header": {
+                    "show": false
+                  },
+                  "yaxis": [
+                    {
+                      "min": 400,
+                      "max": "auto",
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_carbon_dioxide",
+                      "name": "CO2",
+                      "color": "#2196F3",
+                      "stroke_width": 2,
+                      "fill_raw": "last"
+                    }
+                  ],
+                  "apex_config": {
+                    "annotations": {
+                      "yaxis": [
+                        {
+                          "y": 400,
+                          "y2": 800,
+                          "fillColor": "#4CAF50",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Good",
+                            "style": {
+                              "color": "#4CAF50",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 800,
+                          "y2": 1000,
+                          "fillColor": "#FF9800",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Fair",
+                            "style": {
+                              "color": "#FF9800",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 1000,
+                          "y2": 2000,
+                          "fillColor": "#F44336",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Poor",
+                            "style": {
+                              "color": "#F44336",
+                              "fontSize": "11px"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Temp & Humidity (24h)",
+                  "icon": "mdi:thermometer"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "graph_span": "24h",
+                  "header": {
+                    "show": false
+                  },
+                  "yaxis": [
+                    {
+                      "id": "temp",
+                      "min": "auto",
+                      "max": "auto",
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    },
+                    {
+                      "id": "humidity",
+                      "opposite": true,
+                      "min": 0,
+                      "max": 100,
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_temperature",
+                      "name": "Kitchen",
+                      "color": "#FF5722",
+                      "stroke_width": 2,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last"
+                    },
+                    {
+                      "entity": "sensor.bathroom_presence_sensor_temperature",
+                      "name": "Bathroom",
+                      "color": "#E91E63",
+                      "stroke_width": 2,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last"
+                    },
+                    {
+                      "entity": "sensor.laundry_room_sensor_temperature",
+                      "name": "Laundry",
+                      "color": "#9C27B0",
+                      "stroke_width": 2,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last"
+                    },
+                    {
+                      "entity": "weather.forecast_home",
+                      "name": "Outside",
+                      "color": "#607D8B",
+                      "stroke_width": 2,
+                      "stroke_dash": 4,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last",
+                      "attribute": "temperature"
+                    },
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_humidity",
+                      "name": "Humidity",
+                      "color": "#03A9F4",
+                      "stroke_width": 2,
+                      "yaxis_id": "humidity",
+                      "fill_raw": "last"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Air Purifier",
+                  "icon": "mdi:air-purifier",
+                  "sub_button": [
+                    {
+                      "entity": "fan.airversa_ap2_1120_airpurifier",
+                      "show_name": false,
+                      "show_state": true
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "fan.airversa_ap2_1120_airpurifier",
+                  "name": "Purifier",
+                  "icon": "mdi:air-purifier",
+                  "button_type": "switch",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.airversa_ap2_1120_filter_lifetime",
+                  "name": "Filter Life",
+                  "icon": "mdi:air-filter",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "select.airversa_ap2_1120_air_purifier_mode",
+                  "name": "Mode",
+                  "icon": "mdi:tune",
+                  "button_type": "state",
+                  "show_state": true
                 }
               ]
             }
