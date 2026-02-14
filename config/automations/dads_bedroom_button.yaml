@@ -4,7 +4,17 @@ description: Handle single, double, and long presses for Dad's bedroom button
 triggers:
   - trigger: state
     entity_id: event.bedside_button_button
-conditions: []
+    not_from:
+      - unknown
+      - unavailable
+    not_to:
+      - unknown
+      - unavailable
+conditions:
+  # Reject stale events from Thread reconnects
+  - condition: template
+    value_template: >-
+      {{ (now() - states.event.bedside_button_button.last_updated).total_seconds() < 5 }}
 actions:
   - choose:
       - conditions:

@@ -10,7 +10,13 @@ triggers:
     not_to:
       - unknown
       - unavailable
-conditions: []
+conditions:
+  # Reject stale events from Thread reconnects. Event entity state is the
+  # timestamp of the last event; if it's more than 5 seconds old the device
+  # is just re-reporting after a connectivity drop.
+  - condition: template
+    value_template: >-
+      {{ (now() - states.event.smart_button_button.last_updated).total_seconds() < 5 }}
 actions:
   - choose:
       # Single press: Toggle cooking mode (scene + helper that protects from auto-off)
