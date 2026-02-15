@@ -130,11 +130,6 @@
                       }
                     },
                     {
-                      "entity": "sensor.alpstuga_air_quality_monitor_temperature",
-                      "show_name": false,
-                      "show_state": true
-                    },
-                    {
                       "entity": "input_boolean.charlie_eating_mode",
                       "icon": "mdi:baby-face-outline",
                       "name": "Charlie",
@@ -289,11 +284,6 @@
                       }
                     },
                     {
-                      "entity": "sensor.bathroom_presence_sensor_temperature",
-                      "show_name": false,
-                      "show_state": true
-                    },
-                    {
                       "entity": "script.done_shaving",
                       "icon": "mdi:face-man-shimmer",
                       "name": "Shave",
@@ -359,11 +349,6 @@
                       "tap_action": {
                         "action": "toggle"
                       }
-                    },
-                    {
-                      "entity": "sensor.laundry_room_sensor_temperature",
-                      "show_name": false,
-                      "show_state": true
                     }
                   ]
                 },
