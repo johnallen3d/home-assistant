@@ -22,6 +22,18 @@ accessible via SSH
 ssh root@homeassistant "ha --help"
 ```
 
+## Dashboards
+
+| Display Name | Storage Key | Local File | Deploy Name |
+|-------------|-------------|------------|-------------|
+| Overview | `lovelace` | *(not managed locally)* | — |
+| Mobile | `lovelace.dashboard_bubbles` | `config/.storage/lovelace.dashboard_bubbles` | `bubbles` |
+| Desktop | `lovelace.dashboard_desktop` | `config/.storage/lovelace.dashboard_desktop` | `desktop` |
+| Sports | `lovelace.dashboard_sports` | `config/.storage/lovelace.dashboard_sports` | `sports` |
+| Media | `lovelace.dashboard_media_controls` | `config/.storage/lovelace.dashboard_media_controls` | `media_controls` |
+| Shapes | `lovelace.charlie_shapes` | `config/.storage/lovelace.charlie_shapes` | `charlie_shapes` |
+**Deploy name** is what you pass to `mise run config deploy-dashboard <name>`.
+
 ## Commands
 
 This repository uses [just](https://github.com/casey/just) as a command runner.

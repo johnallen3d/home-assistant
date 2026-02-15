@@ -102,7 +102,12 @@ case "$usage_command" in
     pull-dashboards)
         echo "📥 Downloading dashboards from server..."
         mkdir -p .storage
-        scp "$HA_SERVER:$HA_CONFIG_PATH/.storage/lovelace.dashboard_*" .storage/ 2>/dev/null || echo "No dashboards found on server"
+        # Get list of all lovelace dashboard files from server (covers both lovelace.dashboard_* and lovelace.* patterns)
+        ssh "$HA_SERVER" "ls $HA_CONFIG_PATH/.storage/lovelace.* 2>/dev/null" | while read -r remote_file; do
+            filename="$(basename "$remote_file")"
+            echo "  📥 $filename"
+            scp "$HA_SERVER:$remote_file" ".storage/$filename" 2>/dev/null || true
+        done
         scp "$HA_SERVER:$HA_CONFIG_PATH/.storage/lovelace_dashboards" .storage/ 2>/dev/null || echo "No dashboard registry found"
         echo "✅ Dashboards synced"
         ls -la .storage/lovelace* 2>/dev/null || true
@@ -114,9 +119,18 @@ case "$usage_command" in
             echo "❌ Usage: mise run config deploy-dashboard <name>"
             exit 1
         fi
-        echo "📤 Uploading dashboard '$NAME'..."
-        uv run python -m json.tool ".storage/lovelace.dashboard_$NAME" > /dev/null || { echo "❌ Invalid JSON in dashboard file"; exit 1; }
-        scp ".storage/lovelace.dashboard_$NAME" "$HA_SERVER:$HA_CONFIG_PATH/.storage/"
+        # Try lovelace.dashboard_<name> first, then lovelace.<name>
+        if [[ -f ".storage/lovelace.dashboard_$NAME" ]]; then
+            DASHBOARD_FILE=".storage/lovelace.dashboard_$NAME"
+        elif [[ -f ".storage/lovelace.$NAME" ]]; then
+            DASHBOARD_FILE=".storage/lovelace.$NAME"
+        else
+            echo "❌ Dashboard file not found: .storage/lovelace.dashboard_$NAME or .storage/lovelace.$NAME"
+            exit 1
+        fi
+        echo "📤 Uploading dashboard '$NAME' ($DASHBOARD_FILE)..."
+        uv run python -m json.tool "$DASHBOARD_FILE" > /dev/null || { echo "❌ Invalid JSON in dashboard file"; exit 1; }
+        scp "$DASHBOARD_FILE" "$HA_SERVER:$HA_CONFIG_PATH/.storage/"
         echo "✅ Dashboard '$NAME' uploaded"
         echo "🔄 Restarting Home Assistant core..."
         ssh "$HA_SERVER" "ha core restart" || true

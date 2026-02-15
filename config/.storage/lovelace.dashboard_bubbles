@@ -745,6 +745,337 @@
               ]
             }
           ]
+        },
+        {
+          "type": "panel",
+          "title": "Charlie",
+          "path": "charlie",
+          "icon": "mdi:baby-face-outline",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Quick Controls",
+                  "icon": "mdi:baby-face-outline",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
+                  "sub_button": [
+                    {
+                      "entity": "light.charlie_s_shapes",
+                      "icon": "mdi:triangle-outline",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "input_boolean.charlie_presence",
+                  "name": "Presence",
+                  "icon": "mdi:account-check",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.sound_machine_outlet",
+                  "name": "Sound Machine",
+                  "icon": "mdi:speaker",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.charlie_s_shapes",
+                  "name": "Shapes",
+                  "icon": "mdi:triangle-outline",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "script.clean_charlies_room",
+                  "name": "Clean Room",
+                  "icon": "mdi:robot-vacuum",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Shape Effects",
+                  "icon": "mdi:auto-fix"
+                },
+                {
+                  "type": "grid",
+                  "columns": 2,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "button",
+                      "name": "Beatdrop",
+                      "icon": "mdi:music",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Beatdrop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Blaze",
+                      "icon": "mdi:fire",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Blaze"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Cocoa Beach",
+                      "icon": "mdi:beach",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Cocoa Beach"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Cotton Candy",
+                      "icon": "mdi:candy",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Cotton Candy"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Date Night",
+                      "icon": "mdi:heart",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Date Night"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Hip Hop",
+                      "icon": "mdi:music-note",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Hip Hop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Hot Sauce",
+                      "icon": "mdi:chili-hot",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Hot Sauce"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Jungle",
+                      "icon": "mdi:tree",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Jungle"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Lightscape",
+                      "icon": "mdi:image-filter-hdr",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Lightscape"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Morning Sky",
+                      "icon": "mdi:weather-sunset-up",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Morning Sky"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Northern Lights",
+                      "icon": "mdi:aurora",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Northern Lights"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Pop Rocks",
+                      "icon": "mdi:star-shooting",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Pop Rocks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Prism",
+                      "icon": "mdi:triangle",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Prism"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Sonic Sunset",
+                      "icon": "mdi:weather-sunset",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Sonic Sunset"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Starlight",
+                      "icon": "mdi:star",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Starlight"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Sundown",
+                      "icon": "mdi:weather-sunset-down",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Sundown"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Waterfall",
+                      "icon": "mdi:waterfall",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Waterfall"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }
