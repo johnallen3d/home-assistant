@@ -39,6 +39,15 @@
          "show_in_sidebar": true,
          "icon": "mdi:remote-tv",
          "mode": "storage"
+       },
+       {
+         "id": "charlie_shapes",
+         "show_in_sidebar": true,
+         "icon": "mdi:triangle",
+         "title": "Charlie",
+         "require_admin": false,
+         "mode": "storage",
+         "url_path": "charlie-shapes"
        }
     ]
   }
