@@ -1,12 +1,12 @@
 id: '1770580850827'
 alias: Kitchen PM2.5 Spike Alert
 description: >-
-  Notify when kitchen PM2.5 exceeds WHO guideline of 25 µg/m³.
+  Notify when kitchen PM2.5 exceeds 50 µg/m³ (cooking-adjusted threshold).
   Sustained for 5 minutes to avoid brief cooking spikes.
 triggers:
   - trigger: numeric_state
     entity_id: sensor.alpstuga_air_quality_monitor_pm2_5
-    above: 25
+    above: 50
     for:
       minutes: 5
 actions:

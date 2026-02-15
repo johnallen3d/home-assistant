@@ -1,20 +1,20 @@
 id: '1770580838432'
 alias: Kitchen High CO2 Alert
 description: >-
-  Notify when kitchen CO2 levels are unhealthy. 1000ppm = stuffy/drowsy,
-  1500ppm = poor ventilation. Requires sustained reading for 5 minutes
-  to avoid false alarms from brief cooking spikes.
+  Notify when kitchen CO2 levels are unhealthy. 1200ppm = stuffy/drowsy,
+  1800ppm = poor ventilation. Thresholds raised to reduce alert fatigue
+  during normal cooking. Sustained for 5 minutes to avoid false alarms.
 triggers:
   - trigger: numeric_state
     entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
-    above: 1000
-    below: 1500
+    above: 1200
+    below: 1800
     for:
       minutes: 5
     id: elevated
   - trigger: numeric_state
     entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
-    above: 1500
+    above: 1800
     for:
       minutes: 2
     id: high
