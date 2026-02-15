@@ -1076,6 +1076,71 @@
               ]
             }
           ]
+        },
+        {
+          "type": "panel",
+          "title": "Sports",
+          "path": "sports",
+          "icon": "mdi:hockey-sticks",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Sports",
+                  "icon": "mdi:hockey-sticks",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }"
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_bruins",
+                  "home_side": "right",
+                  "show_league": false,
+                  "show_timeouts": true,
+                  "outline": true
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.new_england_patriots",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_red_sox",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_celtics",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Bruins Lights",
+                  "icon": "mdi:hockey-puck"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.bruins",
+                  "name": "Bruins Scene",
+                  "icon": "mdi:hockey-puck",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "script.bruins_animation",
+                  "name": "Bruins Animation",
+                  "icon": "mdi:rotate-3d-variant",
+                  "button_type": "switch"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
