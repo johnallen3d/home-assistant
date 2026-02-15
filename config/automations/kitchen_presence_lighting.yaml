@@ -40,12 +40,27 @@ actions:
                 entity_id: light.sink_bulb
                 state: "off"
             then:
-              - action: script.lights
-                data:
-                  lights:
-                    - light.kitchen_lights
-                  night_mode: dim_warm
-                  night_brightness: 15
+              - choose:
+                  # Alarm enabled: dim pink on lightstrip only (match bathroom night mode)
+                  - conditions:
+                      - condition: state
+                        entity_id: input_boolean.alarm_enabled
+                        state: "on"
+                    sequence:
+                      - action: light.turn_on
+                        target:
+                          entity_id: light.hue_lightstrip_plus_1
+                        data:
+                          brightness_pct: 10
+                          rgb_color: [255, 159, 242]
+                # Alarm disabled: normal adaptive lighting
+                default:
+                  - action: script.lights
+                    data:
+                      lights:
+                        - light.kitchen_lights
+                      night_mode: dim_warm
+                      night_brightness: 15
 
       # Presence cleared - turn off after presence_delay seconds (unless presence returns or cooking/eating mode is on)
       - conditions:
