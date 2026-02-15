@@ -14,13 +14,13 @@
         "url_path": "dashboard-lights"
       },
       {
-        "id": "dashboard_bubbles",
+        "id": "dashboard_mobile",
         "show_in_sidebar": true,
         "icon": "mdi:cellphone",
         "title": "Mobile",
         "require_admin": false,
         "mode": "storage",
-        "url_path": "dashboard-bubbles"
+        "url_path": "dashboard-mobile"
       },
        {
          "id": "dashboard_desktop",
