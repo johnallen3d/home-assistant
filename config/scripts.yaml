@@ -440,8 +440,10 @@ tv_time:
         eating_mode_active: "{{ is_state('input_boolean.charlie_eating_mode', 'on') }}"
         # Dad eating mode - protect living room lights when dad_eating_mode is on
         dad_eating_mode_active: "{{ is_state('input_boolean.dad_eating_mode', 'on') }}"
-        # Skip kitchen modifications if any kitchen-active mode is on
-        kitchen_protected: "{{ cooking_mode_active or eating_mode_active }}"
+        # Kitchen presence - protect lights when someone is physically in the kitchen
+        kitchen_presence_active: "{{ is_state('binary_sensor.kitchen_presence_kitchen', 'on') }}"
+        # Skip kitchen modifications if any kitchen-active mode is on or someone is present
+        kitchen_protected: "{{ cooking_mode_active or eating_mode_active or kitchen_presence_active }}"
 
     # Per mode conflict matrix: tv_time clears hobby_mode (focus on TV, not projects)
     # Disable automation first to prevent its OFF handler from running
@@ -759,9 +761,7 @@ eating:
           sequence:
             - action: light.turn_on
               target:
-                entity_id:
-                  - light.living_room_light
-                  - light.living_room_overhead_light
+                entity_id: light.living_room_light
               data:
                 brightness_pct: 15
                 color_temp_kelvin: 2700
@@ -771,9 +771,7 @@ eating:
           sequence:
             - action: light.turn_on
               target:
-                entity_id:
-                  - light.living_room_light
-                  - light.living_room_overhead_light
+                entity_id: light.living_room_light
               data:
                 brightness_pct: 10
                 color_temp_kelvin: 2200
@@ -782,9 +780,7 @@ eating:
       default:
         - action: light.turn_on
           target:
-            entity_id:
-              - light.living_room_light
-              - light.living_room_overhead_light
+            entity_id: light.living_room_light
           data:
             brightness_pct: "{{ evening_brightness }}"
             color_temp_kelvin: "{{ color_temp }}"
