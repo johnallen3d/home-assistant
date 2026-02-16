@@ -1,0 +1,72 @@
+id: "1771251368598"
+alias: "Matter Server Watchdog"
+description: >-
+  Monitors Matter Server for subscription failure loops affecting any
+  node. Uses a command_line sensor that parses Matter Server add-on
+  logs every 10 minutes for repeated "Subscription failed" entries.
+  When any node has 3+ failures in the log buffer, it's stuck in a
+  fail/reconnect cycle (common after network disruptions like eero
+  firmware updates). Sends an actionable notification with a "Restart
+  Now" button. If neither tapped nor auto-resolved within 10 minutes,
+  restarts the Matter Server automatically.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.matter_subscription_failures
+    above: 2
+conditions: []
+actions:
+  - variables:
+      fail_count: "{{ states('sensor.matter_subscription_failures') }}"
+      action_restart: "{{ 'MATTER_RESTART_' ~ context.id }}"
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "Matter Node Stuck"
+      message: >-
+        A Matter node has {{ fail_count }} subscription failures —
+        stuck in reconnect loop. Will auto-restart in 10 minutes.
+      data:
+        push:
+          sound:
+            name: default
+            critical: 0
+            volume: 0.5
+        actions:
+          - action: "{{ action_restart }}"
+            title: "Restart Now"
+            destructive: true
+            icon: "sfsymbols:arrow.clockwise"
+  - wait_for_trigger:
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_restart }}"
+    timeout:
+      minutes: 10
+  - choose:
+      - conditions: "{{ wait.trigger is not none }}"
+        sequence:
+          - action: hassio.addon_restart
+            data:
+              addon: core_matter_server
+          - delay:
+              seconds: 30
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "Matter Server Restarted"
+              message: "Restarted Matter Server (manual)."
+    default:
+      - condition: numeric_state
+        entity_id: sensor.matter_subscription_failures
+        above: 2
+      - action: hassio.addon_restart
+        data:
+          addon: core_matter_server
+      - delay:
+          seconds: 30
+      - action: notify.mobile_app_john_allens_iphone
+        data:
+          title: "Matter Server Restarted"
+          message: >-
+            Auto-restarted Matter Server — still had {{ fail_count }}+
+            subscription failures after 10 minutes.
+mode: single
