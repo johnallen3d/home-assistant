@@ -400,6 +400,38 @@
                 {
                   "type": "custom:bubble-card",
                   "card_type": "separator",
+                  "icon": "mdi:motion-sensor",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
+                  "sub_button": [
+                    {
+                      "entity": "binary_sensor.kitchen_presence_kitchen",
+                      "icon": "mdi:stove",
+                      "name": "Kit",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "binary_sensor.kitchen_presence_living_room",
+                      "icon": "mdi:sofa",
+                      "name": "Liv",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "binary_sensor.bathroom_presence_sensor_occupancy",
+                      "icon": "mdi:shower",
+                      "name": "Bath",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "binary_sensor.laundry_room_sensor_motion",
+                      "icon": "mdi:washing-machine",
+                      "name": "Lndy",
+                      "show_name": true
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
                   "name": "Kitchen Air Quality",
                   "icon": "mdi:air-filter",
                   "sub_button": [
