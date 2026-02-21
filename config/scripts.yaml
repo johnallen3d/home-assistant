@@ -876,17 +876,11 @@ arriving_home:
   sequence:
     - variables:
         sun_elevation: "{{ state_attr('sun.sun', 'elevation') | float(0) }}"
-        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
-        adaptive_color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
         hour: "{{ now().hour }}"
-        # Daytime: sun is high enough for natural light
         is_daytime: "{{ sun_elevation > 5 }}"
-        # Late night: after 11pm or before 6am
         is_late_night: "{{ hour >= 23 or hour < 6 }}"
-        # Cap brightness at 60% for chill vibe
-        chill_brightness: "{{ [adaptive_brightness, 60] | min }}"
-        # Cap color temp at 3000K (warmer = more welcoming)
-        chill_color_temp: "{{ [adaptive_color_temp, 3000] | min }}"
+        chill_brightness: 50
+        chill_color_temp: 2700
 
     # Always turn off counter switch (no harsh task lighting when arriving)
     - action: switch.turn_off
