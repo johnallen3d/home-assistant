@@ -55,8 +55,8 @@ actions:
             # Alarm disabled: normal adaptive/night lighting
             default:
               - variables:
-                  brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
-                  color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+                  brightness: 60
+                  color_temp: 2700
                   hour: "{{ now().hour }}"
                   is_night: "{{ hour >= 23 or hour < 6 }}"
                   night_brightness: 15
