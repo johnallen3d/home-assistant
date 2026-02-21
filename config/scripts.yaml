@@ -800,10 +800,7 @@ winding_down:
   mode: single
   sequence:
     - variables:
-        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(25) }}"
-        # Cap brightness at 35% for winding down
-        capped_brightness: "{{ [adaptive_brightness, 35] | min }}"
-        # Very warm color temp, capped at 2200K
+        capped_brightness: 35
         color_temp: 2200
         # Charlie presence
         charlie_is_home: "{{ is_state('input_boolean.charlie_presence', 'on') }}"
