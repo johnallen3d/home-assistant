@@ -580,14 +580,10 @@ kitchen_chill:
   mode: single
   sequence:
     - variables:
-        adaptive_brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
-        adaptive_color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+        chill_brightness: 50
+        chill_color_temp: 2700
         hour: "{{ now().hour }}"
         is_night: "{{ hour >= 23 or hour < 6 }}"
-        # Use full adaptive brightness (no cap)
-        chill_brightness: "{{ adaptive_brightness }}"
-        # Cap color temp at 3000K (warmer = more chill)
-        chill_color_temp: "{{ [adaptive_color_temp, 3000] | min }}"
 
     # Always turn off counter switch (task lighting)
     - action: switch.turn_off
