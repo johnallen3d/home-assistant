@@ -21,10 +21,14 @@ triggers:
 
 actions:
   - choose:
-      # Presence detected - turn on with adaptive lighting (but not if TV is on)
+      # Presence detected - turn on with adaptive lighting (but not if TV is on or eating mode active)
       - conditions:
           - condition: trigger
             id: presence_on
+          # Skip if eating mode is on (scene is already set, don't overwrite it)
+          - condition: state
+            entity_id: input_boolean.dad_eating_mode
+            state: "off"
           # Check Apple TV, LG TV, and SuperBOX - skip if any is in use
           # Apple TV: playing/paused/idle = in use; off/unavailable = not in use
           # LG TV: on/playing = in use; off/unavailable = not in use
