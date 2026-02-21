@@ -199,7 +199,7 @@ toggle_meditation:
 
 lights:
   alias: "Lights"
-  description: "Apply adaptive brightness and color temperature based on time/weather"
+  description: "Apply standard brightness and color temperature"
   icon: mdi:lightbulb-auto
   mode: parallel
   max: 10
@@ -257,8 +257,8 @@ lights:
           unit_of_measurement: "%"
   sequence:
     - variables:
-        brightness: "{{ states('sensor.adaptive_brightness') | int(50) }}"
-        color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
+        brightness: 60
+        color_temp: 2700
         hour: "{{ now().hour }}"
         is_night: "{{ hour >= 23 or hour < 6 }}"
         mode: "{{ night_mode | default('adaptive') }}"
