@@ -1,7 +1,7 @@
 # Living Room Presence Lighting
 # Turns living room lights on/off based on FP2 presence sensor living room zone
 #
-# On entry: Uses adaptive lighting with overhead 15% dimmer than main light
+# On entry: Uses adaptive lighting on lamp only (overhead excluded from presence control)
 # On exit: Turns lights off immediately (no delay)
 
 id: '1765490534742'
@@ -55,10 +55,7 @@ actions:
                   color_temp: "{{ states('sensor.adaptive_color_temp') | int(3000) }}"
                   hour: "{{ now().hour }}"
                   is_night: "{{ hour >= 23 or hour < 6 }}"
-                  # Overhead is 15 percentage points dimmer than main light
-                  overhead_brightness: "{{ [brightness - 15, 5] | max }}"
                   night_brightness: 15
-                  overhead_night_brightness: "{{ [night_brightness - 15, 5] | max }}"
               - choose:
                   # Night mode: dim warm
                   - conditions: "{{ is_night }}"
@@ -69,12 +66,6 @@ actions:
                         data:
                           brightness_pct: "{{ night_brightness }}"
                           color_temp_kelvin: 2200
-                      - action: light.turn_on
-                        target:
-                          entity_id: light.living_room_overhead_light
-                        data:
-                          brightness_pct: "{{ overhead_night_brightness }}"
-                          color_temp_kelvin: 2200
                 # Default: adaptive mode
                 default:
                   - action: light.turn_on
@@ -82,12 +73,6 @@ actions:
                       entity_id: light.living_room_light
                     data:
                       brightness_pct: "{{ brightness }}"
-                      color_temp_kelvin: "{{ color_temp }}"
-                  - action: light.turn_on
-                    target:
-                      entity_id: light.living_room_overhead_light
-                    data:
-                      brightness_pct: "{{ overhead_brightness }}"
                       color_temp_kelvin: "{{ color_temp }}"
 
       # Presence cleared - turn off (unless hobby mode, eating mode, or TV is on)
@@ -116,4 +101,4 @@ actions:
                  and states('media_player.superbox') in ['off', 'unavailable'] }}
           - action: light.turn_off
             target:
-              entity_id: light.living_room_lights
+              entity_id: light.living_room_light
