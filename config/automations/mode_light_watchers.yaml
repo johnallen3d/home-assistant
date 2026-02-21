@@ -1,0 +1,94 @@
+id: '1771697984121'
+alias: "Mode Light Watchers"
+description: >-
+  Clears stale mode booleans when their associated light group turns off
+  (e.g. via dashboard, voice command, or other automation). Waits 5 seconds
+  to avoid false triggers from brief transitions.
+triggers:
+  - entity_id: light.bedroom_lights
+    to: "off"
+    for: "00:00:05"
+    id: bedroom_off
+    trigger: state
+  - entity_id: light.kitchen_lights
+    to: "off"
+    for: "00:00:05"
+    id: kitchen_off
+    trigger: state
+  - entity_id: light.living_room_lights
+    to: "off"
+    for: "00:00:05"
+    id: living_room_off
+    trigger: state
+  - entity_id: light.bathroom_lights
+    to: "off"
+    for: "00:00:05"
+    id: bathroom_off
+    trigger: state
+  - entity_id: light.island_bulb
+    to: "off"
+    for: "00:00:05"
+    id: island_off
+    trigger: state
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: bedroom_off
+          - condition: state
+            entity_id: input_boolean.working_mode
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.working_mode
+      - conditions:
+          - condition: trigger
+            id: kitchen_off
+          - condition: state
+            entity_id: input_boolean.cooking_mode
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.cooking_mode
+      - conditions:
+          - condition: trigger
+            id: living_room_off
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: input_boolean.hobby_mode
+                state: "on"
+              - condition: state
+                entity_id: input_boolean.dad_eating_mode
+                state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id:
+                - input_boolean.hobby_mode
+                - input_boolean.dad_eating_mode
+      - conditions:
+          - condition: trigger
+            id: bathroom_off
+          - condition: state
+            entity_id: input_boolean.bathing_mode
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.bathing_mode
+      - conditions:
+          - condition: trigger
+            id: island_off
+          - condition: state
+            entity_id: input_boolean.charlie_eating_mode
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.charlie_eating_mode
+mode: parallel
+max: 5

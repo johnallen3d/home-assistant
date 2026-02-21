@@ -1127,6 +1127,62 @@ charlies_away:
 
 
 # =============================================================================
+# Reset All Modes - Clear all mode booleans with automation sandwich
+# =============================================================================
+# Turns off all 9 mode booleans using the 3-step sandwich pattern:
+#   1. Disable all mode automations (prevents OFF handlers from running)
+#   2. Turn off all mode booleans
+#   3. Re-enable all mode automations
+#
+# Called by: lock_down, departing, lights_out (Atom S3 long press)
+# This ensures no stale mode state lingers after bulk lights-off events.
+
+reset_all_modes:
+  alias: "Reset All Modes"
+  description: "Turn off all mode booleans with automation sandwich to prevent stale state"
+  icon: mdi:toggle-switch-off-outline
+  mode: single
+  sequence:
+    # Step 1: Disable all mode automations
+    - action: automation.turn_off
+      target:
+        entity_id:
+          - automation.cooking_mode_changed
+          - automation.hobby_mode_changed
+          - automation.dad_eating_mode_changed
+          - automation.working_mode_changed
+          - automation.bathing_mode_changed
+          - automation.tv_mode_auto
+          - automation.cleaning_mode_changed
+          - automation.charlie_eating_mode_changed
+    # Step 2: Turn off all mode booleans
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.cooking_mode
+          - input_boolean.hobby_mode
+          - input_boolean.dad_eating_mode
+          - input_boolean.working_mode
+          - input_boolean.bathing_mode
+          - input_boolean.tv_mode
+          - input_boolean.cleaning_mode
+          - input_boolean.charlie_eating_mode
+          - input_boolean.meditation_mode
+    # Step 3: Re-enable all mode automations
+    - action: automation.turn_on
+      target:
+        entity_id:
+          - automation.cooking_mode_changed
+          - automation.hobby_mode_changed
+          - automation.dad_eating_mode_changed
+          - automation.working_mode_changed
+          - automation.bathing_mode_changed
+          - automation.tv_mode_auto
+          - automation.cleaning_mode_changed
+          - automation.charlie_eating_mode_changed
+
+
+# =============================================================================
 # Lock Down - Bedtime security and shutdown
 # =============================================================================
 # Comprehensive bedtime routine: lock door, turn off lights and media.
@@ -1138,6 +1194,7 @@ lock_down:
   icon: mdi:shield-lock
   mode: single
   sequence:
+    - action: script.reset_all_modes
     - parallel:
         - action: lock.lock
           target:

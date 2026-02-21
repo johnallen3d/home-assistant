@@ -25,6 +25,7 @@ actions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''long'' }}'
         sequence:
+          - action: script.reset_all_modes
           - action: scene.turn_on
             target:
               entity_id: scene.lights_out

@@ -8,6 +8,7 @@ triggers:
     trigger: zone
 conditions: []
 actions:
+  - action: script.reset_all_modes
   - action: scene.turn_on
     metadata: {}
     data: {}
