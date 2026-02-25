@@ -1,29 +1,28 @@
 id: "1771251368598"
 alias: "Matter Server Watchdog"
 description: >-
-  Monitors Matter Server for subscription failure loops affecting any
-  node. Uses a command_line sensor that parses Matter Server add-on
-  logs every 10 minutes for repeated "Subscription failed" entries.
-  When any node has 3+ failures in the log buffer, it's stuck in a
-  fail/reconnect cycle (common after network disruptions like eero
-  firmware updates). Sends an actionable notification with a "Restart
-  Now" button. If neither tapped nor auto-resolved within 10 minutes,
-  restarts the Matter Server automatically.
+  Monitors Matter Server for nodes that are truly stuck — where the last
+  subscription event is a failure with no subsequent recovery. Nodes that
+  fail and self-recover (normal Thread mesh jitter) are ignored. Only
+  triggers when a node is genuinely stuck and needs a server restart.
+  Sends an actionable notification with a Restart Now button. If not
+  tapped within 10 minutes, re-checks and auto-restarts only if nodes
+  are still stuck.
 triggers:
   - trigger: numeric_state
     entity_id: sensor.matter_subscription_failures
-    above: 2
+    above: 0
 conditions: []
 actions:
   - variables:
-      fail_count: "{{ states('sensor.matter_subscription_failures') }}"
+      stuck_count: "{{ states('sensor.matter_subscription_failures') }}"
       action_restart: "{{ 'MATTER_RESTART_' ~ context.id }}"
   - action: notify.mobile_app_john_allens_iphone
     data:
       title: "Matter Node Stuck"
       message: >-
-        A Matter node has {{ fail_count }} subscription failures —
-        stuck in reconnect loop. Will auto-restart in 10 minutes.
+        {{ stuck_count }} Matter node(s) stuck — failed subscription with
+        no recovery. Will auto-restart in 10 minutes if still stuck.
       data:
         push:
           sound:
@@ -57,7 +56,7 @@ actions:
     default:
       - condition: numeric_state
         entity_id: sensor.matter_subscription_failures
-        above: 2
+        above: 0
       - action: hassio.addon_restart
         data:
           addon: core_matter_server
@@ -67,6 +66,6 @@ actions:
         data:
           title: "Matter Server Restarted"
           message: >-
-            Auto-restarted Matter Server — still had {{ fail_count }}+
-            subscription failures after 10 minutes.
+            Auto-restarted Matter Server — {{ stuck_count }} node(s)
+            still stuck after 10 minutes.
 mode: single
