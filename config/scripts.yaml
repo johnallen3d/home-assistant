@@ -30,7 +30,7 @@ toggle_cooking:
 # automation.hobby_mode_changed which reacts to the boolean state.
 #
 # This script exists for:
-#   - Living room Atom S3 button single press
+#   - Living room Atom S3 button double press
 #   - Voice command: "toggle hobby"
 #
 # Preferred interaction: Use input_boolean.hobby_mode directly (shows state)
@@ -44,6 +44,29 @@ toggle_hobby:
     - action: input_boolean.toggle
       target:
         entity_id: input_boolean.hobby_mode
+
+
+# =============================================================================
+# Dad Eating Mode Toggle
+# =============================================================================
+# Simple toggle for dad eating mode. The actual lighting logic is handled by
+# automation.dad_eating_mode_changed which reacts to the boolean state.
+#
+# This script exists for:
+#   - Living room Atom S3 button single press
+#   - Voice command: "toggle dad eating"
+#
+# Preferred interaction: Use input_boolean.dad_eating_mode directly (shows state)
+
+toggle_dad_eating:
+  alias: "Toggle Dad Eating"
+  description: "Toggle dad eating mode boolean"
+  icon: mdi:silverware-fork-knife
+  mode: single
+  sequence:
+    - action: input_boolean.toggle
+      target:
+        entity_id: input_boolean.dad_eating_mode
 
 
 # =============================================================================

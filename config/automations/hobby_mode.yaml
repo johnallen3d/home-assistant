@@ -17,7 +17,7 @@
 id: '1735523100000'
 alias: "Hobby Mode Changed"
 description: "Handle hobby mode state changes - activate scene or check presence for off"
-mode: single
+mode: restart
 
 triggers:
   - trigger: state
@@ -82,32 +82,11 @@ actions:
             target:
               entity_id: switch.kitchen_counter_switch
 
-      # Hobby mode turned OFF - check presence for light control
+      # Hobby mode turned OFF - turn off living room lights
       - conditions:
           - condition: trigger
             id: hobby_off
         sequence:
-          - choose:
-              # Living room presence detected - lights stay on
-              - conditions:
-                  - condition: state
-                    entity_id: binary_sensor.kitchen_presence_living_room
-                    state: "on"
-                sequence: []
-            # No presence detected - wait for presence_delay before turning off
-            # This gives time to walk into detection zone after toggling
-            default:
-              - wait_for_trigger:
-                  - trigger: state
-                    entity_id: binary_sensor.kitchen_presence_living_room
-                    to: "on"
-                timeout:
-                  seconds: "{{ states('input_number.presence_delay') | int(5) }}"
-              # Only turn off if no presence detected during wait
-              - if:
-                  - condition: template
-                    value_template: "{{ wait.trigger is none }}"
-                then:
-                  - action: light.turn_off
-                    target:
-                      entity_id: light.living_room_lights
+          - action: light.turn_off
+            target:
+              entity_id: light.living_room_lights

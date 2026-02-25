@@ -1,7 +1,7 @@
 id: '1762718475350'
 alias: Living Room – Atom S3 Multi-Click Button
 description: >-
-  Single press → toggle hobby mode. Double press → activate TV time script. Long press → activate lights out scene.
+  Single press → toggle dad eating mode. Double press → toggle hobby mode. Long press → activate lights out scene.
 triggers:
   - event_type: esphome.button_pressed
     event_data:
@@ -15,12 +15,12 @@ actions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''single'' }}'
         sequence:
-          - action: script.toggle_hobby
+          - action: script.toggle_dad_eating
       - conditions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''double'' }}'
         sequence:
-          - action: script.tv_time
+          - action: script.toggle_hobby
       - conditions:
           - condition: template
             value_template: '{{ trigger.event.data.click_type == ''long'' }}'
