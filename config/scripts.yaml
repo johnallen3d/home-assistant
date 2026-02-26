@@ -765,10 +765,23 @@ eating:
         # Very warm for dining ambiance
         color_temp: 2200
 
-    # Always turn off kitchen (focus on dining, not cooking)
+    # Turn off kitchen lights, but protect island if Charlie is in meal zone
     - action: light.turn_off
       target:
-        entity_id: light.kitchen_lights
+        entity_id:
+          - light.sink_bulb
+          - light.hue_lightstrip_plus_1
+    - if:
+        - condition: state
+          entity_id: binary_sensor.charlie_meal
+          state: "off"
+        - condition: state
+          entity_id: input_boolean.charlie_eating_mode
+          state: "off"
+      then:
+        - action: light.turn_off
+          target:
+            entity_id: light.island_bulb
 
     - action: switch.turn_off
       target:
