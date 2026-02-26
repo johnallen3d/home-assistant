@@ -1,9 +1,10 @@
 id: '1770580843422'
 alias: Cooking Air Quality Monitor
 description: >-
-  Monitor air quality. Notify when air quality is poor or worse for 5+
-  minutes, and notify again when it recovers (safe to close windows).
-  Skips mild states (fair/moderate) to reduce alert fatigue.
+  Monitor air quality. Notify when air quality is poor or worse for 15+
+  minutes, then wait for sustained recovery (good for 15+ min) before
+  sending an all-clear. Recovery notification is chained after the
+  degraded alert so it can never fire on its own.
 triggers:
   - trigger: state
     entity_id: sensor.alpstuga_air_quality_monitor_air_quality
@@ -12,35 +13,31 @@ triggers:
       - very_poor
       - extremely_poor
     for:
-      minutes: 5
-    id: degraded
-  - trigger: state
-    entity_id: sensor.alpstuga_air_quality_monitor_air_quality
-    to: good
-    id: recovered
+      minutes: 15
 actions:
-  - choose:
-      - conditions:
-          - condition: trigger
-            id: degraded
-        sequence:
-          - action: notify.mobile_app_john_allens_iphone
-            data:
-              title: "\U0001F373 Kitchen Air Quality Dropping"
-              message: >-
-                Air quality is now {{ states('sensor.alpstuga_air_quality_monitor_air_quality') }}
-                while cooking — PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³,
-                CO2: {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm.
-                Open a window or turn on ventilation.
-      - conditions:
-          - condition: trigger
-            id: recovered
-        sequence:
-          - action: notify.mobile_app_john_allens_iphone
-            data:
-              title: "\u2705 Kitchen Air Cleared"
-              message: >-
-                Air quality is back to good — PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³,
-                CO2: {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm.
-                Safe to close windows.
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "\U0001F373 Kitchen Air Quality Dropping"
+      message: >-
+        Air quality is now {{ states('sensor.alpstuga_air_quality_monitor_air_quality') }}
+        while cooking — PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³,
+        CO2: {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm.
+        Open a window or turn on ventilation.
+  - wait_for_trigger:
+      - trigger: state
+        entity_id: sensor.alpstuga_air_quality_monitor_air_quality
+        to: good
+        for:
+          minutes: 15
+    timeout:
+      hours: 4
+  - condition: template
+    value_template: "{{ wait.trigger is not none }}"
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "\u2705 Kitchen Air Cleared"
+      message: >-
+        Air quality is back to good — PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³,
+        CO2: {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm.
+        Safe to close windows.
 mode: single
