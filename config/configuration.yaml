@@ -141,10 +141,11 @@ input_datetime:
     icon: mdi:air-purifier
 
 # Matter Server Health Monitoring
-# Counts Matter nodes that are CURRENTLY stuck (last subscription event
-# was a failure with no subsequent re-subscription success).
-# Nodes that fail then self-recover are NOT counted — only truly stuck
-# nodes that need a server restart to recover.
+# Counts Matter nodes that are genuinely stuck — failed subscription with
+# no recovery for >30 minutes. Normal Thread mesh jitter (nodes that fail
+# and self-recover within minutes) is ignored. Only reports nodes that
+# likely need a Matter Server restart to recover.
+# See: config/scripts/matter_stuck_nodes.py
 command_line:
   - sensor:
       name: "Matter Subscription Failures"
@@ -154,11 +155,7 @@ command_line:
         -H "Authorization: Bearer ${SUPERVISOR_TOKEN}"
         http://supervisor/addons/core_matter_server/logs
         2>/dev/null
-        | grep -E '<Node:[0-9]+>.*(Subscription failed|Subscription succeeded|Re-Subscription succeeded)'
-        | awk -F'<Node:' '{split($2,a,">"); node=a[1];
-          if (/failed/) s[node]="failed";
-          else s[node]="ok"}
-          END {c=0; for (n in s) if (s[n]=="failed") c++; print c}'
+        | python3 /config/scripts/matter_stuck_nodes.py
       scan_interval: 600
       value_template: "{{ value | int(0) }}"
 

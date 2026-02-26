@@ -1,13 +1,12 @@
 id: "1771251368598"
 alias: "Matter Server Watchdog"
 description: >-
-  Monitors Matter Server for nodes that are truly stuck — where the last
-  subscription event is a failure with no subsequent recovery. Nodes that
-  fail and self-recover (normal Thread mesh jitter) are ignored. Only
-  triggers when a node is genuinely stuck and needs a server restart.
-  Sends an actionable notification with a Restart Now button. If not
-  tapped within 10 minutes, re-checks and auto-restarts only if nodes
-  are still stuck.
+  Monitors Matter Server for nodes stuck in a failed state for >30 minutes
+  without self-recovering. Normal Thread mesh jitter (nodes that fail and
+  recover within minutes) is filtered out by the sensor. Only triggers when
+  a node is genuinely stuck and likely needs a server restart. Sends an
+  actionable notification with a Restart Now button. If not tapped within
+  10 minutes, re-checks and auto-restarts only if nodes are still stuck.
 triggers:
   - trigger: numeric_state
     entity_id: sensor.matter_subscription_failures
