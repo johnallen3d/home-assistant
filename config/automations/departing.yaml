@@ -1,12 +1,15 @@
 id: '1762719083752'
 alias: Departing
-description: ''
+description: "Turn off lights and reset modes when leaving home, unless cleaning mode is active"
 triggers:
   - entity_id: person.john_allen
     zone: zone.home
     event: leave
     trigger: zone
-conditions: []
+conditions:
+  - condition: state
+    entity_id: input_boolean.cleaning_mode
+    state: "off"
 actions:
   - action: script.reset_all_modes
   - action: scene.turn_on
