@@ -9,7 +9,7 @@
 #   - Friday: Non-Charlie rooms
 #   - Saturday: No cleaning
 #
-# Triggers every 15 minutes from 8am-6pm on scheduled days.
+# Triggers every 15 minutes from 6am-6pm on scheduled days.
 # Only runs when nobody is home and vacuum isn't already cleaning.
 
 id: "1767454229654"
@@ -22,9 +22,9 @@ trigger:
     minutes: "/15"
 
 condition:
-  # Only run between 8am and 6pm
+  # Only run between 6am and 6pm
   - condition: time
-    after: "08:00:00"
+    after: "06:00:00"
     before: "18:00:00"
   # Only on scheduled days (Mon=0, Tue=1, Wed=2, Thu=3, Fri=4)
   - condition: template
