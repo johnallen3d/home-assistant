@@ -12,6 +12,10 @@
 # Per mode conflict matrix, tv ON turns off:
 # - hobby_mode (focus on TV, not projects)
 # - meditation_mode (TV is not meditation)
+#
+# Protected modes (tv_mode skips entirely when active):
+# - babysitter_mode (sitter needs stable lights)
+# - cooking_mode (don't disrupt kitchen lighting)
 
 id: 'tv_mode_auto'
 alias: "TV Mode Auto"
@@ -38,9 +42,12 @@ actions:
           - condition: trigger
             id: tv_on
         sequence:
-          # Skip if babysitter mode is active (sitter needs stable lights)
+          # Skip if babysitter or cooking mode is active (don't mess with their lights)
           - condition: state
             entity_id: input_boolean.babysitter_mode
+            state: "off"
+          - condition: state
+            entity_id: input_boolean.cooking_mode
             state: "off"
           - action: input_boolean.turn_on
             target:
