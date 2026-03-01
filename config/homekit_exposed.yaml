@@ -15,34 +15,26 @@ include_domains:
 
 # Specific entities to include (from domains NOT in include_domains)
 include_entities:
-  # Scenes (used on dashboards)
+  # Scenes (one-shot actions without mode helpers)
   - scene.lights_out
   - scene.shaving
-  - scene.working
-  # Scripts (adaptive lighting - used on dashboards)
+  # Scripts (one-shot actions without mode helpers)
   - script.arriving_home
-  - script.charlie_eating
-  - script.eating
   - script.good_morning
   - script.kitchen_chill
-  - script.tv_time
-  - script.winding_down
-  # Note: toggle_cooking removed - use input_boolean.cooking_mode instead (shows state)
   # Switches (only useful ones, not camera/vacuum controls)
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
   - switch.sound_machine_outlet
   # Helpers (booleans show as switches with ON/OFF state)
+  - input_boolean.charlie_eating_mode
   - input_boolean.charlie_presence
   - input_boolean.cooking_mode
+  - input_boolean.dad_eating_mode
   - input_boolean.hobby_mode
   - input_boolean.meditation_mode
   - input_boolean.working_mode
   - input_boolean.door_lock
-  - script.toggle_meditation
-  # Charlie presence scripts
-  - script.charlies_home
-  - script.charlies_away
 
 # Entities to exclude (from included domains)
 exclude_entities:

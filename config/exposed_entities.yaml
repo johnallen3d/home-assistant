@@ -20,26 +20,24 @@ light.bathroom_lights: true
 light.bedroom_lights: true
 light.dad_s_overhead_lights: true
 
-# Scenes (static lighting presets)
+# Scenes (one-shot actions without mode helpers)
 scene.alarm: true
 scene.lights_out: true
 scene.shaving: true
-scene.working: true
 
-# Scripts (adaptive lighting - replace static scenes)
+# Scripts (one-shot actions without mode helpers)
 script.bathroom_lights: true
 script.bedroom_lights: true
-script.charlie_eating: true
-script.eating: true
 script.good_morning: true
 script.kitchen_chill: true
 script.toggle_cooking: true
 script.tv_time: true
-script.winding_down: true
 
 # Helpers
+input_boolean.charlie_eating_mode: true
 input_boolean.charlie_presence: true
 input_boolean.cooking_mode: true
+input_boolean.dad_eating_mode: true
 input_boolean.working_mode: true
 
 # Charlie presence scripts
