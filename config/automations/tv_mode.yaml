@@ -38,6 +38,10 @@ actions:
           - condition: trigger
             id: tv_on
         sequence:
+          # Skip if babysitter mode is active (sitter needs stable lights)
+          - condition: state
+            entity_id: input_boolean.babysitter_mode
+            state: "off"
           - action: input_boolean.turn_on
             target:
               entity_id: input_boolean.tv_mode

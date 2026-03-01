@@ -98,6 +98,9 @@ input_boolean:
   tv_mode:
     name: "TV Mode"
     icon: mdi:television
+  babysitter_mode:
+    name: "Babysitter Mode"
+    icon: mdi:account-child
   door_lock:
     name: "Door Lock"
     icon: mdi:lock

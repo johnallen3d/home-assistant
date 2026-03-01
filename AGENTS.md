@@ -130,6 +130,20 @@ When renaming any script, scene, or entity that may be exposed to voice assistan
 
 **The exposure configs are the primary reason for renaming** - they control what voice assistants can access. Forgetting to update them defeats the purpose of the rename.
 
+### Adding a New Mode Checklist
+
+When adding a new mode (like babysitter_mode, cleaning_mode, etc.), ALL of these must be done:
+
+1. **`input_boolean`** in `configuration.yaml`
+2. **Scene** (if applicable) in `config/scenes/`
+3. **Automation handler** in `config/automations/` (ON/OFF logic)
+4. **Mode conflict matrix** — add to every other mode that should clear this one (automation sandwich: disable automation → turn off boolean → re-enable)
+5. **`reset_all_modes` script** — add to all 3 steps (disable, turn off, re-enable)
+6. **`departing` automation** — add condition to protect mode from departure lights-off (if mode should survive leaving home)
+7. **`mode_light_watchers` automation** — add to relevant light-off triggers so mode clears when its lights are manually turned off. **This prevents stale mode state.**
+8. **Dashboard** — add toggle button to mobile dashboard
+9. **Other scripts that control the same lights** (e.g., `tv_time`) — add guards to skip light changes when mode is active
+
 ### Automation/Script Update Checklist
 
 After modifying automations that respond to physical triggers (buttons, sensors), **always verify**:

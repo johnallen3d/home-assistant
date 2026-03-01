@@ -1,42 +1,44 @@
-# Cleaning Mode State Handler
-# Reacts to cleaning_mode boolean changes to set up full-brightness lighting
-# and disable presence/motion automations while cleaning.
+# Babysitter Mode State Handler
+# Reacts to babysitter_mode boolean changes to set soft, warm lighting
+# in kitchen and living room and disable presence/motion automations
+# so a sitter isn't surprised by lights turning on/off.
 #
-# The boolean (input_boolean.cleaning_mode) is the user-facing switch:
-# - Visible on dashboards as a toggle
+# Similar to cleaning mode but:
+# - Only lights kitchen + living room (not bedrooms/bathrooms)
+# - Softer brightness (~50%) and warm color temp (2700K)
+# - Also protects against departing automation turning everything off
+#
+# The boolean (input_boolean.babysitter_mode) is the user-facing switch.
 #
 # This automation handles:
-# - ON: Turn on all lights at 100% brightness, full white (6500K)
-#       Disable presence automations (bathroom, kitchen, living room, charlie meal, bedroom-bathroom)
-#       Skip laundry room
-# - OFF: Turn off all lights, re-enable presence automations
-#
-# Excluded: Laundry room motion/switch (per user preference)
+# - ON: Activate babysitter scene (soft warm kitchen + living room)
+#       Disable presence automations so lights stay stable
+#       Turn off conflicting modes
+# - OFF: Turn off kitchen + living room lights, re-enable presence automations
 
-id: '1767710078995'
-alias: "Cleaning Mode Changed"
-description: "Handle cleaning mode - full brightness lights, disable presence automations"
+id: '1772372585807'
+alias: "Babysitter Mode Changed"
+description: "Handle babysitter mode - soft warm lighting, disable presence automations"
 mode: single
 
 triggers:
   - trigger: state
-    entity_id: input_boolean.cleaning_mode
+    entity_id: input_boolean.babysitter_mode
     to: "on"
-    id: cleaning_on
+    id: babysitter_on
   - trigger: state
-    entity_id: input_boolean.cleaning_mode
+    entity_id: input_boolean.babysitter_mode
     to: "off"
-    id: cleaning_off
+    id: babysitter_off
 
 actions:
   - choose:
-      # Cleaning mode turned ON - full brightness everywhere
+      # Babysitter mode turned ON - soft warm lights in kitchen + living room
       - conditions:
           - condition: trigger
-            id: cleaning_on
+            id: babysitter_on
         sequence:
           # Disable mode automations FIRST (before turning off modes)
-          # This prevents them from reacting and turning off lights
           - action: automation.turn_off
             target:
               entity_id:
@@ -47,9 +49,9 @@ actions:
                 - automation.working_mode_changed
                 - automation.bathing_mode_changed
                 - automation.tv_mode_auto
-                - automation.babysitter_mode_changed
+                - automation.cleaning_mode_changed
 
-          # Per mode conflict matrix: cleaning ON turns off ALL other modes
+          # Babysitter ON turns off ALL other modes
           - action: input_boolean.turn_off
             target:
               entity_id:
@@ -61,9 +63,9 @@ actions:
                 - input_boolean.working_mode
                 - input_boolean.bathing_mode
                 - input_boolean.tv_mode
-                - input_boolean.babysitter_mode
+                - input_boolean.cleaning_mode
 
-          # Disable presence automations (skip laundry)
+          # Disable presence automations so lights stay stable
           - action: automation.turn_off
             target:
               entity_id:
@@ -73,43 +75,22 @@ actions:
                 - automation.charlie_meal_presence_lighting
                 - automation.bedroom_bathroom_presence_coupling
 
-          # Turn on all lights at 100% brightness, max white (6500K)
-          - action: light.turn_on
+          # Activate babysitter scene (soft warm kitchen + living room)
+          - action: scene.turn_on
             target:
-              entity_id:
-                - light.kitchen_lights
-                - light.living_room_lights
-                - light.bedroom_lights
-                - light.bathroom_lights
-                - light.charlie_s_shapes
-            data:
-              brightness_pct: 100
-              color_temp_kelvin: 6500
+              entity_id: scene.babysitter
 
-          # Turn on counter switch
-          - action: switch.turn_on
-            target:
-              entity_id: switch.kitchen_counter_switch
-
-      # Cleaning mode turned OFF - restore normal state
+      # Babysitter mode turned OFF - restore normal state
       - conditions:
           - condition: trigger
-            id: cleaning_off
+            id: babysitter_off
         sequence:
-          # Turn off all lights
+          # Turn off kitchen + living room lights
           - action: light.turn_off
             target:
               entity_id:
                 - light.kitchen_lights
                 - light.living_room_lights
-                - light.bedroom_lights
-                - light.bathroom_lights
-                - light.charlie_s_shapes
-
-          # Turn off counter switch
-          - action: switch.turn_off
-            target:
-              entity_id: switch.kitchen_counter_switch
 
           # Re-enable presence automations
           - action: automation.turn_on
@@ -132,4 +113,4 @@ actions:
                 - automation.working_mode_changed
                 - automation.bathing_mode_changed
                 - automation.tv_mode_auto
-                - automation.babysitter_mode_changed
+                - automation.cleaning_mode_changed

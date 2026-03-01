@@ -41,6 +41,15 @@
                       "tap_action": {
                         "action": "toggle"
                       }
+                    },
+                    {
+                      "entity": "input_boolean.babysitter_mode",
+                      "icon": "mdi:account-child",
+                      "name": "Sitter",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
                     }
                   ]
                 },

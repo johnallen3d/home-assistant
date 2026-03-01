@@ -46,13 +46,20 @@ actions:
       - conditions:
           - condition: trigger
             id: kitchen_off
-          - condition: state
-            entity_id: input_boolean.cooking_mode
-            state: "on"
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: input_boolean.cooking_mode
+                state: "on"
+              - condition: state
+                entity_id: input_boolean.babysitter_mode
+                state: "on"
         sequence:
           - action: input_boolean.turn_off
             target:
-              entity_id: input_boolean.cooking_mode
+              entity_id:
+                - input_boolean.cooking_mode
+                - input_boolean.babysitter_mode
       - conditions:
           - condition: trigger
             id: living_room_off
@@ -64,12 +71,16 @@ actions:
               - condition: state
                 entity_id: input_boolean.dad_eating_mode
                 state: "on"
+              - condition: state
+                entity_id: input_boolean.babysitter_mode
+                state: "on"
         sequence:
           - action: input_boolean.turn_off
             target:
               entity_id:
                 - input_boolean.hobby_mode
                 - input_boolean.dad_eating_mode
+                - input_boolean.babysitter_mode
       - conditions:
           - condition: trigger
             id: bathroom_off

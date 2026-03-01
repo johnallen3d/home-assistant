@@ -113,6 +113,7 @@ toggle_meditation:
                   - automation.bathing_mode_changed
                   - automation.tv_mode_auto
                   - automation.cleaning_mode_changed
+                  - automation.babysitter_mode_changed
             - action: input_boolean.turn_off
               target:
                 entity_id:
@@ -123,6 +124,7 @@ toggle_meditation:
                   - input_boolean.bathing_mode
                   - input_boolean.tv_mode
                   - input_boolean.cleaning_mode
+                  - input_boolean.babysitter_mode
             - action: automation.turn_on
               target:
                 entity_id:
@@ -133,6 +135,7 @@ toggle_meditation:
                   - automation.bathing_mode_changed
                   - automation.tv_mode_auto
                   - automation.cleaning_mode_changed
+                  - automation.babysitter_mode_changed
             # Turn off lights in dad's bedroom
             - action: light.turn_off
               target:
@@ -467,6 +470,10 @@ tv_time:
         kitchen_presence_active: "{{ is_state('binary_sensor.kitchen_presence_kitchen', 'on') }}"
         # Skip kitchen modifications if any kitchen-active mode is on or someone is present
         kitchen_protected: "{{ cooking_mode_active or eating_mode_active or kitchen_presence_active }}"
+
+    # Babysitter mode: skip all light changes (sitter needs stable lights)
+    - condition: template
+      value_template: "{{ not is_state('input_boolean.babysitter_mode', 'on') }}"
 
     # Per mode conflict matrix: tv_time clears hobby_mode (focus on TV, not projects)
     # Disable automation first to prevent its OFF handler from running
@@ -1191,6 +1198,7 @@ reset_all_modes:
           - automation.tv_mode_auto
           - automation.cleaning_mode_changed
           - automation.charlie_eating_mode_changed
+          - automation.babysitter_mode_changed
     # Step 2: Turn off all mode booleans
     - action: input_boolean.turn_off
       target:
@@ -1204,6 +1212,7 @@ reset_all_modes:
           - input_boolean.cleaning_mode
           - input_boolean.charlie_eating_mode
           - input_boolean.meditation_mode
+          - input_boolean.babysitter_mode
     # Step 3: Re-enable all mode automations
     - action: automation.turn_on
       target:
@@ -1216,6 +1225,7 @@ reset_all_modes:
           - automation.tv_mode_auto
           - automation.cleaning_mode_changed
           - automation.charlie_eating_mode_changed
+          - automation.babysitter_mode_changed
 
 
 # =============================================================================
