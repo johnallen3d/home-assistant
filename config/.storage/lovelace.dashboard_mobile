@@ -1167,6 +1167,66 @@
               ]
             }
           ]
+        },
+        {
+          "type": "panel",
+          "title": "Batteries",
+          "path": "batteries",
+          "icon": "mdi:battery",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Device Batteries",
+                  "icon": "mdi:battery",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.nuki_smart_lock_battery",
+                      "name": "Front Door Lock",
+                      "icon": "mdi:door-closed-lock"
+                    },
+                    {
+                      "entity": "sensor.kitchen_counter_switch_battery",
+                      "name": "Kitchen Counter Switch",
+                      "icon": "mdi:light-switch"
+                    },
+                    {
+                      "entity": "sensor.laundry_room_switch_battery",
+                      "name": "Laundry Room Switch",
+                      "icon": "mdi:power-socket-us"
+                    },
+                    {
+                      "entity": "sensor.laundry_room_sensor_battery",
+                      "name": "Laundry Room Sensor",
+                      "icon": "mdi:motion-sensor"
+                    },
+                    {
+                      "entity": "sensor.bathroom_presence_sensor_battery",
+                      "name": "Bathroom Sensor",
+                      "icon": "mdi:motion-sensor"
+                    },
+                    {
+                      "entity": "sensor.smart_button_battery",
+                      "name": "Smart Button",
+                      "icon": "mdi:gesture-tap-button"
+                    },
+                    {
+                      "entity": "sensor.bedside_button_battery",
+                      "name": "Bedside Button",
+                      "icon": "mdi:gesture-tap-button"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }
