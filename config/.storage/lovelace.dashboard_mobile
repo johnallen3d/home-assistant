@@ -1213,8 +1213,8 @@
                       "icon": "mdi:motion-sensor"
                     },
                     {
-                      "entity": "sensor.smart_button_battery",
-                      "name": "Smart Button",
+                      "entity": "sensor.kitchen_button_battery",
+                      "name": "Kitchen Button",
                       "icon": "mdi:gesture-tap-button"
                     },
                     {

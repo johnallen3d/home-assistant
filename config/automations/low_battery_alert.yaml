@@ -7,7 +7,7 @@ description: >-
 triggers:
   - trigger: numeric_state
     entity_id:
-      - sensor.smart_button_battery
+      - sensor.kitchen_button_battery
       - sensor.bedside_button_battery
       - sensor.kitchen_counter_switch_battery
       - sensor.nuki_smart_lock_battery
