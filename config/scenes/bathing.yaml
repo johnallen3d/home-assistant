@@ -3,10 +3,10 @@ name: Bathing
 entities:
   light.bathroom_strip:
     state: 'on'
-    brightness: 64
-    color_temp_kelvin: 2400
+    brightness: 32
+    hs_color: [340, 50]
   light.bathroom_lamp:
     state: 'on'
-    brightness: 64
-    color_temp_kelvin: 2400
+    brightness: 32
+    hs_color: [340, 50]
 metadata: {}
