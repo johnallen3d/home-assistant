@@ -410,12 +410,12 @@
                         },
                         {
                           "type": "heading",
-                          "heading": "Ember Mug",
+                          "heading": "Ember Mug 2",
                           "heading_style": "subtitle"
                         },
                         {
                           "type": "custom:ember-mug-card",
-                          "entity": "sensor.ember_mug_e87720e9d7b9_state"
+                          "entity": "sensor.ember_mug_2_state"
                         },
                         {
                           "type": "heading",
