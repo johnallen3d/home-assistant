@@ -1,0 +1,1 @@
+{"id":"int-20beb64e","kind":"field_change","created_at":"2026-03-26T15:10:15.086958Z","actor":"John Allen","issue_id":"beads-x5f","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Completed: removed the Travel Mug card from the mobile dashboard and verified the dashboard file still contains valid JSON."}}
