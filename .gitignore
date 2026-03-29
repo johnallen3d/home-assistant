@@ -26,6 +26,9 @@ CLAUDE.md
 # bv (beads viewer) local config and caches
 .bv/
 
+# Beads credentials
+.beads/.beads-credential-key
+
 # Dolt database files (added by bd init)
 .dolt/
 *.db
