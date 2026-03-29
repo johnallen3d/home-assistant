@@ -36,13 +36,20 @@ actions:
       - conditions:
           - condition: trigger
             id: bedroom_off
-          - condition: state
-            entity_id: input_boolean.working_mode
-            state: "on"
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: input_boolean.working_mode
+                state: "on"
+              - condition: state
+                entity_id: input_boolean.sexy_time_mode
+                state: "on"
         sequence:
           - action: input_boolean.turn_off
             target:
-              entity_id: input_boolean.working_mode
+              entity_id:
+                - input_boolean.working_mode
+                - input_boolean.sexy_time_mode
       - conditions:
           - condition: trigger
             id: kitchen_off

@@ -49,6 +49,7 @@ actions:
                 - automation.tv_mode_auto
                 - automation.babysitter_mode_changed
                 - automation.lights_out_mode_changed
+                - automation.sexy_time_mode_changed
 
           # Per mode conflict matrix: cleaning ON turns off ALL other modes
           - action: input_boolean.turn_off
@@ -64,6 +65,7 @@ actions:
                 - input_boolean.tv_mode
                 - input_boolean.babysitter_mode
                 - input_boolean.lights_out_mode
+                - input_boolean.sexy_time_mode
 
           # Disable presence automations (skip laundry)
           - action: automation.turn_off
@@ -136,3 +138,4 @@ actions:
                 - automation.tv_mode_auto
                 - automation.babysitter_mode_changed
                 - automation.lights_out_mode_changed
+                - automation.sexy_time_mode_changed

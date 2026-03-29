@@ -1,0 +1,12 @@
+id: '1774800000001'
+name: Sexy Time
+entities:
+  light.bedroom_lamp:
+    state: 'on'
+    brightness: 25
+    hs_color: [350, 70]
+  light.bedroom_overhead_left:
+    state: 'off'
+  light.bedroom_overhead_right:
+    state: 'off'
+metadata: {}

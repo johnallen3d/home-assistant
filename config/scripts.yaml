@@ -1200,6 +1200,7 @@ reset_all_modes:
           - automation.charlie_eating_mode_changed
           - automation.babysitter_mode_changed
           - automation.lights_out_mode_changed
+          - automation.sexy_time_mode_changed
     # Step 2: Turn off all mode booleans
     - action: input_boolean.turn_off
       target:
@@ -1215,6 +1216,7 @@ reset_all_modes:
           - input_boolean.meditation_mode
           - input_boolean.babysitter_mode
           - input_boolean.lights_out_mode
+          - input_boolean.sexy_time_mode
     # Step 3: Re-enable all mode automations
     - action: automation.turn_on
       target:
@@ -1229,6 +1231,7 @@ reset_all_modes:
           - automation.charlie_eating_mode_changed
           - automation.babysitter_mode_changed
           - automation.lights_out_mode_changed
+          - automation.sexy_time_mode_changed
 
 
 # =============================================================================

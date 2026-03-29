@@ -104,6 +104,9 @@ input_boolean:
   lights_out_mode:
     name: "Lights Out Mode"
     icon: mdi:lightbulb-off
+  sexy_time_mode:
+    name: "Sexy Time Mode"
+    icon: mdi:candle
   door_lock:
     name: "Door Lock"
     icon: mdi:lock
