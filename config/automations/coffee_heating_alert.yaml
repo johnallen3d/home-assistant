@@ -5,13 +5,13 @@ description: >-
   preparing for the next cup of coffee.
 triggers:
   - trigger: state
-    entity_id: sensor.ember_mug_e87720e9d7b9_state
+    entity_id: sensor.ember_mug_2_state
     to: "empty"
   - trigger: state
-    entity_id: sensor.ember_mug_e87720e9d7b9_state
+    entity_id: sensor.ember_mug_2_state
     to: "standby"
   - trigger: numeric_state
-    entity_id: sensor.ember_mug_e87720e9d7b9_liquid_level
+    entity_id: sensor.ember_mug_2_liquid_level
     below: 5
 conditions:
   # Only reset if it was previously set (avoid unnecessary calls)
