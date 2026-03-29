@@ -34,6 +34,15 @@
                       }
                     },
                     {
+                      "entity": "input_boolean.lights_out_mode",
+                      "icon": "mdi:lightbulb-off",
+                      "name": "Dark",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
                       "entity": "input_boolean.cleaning_mode",
                       "icon": "mdi:broom",
                       "name": "Clean",

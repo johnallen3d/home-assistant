@@ -1,0 +1,41 @@
+# Lights Out Mode State Handler
+# Prevents presence-based lighting from turning on kitchen and living room lights.
+#
+# The boolean (input_boolean.lights_out_mode) is the user-facing switch:
+# - Visible on mobile dashboard as a top-line toggle
+#
+# This automation handles:
+# - ON: Turn off kitchen + living room lights immediately
+# - OFF: Nothing required - presence automations resume naturally on next detection
+
+id: '1774793509812'
+alias: "Lights Out Mode Changed"
+description: "Handle lights out mode - keep kitchen and living room dark, block presence lighting"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.lights_out_mode
+    to: "on"
+    id: lights_out_on
+  - trigger: state
+    entity_id: input_boolean.lights_out_mode
+    to: "off"
+    id: lights_out_off
+
+actions:
+  - choose:
+      # Lights out mode turned ON - turn off kitchen and living room lights
+      - conditions:
+          - condition: trigger
+            id: lights_out_on
+        sequence:
+          - action: light.turn_off
+            target:
+              entity_id:
+                - light.kitchen_lights
+                - light.living_room_lights
+          - action: switch.turn_off
+            target:
+              entity_id: switch.kitchen_counter_switch
+      # Lights out mode turned OFF - nothing to do, presence automations resume naturally

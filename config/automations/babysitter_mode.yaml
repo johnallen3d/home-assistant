@@ -50,6 +50,7 @@ actions:
                 - automation.bathing_mode_changed
                 - automation.tv_mode_auto
                 - automation.cleaning_mode_changed
+                - automation.lights_out_mode_changed
 
           # Babysitter ON turns off ALL other modes
           - action: input_boolean.turn_off
@@ -64,6 +65,7 @@ actions:
                 - input_boolean.bathing_mode
                 - input_boolean.tv_mode
                 - input_boolean.cleaning_mode
+                - input_boolean.lights_out_mode
 
           # Disable presence automations so lights stay stable
           - action: automation.turn_off
@@ -114,3 +116,4 @@ actions:
                 - automation.bathing_mode_changed
                 - automation.tv_mode_auto
                 - automation.cleaning_mode_changed
+                - automation.lights_out_mode_changed

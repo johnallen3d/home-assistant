@@ -3,6 +3,7 @@
 #
 # On entry: Uses adaptive lighting on lamp only (overhead excluded from presence control)
 # On exit: Turns lights off immediately (no delay)
+# Lights Out Mode: When input_boolean.lights_out_mode is ON, lights are NOT turned on.
 
 id: '1765490534742'
 alias: "Living Room Presence Lighting"
@@ -25,6 +26,10 @@ actions:
       - conditions:
           - condition: trigger
             id: presence_on
+          # Skip if lights out mode is on (presence should not turn on lights)
+          - condition: state
+            entity_id: input_boolean.lights_out_mode
+            state: "off"
           # Skip if eating mode is on (scene is already set, don't overwrite it)
           - condition: state
             entity_id: input_boolean.dad_eating_mode

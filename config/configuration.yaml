@@ -101,6 +101,9 @@ input_boolean:
   babysitter_mode:
     name: "Babysitter Mode"
     icon: mdi:account-child
+  lights_out_mode:
+    name: "Lights Out Mode"
+    icon: mdi:lightbulb-off
   door_lock:
     name: "Door Lock"
     icon: mdi:lock

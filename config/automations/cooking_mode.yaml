@@ -36,7 +36,7 @@ actions:
           - condition: trigger
             id: cooking_on
         sequence:
-          # Per mode conflict matrix: cooking ON turns off meditation, bathing, cleaning, babysitter
+          # Per mode conflict matrix: cooking ON turns off meditation, bathing, cleaning, babysitter, lights_out
           # Disable automations first to prevent their OFF handlers from running
           - action: automation.turn_off
             target:
@@ -51,6 +51,7 @@ actions:
                 - input_boolean.bathing_mode
                 - input_boolean.cleaning_mode
                 - input_boolean.babysitter_mode
+                - input_boolean.lights_out_mode
           - action: automation.turn_on
             target:
               entity_id:

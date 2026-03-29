@@ -11,6 +11,7 @@
 #
 # Cooking Mode: When input_boolean.cooking_mode is ON, lights are NOT turned off.
 # This protects against the FP2 coverage gap at the oven.
+# Lights Out Mode: When input_boolean.lights_out_mode is ON, lights are NOT turned on.
 
 id: '1765490530767'
 alias: "Kitchen Presence Lighting"
@@ -34,6 +35,10 @@ actions:
           - condition: trigger
             id: presence_on
         sequence:
+          # Skip if lights out mode is on (presence should not turn on lights)
+          - condition: state
+            entity_id: input_boolean.lights_out_mode
+            state: "off"
           # Only proceed if lights are actually off
           - if:
               - condition: state
