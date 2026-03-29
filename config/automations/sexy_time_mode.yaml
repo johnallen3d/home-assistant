@@ -4,7 +4,7 @@
 # The boolean (input_boolean.sexy_time_mode) is the user-facing switch.
 #
 # This automation handles:
-# - ON: Activate sexy time scene (dim pink lamp, overheads off), resume HomePod at 35% volume
+# - ON: Activate sexy time scene (dim pink lamp, overheads off), play Hania Rani via Music Assistant at 35% volume
 # - OFF: Turn off bedroom lights, pause HomePod
 
 id: '1774794220764'
@@ -34,12 +34,15 @@ actions:
               entity_id: scene.sexy_time
           - action: media_player.volume_set
             target:
-              entity_id: media_player.bedroom_homepod_mini
+              entity_id: media_player.bedroom_3
             data:
               volume_level: 0.35
-          - action: media_player.media_play
+          - action: music_assistant.play_media
             target:
-              entity_id: media_player.bedroom_homepod_mini
+              entity_id: media_player.bedroom_3
+            data:
+              media_id: Hania Rani
+              media_type: artist
 
       # Sexy time mode turned OFF - lights off, pause music
       - conditions:
@@ -51,4 +54,4 @@ actions:
               entity_id: light.bedroom_lights
           - action: media_player.media_pause
             target:
-              entity_id: media_player.bedroom_homepod_mini
+              entity_id: media_player.bedroom_3
