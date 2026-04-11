@@ -357,6 +357,9 @@ When investigating device unavailability in HA:
 - You're about to commit/push and the user hasn't requested it
 - The user asked a question (not gave an instruction)
 
+**Agent co-author convention:**
+- When agent co-author credit is required, use `Co-Authored-By: Shitty Coding Agent <noreply@shittycodingagent.ai>`
+
 **Commands that push (be aware):**
 - `git push`
 - `bd sync` ← THIS PUSHES! It runs `git push` internally!
