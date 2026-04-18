@@ -37,27 +37,26 @@ Use `/todo` command for todo list queries. This queries `todo.ha_enhancements` (
 
 ## Core Tenets
 
-1. **Make changes locally FIRST** - Edit files in this repo, not in HA UI or via MCP write tools
-2. **Push local changes to HA** - Use `mise run config <command>` or scp
-3. **Reload HA when necessary** - Use MCP `ha_call_service` for reloads, or `mise run config restart`
+1. **Make changes locally FIRST** - Edit files in this repo via `read` + `edit`, never in HA UI
+2. **Push local changes to HA** - Use `mise run <task>` commands for deployment
+3. **Validate via SSH** - Use `ssh root@homeassistant` for config validation, entity inspection, and log analysis
 4. **Never make changes in HA UI** - For things managed here (automations, scripts, scenes, configuration.yaml)
 
-## ⛔ MCP WRITE TOOLS - READ THIS ⛔
+## ⛔ LOCAL-FIRST WORKFLOW - READ THIS ⛔
 
-**For anything in the "What We Manage Locally" table below, NEVER use MCP write tools directly.**
+**For anything in the "What We Manage Locally" table below, NEVER edit via HA UI or make direct server changes.**
 
-This means: Do NOT use `ha_config_set_dashboard`, `ha_config_set_automation`, etc. to make changes.
+This means: Do NOT edit automations, scripts, dashboards, etc. in the HA UI directly.
 
 **Correct workflow:**
-1. Edit the local file (e.g., `config/.storage/lovelace.charlie_shapes`)
-2. Deploy via `mise` command (e.g., `mise run config deploy-dashboard charlie_shapes`)
+1. Edit the local file (e.g., `config/automations/sexy_time_mode.yaml`) using `read` + `edit`
+2. Deploy via `mise` command (e.g., `mise run automation-update config/automations/sexy_time_mode.yaml`)
 
 **Wrong workflow:**
-1. ~~Use MCP `ha_config_set_dashboard` to change the server~~
-2. ~~Then create/update the local file~~
+1. ~~Edit automations in the HA UI~~
+2. ~~Then try to update local files~~
 
-MCP write tools bypass local files and create drift between repo and server.
-**Use MCP tools only for reading/querying, not writing, for locally-managed config.**
+UI edits bypass local files and create drift between repo and server. Local-first keeps everything in sync.
 
 ## What We Manage Locally
 
@@ -86,36 +85,33 @@ MCP write tools bypass local files and create drift between repo and server.
 
 ## Available Tools
 
-This project has three layers of Home Assistant tooling:
+This project has two primary tools for agents:
 
-1. **Home Assistant MCP** (`home-assistant_ha_*`) - Direct API access to HA
-   - CRUD for automations, scripts, scenes, dashboards, helpers
-   - Entity state queries and service calls
-   - History, statistics, and logbook access
-   - Preferred for most read/write operations
-
-2. **`home-assistant-manager` skill** - SSH/scp workflows and deployment patterns
-   - Use for: config validation (`ha core check`), log analysis, rapid scp iteration
-   - Covers: reload vs restart decisions, dashboard JSON debugging, template testing
-
-3. **`mise` tasks** - Deployment automation (see `mise tasks`)
+1. **`mise` tasks** - Deployment automation (see `mise tasks`)
+   - `mise run automation-update <file>` - Deploy automation YAML to HA
+   - `mise run scene-update <file>` - Deploy scene YAML to HA
    - `mise run config deploy` - Upload configuration.yaml and restart
    - `mise run config restart` - Restart HA core
    - `mise run esphome <cmd>` - ESPHome device management
    - Secrets loaded on-demand from **Doppler** (no .envrc needed)
 
-**Decision guide:**
-- Query/modify entities, automations, dashboards → Use MCP tools
-- Check config validity, view logs, rapid file deployment → Use skill (SSH/scp)
-- Routine tasks with established patterns → Use `mise run` commands
+2. **SSH + File Inspection** - Remote validation and entity inspection
+   - SSH to `root@homeassistant` for config validation (`ha core check`), logs, and entity registry queries
+   - Query `.storage/core.entity_registry` and `.storage/core.device_registry` for entity IDs and device mappings
+   - Useful for debugging service call issues and verifying entity targeting
+
+**Workflow:**
+- Edit files locally with `read` + `edit` tools
+- Deploy via `mise run` commands
+- Validate via SSH when needed (entity registry inspection, config checks)
 
 ### Known Issues
 
 **`mise run automation-update` only updates existing automations.**
-For NEW automations, use MCP `ha_config_set_automation()` to create them first, then update the local YAML file with the generated `id` from the response. The `update-automation` command downloads the server's automation list and merges changes - it won't add automations that don't already exist on the server.
+The `update-automation` task downloads the server's automation list and merges changes. It won't add automations that don't already exist on the server. For new automations, create them in the HA UI first, then download the `id` and add to your local YAML.
 
-**`ha core reload-scripts` via SSH doesn't reliably reload new scripts.**  
-After uploading scripts.yaml, use MCP `ha_call_service("script", "reload")` instead of SSH `ha core reload-scripts`. The SSH command may silently fail to pick up new script definitions.
+**Service call syntax varies by integration.**  
+Some integrations (like Music Assistant) don't accept standard HA `target: entity_id:` syntax. Use SSH to query entity registry for entity IDs and test service calls locally in YAML before deploying. Example: `music_assistant.play_media` requires `data: entity_id:` not `target:`.
 
 ### Renaming Scripts/Scenes/Entities Checklist
 
@@ -148,24 +144,27 @@ When adding a new mode (like babysitter_mode, cleaning_mode, etc.), ALL of these
 
 After modifying automations that respond to physical triggers (buttons, sensors), **always verify**:
 
-1. **Check the automation exists and is enabled:**
+1. **Deploy the local YAML:**
+   ```bash
+   mise run automation-update config/automations/your_automation.yaml
    ```
-   ha_get_state("automation.xxx") → state should be "on"
-   ```
+   Verify success message.
 
-2. **Test the script/action directly first:**
+2. **Query entity state via SSH:**
+   ```bash
+   ssh root@homeassistant "ha shell -c 'print(hass.states.get(\"automation.xxx\"))'"
    ```
-   ha_call_service("script", "turn_on", entity_id="script.xxx")
-   ```
-   Verify the expected state change occurred.
+   State should be "on" and not showing errors.
 
-3. **Trigger a test event and check traces:**
-   - Ask user to press the button
-   - Check `ha_get_automation_traces()` for the new run
-   - Verify `execution: finished` and no errors
+3. **Trigger a test event and verify:**
+   - Ask user to press the button / trigger the sensor
+   - Check HA's automation traces in the UI (Automations → tap automation → "Traces" tab)
+   - Verify the most recent execution shows `finished` state and no errors
 
-4. **If automation fails silently:** The MCP `ha_config_set_automation` may mangle config. 
-   Re-push and reload, or compare with a known-working automation.
+4. **If automation fails silently:**
+   - Check entity registry: `ssh root@homeassistant "cat /config/.storage/core.entity_registry | jq '.data.entities[] | select(.entity_id == \"automation.xxx\")'`
+   - Verify service call syntax in YAML (some integrations have non-standard `target:` vs `data:` requirements)
+   - Re-deploy and check traces again
 
 **Do NOT mark an automation change as "done" until step 3 confirms it works end-to-end.**
 
@@ -367,6 +366,32 @@ When investigating device unavailability in HA:
 **Do NOT run `bd sync` without approval.** Use `bd close` to close issues,
 then wait for push approval before running `bd sync`.
 
+## Agent Methods & Patterns
+
+### File Operations
+- **`read` tool**: Load YAML/JSON files for inspection before editing
+- **`edit` tool**: Make precise text replacements with `oldText` + `newText` (no overlapping edits)
+- **`bash` tool**: File operations (`ls`, `find`, `grep`) only; avoid large output
+
+### Entity & Device Inspection
+- **SSH entity registry**: `ssh root@homeassistant "cat /config/.storage/core.entity_registry | jq ..."` to query entity IDs by name/platform
+- **SSH device registry**: `ssh root@homeassistant "cat /config/.storage/core.device_registry | jq ..."` to map devices to names/models
+- Useful for verifying service call targeting and debugging integration-specific naming
+
+### Deployment
+- **`mise run` tasks**: All deployments go through mise (automation-update, config deploy, etc.)
+- Always verify task succeeds before considering work done
+
+### Issue Tracking
+- **`bd` commands**: All work tracked via beads (create, close, list)
+- Use `--json` flag for programmatic output
+- Create issue → do work → close issue → commit → push
+
+### Git & Commits
+- **Conventional Commits**: `type(scope): subject` format
+- Example: `fix(automations): use data param for music_assistant play_media`
+- Use `authoring-commits` skill when creating commit messages
+
 <!-- bv-agent-instructions-v1 -->
 
 ---
@@ -433,6 +458,33 @@ bd sync                 # Syncs beads AND pushes to remote
 - Ask user before running `bd sync` (it pushes to remote)
 
 <!-- end-bv-agent-instructions -->
+
+## Notes for Pi Agents Working Without HA MCP
+
+This project **intentionally does not provide HA MCP access** to agents. Instead, agents should:
+
+1. **Edit locally** - Use `read` + `edit` to modify config files
+2. **Deploy via mise** - All deployment goes through `mise run` tasks
+3. **Validate via SSH** - Query entity registry, inspect device mappings, check logs over SSH
+4. **Reference AGENTS.md** - This file documents all entity naming, device locations, and known issues
+
+This approach keeps all config in git and prevents drift between repo and server state. If something isn't documented here or in the code, query the HA server via SSH to discover it.
+
+Common SSH patterns:
+```bash
+# List all automations
+grep -r "alias:" /config/automations/*.yaml | head -20
+
+# Find entity by name
+ssh root@homeassistant "cat /config/.storage/core.entity_registry | jq '.data.entities[] | select(.entity_id | contains(\"keyword\"))'"
+
+# Check automation state
+ssh root@homeassistant "curl -s http://localhost:8123/api/states/automation.xxx \
+  -H \"Authorization: Bearer TOKEN\" | jq .state"
+
+# View recent logs
+ssh root@homeassistant "ha core logs | tail -50"
+```
 
 <!-- BEGIN BEADS INTEGRATION -->
 ## Issue Tracking with bd (beads)
@@ -591,17 +643,3 @@ Search results can flood context. Use `context-mode_ctx_execute(language: "shell
 3. **PROCESSING**: `context-mode_ctx_execute(language, code)` | `context-mode_ctx_execute_file(path, language, code)` — Sandbox execution. Only stdout enters context.
 4. **WEB**: `context-mode_ctx_fetch_and_index(url, source)` then `context-mode_ctx_search(queries)` — Fetch, chunk, index, query. Raw HTML never enters context.
 5. **INDEX**: `context-mode_ctx_index(content, source)` — Store content in FTS5 knowledge base for later search.
-
-## Output constraints
-
-- Keep responses under 500 words.
-- Write artifacts (code, configs, PRDs) to FILES — never return them as inline text. Return only: file path + 1-line description.
-- When indexing content, use descriptive source labels so others can `search(source: "label")` later.
-
-## ctx commands
-
-| Command | Action |
-|---------|--------|
-| `ctx stats` | Call the `stats` MCP tool and display the full output verbatim |
-| `ctx doctor` | Call the `doctor` MCP tool, run the returned shell command, display as checklist |
-| `ctx upgrade` | Call the `upgrade` MCP tool, run the returned shell command, display as checklist |
