@@ -1,6 +1,8 @@
 id: '1735999999999'
 alias: Bathroom presence → bedroom lights
-description: Control Dad's bedroom lights based on bathroom presence (disabled when alarm is enabled)
+description: >-
+  Control Dad's bedroom lights based on bathroom presence
+  (disabled when alarm is enabled)
 triggers:
   - id: presence_on
     entity_id:
@@ -44,9 +46,8 @@ actions:
                       entity_id: light.bedroom_lamp
                     data:
                       brightness_pct: 30
-              - conditions: []
-                sequence:
-                  - action: script.bedroom_lights
+            default:
+              - action: script.bedroom_lights
       - conditions:
           - condition: trigger
             id: presence_off
