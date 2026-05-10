@@ -1,0 +1,15 @@
+id: '1770566008305'
+alias: "TV Mode Auto (legacy disabled)"
+description: >-
+  Legacy server-only duplicate replaced by config/automations/tv_mode.yaml.
+  Kept disabled so local config remains source of truth.
+triggers:
+  - trigger: event
+    event_type: legacy_tv_mode_auto_disabled_never_fires
+conditions: []
+actions:
+  - action: logbook.log
+    data:
+      name: "Legacy TV Mode Auto"
+      message: "Unexpected impossible legacy trigger fired"
+mode: single

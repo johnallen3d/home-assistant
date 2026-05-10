@@ -382,10 +382,10 @@ bedroom_lights:
         night_brightness: 10
 
 
-# Bathroom - uses dim pink RGB when alarm enabled, adaptive otherwise
+# Bathroom - dim pink only when alarm enabled, normal otherwise
 bathroom_lights:
   alias: "Bathroom Lights"
-  description: "Bathroom adaptive lighting with pink mode when alarm enabled"
+  description: "Bathroom lighting with pink mode only when alarm enabled"
   icon: mdi:toilet
   mode: single
   sequence:
@@ -402,13 +402,16 @@ bathroom_lights:
               data:
                 brightness_pct: 10
                 rgb_color: [255, 159, 242]
-      # Alarm disabled: adaptive lighting on both
+      # Alarm disabled: explicit normal lighting; no script.lights night path.
       default:
-        - action: script.lights
-          data:
-            lights:
+        - action: light.turn_on
+          target:
+            entity_id:
               - light.bathroom_lamp
               - light.bathroom_strip
+          data:
+            brightness_pct: 60
+            color_temp_kelvin: 2700
 
 
 # =============================================================================
@@ -466,10 +469,10 @@ tv_time:
         eating_mode_active: "{{ is_state('input_boolean.charlie_eating_mode', 'on') }}"
         # Dad eating mode - protect living room lights when dad_eating_mode is on
         dad_eating_mode_active: "{{ is_state('input_boolean.dad_eating_mode', 'on') }}"
-        # Kitchen presence - protect lights when someone is physically in the kitchen
-        kitchen_presence_active: "{{ is_state('binary_sensor.kitchen_presence_kitchen', 'on') }}"
-        # Skip kitchen modifications if any kitchen-active mode is on or someone is present
-        kitchen_protected: "{{ cooking_mode_active or eating_mode_active or kitchen_presence_active }}"
+        # Skip kitchen modifications if cooking/eating mode is active.
+        # Presence itself does not block TV ambient behavior; kitchen presence
+        # automation also applies this same contract while tv_mode is on.
+        kitchen_protected: "{{ cooking_mode_active or eating_mode_active }}"
 
     # Babysitter mode: skip all light changes (sitter needs stable lights)
     - condition: template

@@ -2,7 +2,7 @@
 # Turns kitchen lights on/off based on FP2 presence sensor kitchen zone
 #
 # On entry: Uses adaptive lighting script for time-appropriate brightness/color
-# On exit: Turns lights off after presence_delay seconds (unless presence returns or cooking_mode is active)
+# On exit: Turns lights off after delay unless presence returns or cooking is active
 #
 # Note: Charlie Meal zone is inside Kitchen zone. Island light is shared:
 # - Kitchen turns it ON (via kitchen_lights group)
@@ -11,7 +11,7 @@
 #
 # Cooking Mode: When input_boolean.cooking_mode is ON, lights are NOT turned off.
 # This protects against the FP2 coverage gap at the oven.
-# Lights Out Mode: When input_boolean.lights_out_mode is ON, lights are NOT turned on.
+# Lights Out Mode: When input_boolean.lights_out_mode is ON, lights stay off.
 
 id: '1765490530767'
 alias: "Kitchen Presence Lighting"
@@ -46,7 +46,82 @@ actions:
                 state: "off"
             then:
               - choose:
-                  # Alarm enabled: dim pink on lightstrip only (match bathroom night mode)
+                  # TV mode: keep kitchen in TV ambient contract.
+                  - conditions:
+                      - condition: state
+                        entity_id: input_boolean.tv_mode
+                        state: "on"
+                    sequence:
+                      - variables:
+                          sun_elevation: >-
+                            {{ state_attr('sun.sun', 'elevation') | float(0) }}
+                          hour: "{{ now().hour }}"
+                          is_daytime: "{{ sun_elevation > 5 }}"
+                          is_late_night: "{{ hour >= 23 or hour < 6 }}"
+                          ambient_color: [255, 180, 107]
+                          charlie_meal_active: >-
+                            {{ is_state('binary_sensor.charlie_meal', 'on') }}
+                      - action: switch.turn_off
+                        target:
+                          entity_id: switch.kitchen_counter_switch
+                      - choose:
+                          # Daytime: no ambient needed.
+                          - conditions: "{{ is_daytime }}"
+                            sequence:
+                              - action: light.turn_off
+                                target:
+                                  entity_id:
+                                    - light.sink_bulb
+                                    - light.hue_lightstrip_plus_1
+                              - if:
+                                  - condition: template
+                                    value_template: >-
+                                      {{ not charlie_meal_active }}
+                                then:
+                                  - action: light.turn_off
+                                    target:
+                                      entity_id: light.island_bulb
+                          # Late night: very dim strip only.
+                          - conditions: "{{ is_late_night }}"
+                            sequence:
+                              - action: light.turn_off
+                                target:
+                                  entity_id: light.sink_bulb
+                              - if:
+                                  - condition: template
+                                    value_template: >-
+                                      {{ not charlie_meal_active }}
+                                then:
+                                  - action: light.turn_off
+                                    target:
+                                      entity_id: light.island_bulb
+                              - action: light.turn_on
+                                target:
+                                  entity_id: light.hue_lightstrip_plus_1
+                                data:
+                                  brightness_pct: 3
+                                  rgb_color: "{{ ambient_color }}"
+                        default:
+                          - action: light.turn_on
+                            target:
+                              entity_id:
+                                - light.sink_bulb
+                                - light.hue_lightstrip_plus_1
+                            data:
+                              brightness_pct: 15
+                              rgb_color: "{{ ambient_color }}"
+                          - if:
+                              - condition: template
+                                value_template: "{{ not charlie_meal_active }}"
+                            then:
+                              - action: light.turn_on
+                                target:
+                                  entity_id: light.island_bulb
+                                data:
+                                  brightness_pct: 15
+                                  rgb_color: "{{ ambient_color }}"
+
+                  # Alarm enabled: dim pink on lightstrip only.
                   - conditions:
                       - condition: state
                         entity_id: input_boolean.alarm_enabled
@@ -58,21 +133,19 @@ actions:
                         data:
                           brightness_pct: 10
                           rgb_color: [255, 159, 242]
-                # Alarm disabled: normal adaptive lighting
+                # Alarm disabled: adaptive lighting, no clock-only dimming.
                 default:
                   - action: script.lights
                     data:
                       lights:
                         - light.kitchen_lights
-                      night_mode: dim_warm
-                      night_brightness: 15
 
-      # Presence cleared - turn off after presence_delay seconds (unless presence returns or cooking/eating mode is on)
+      # Presence cleared - delayed off unless presence returns or mode blocks it
       - conditions:
           - condition: trigger
             id: presence_off
         sequence:
-          # If cooking_mode is on, don't turn off lights (oven coverage gap protection)
+          # If cooking_mode is on, don't turn off lights.
           - condition: state
             entity_id: input_boolean.cooking_mode
             state: "off"
@@ -99,7 +172,7 @@ actions:
               - action: switch.turn_off
                 target:
                   entity_id: switch.kitchen_counter_switch
-              # Turn off island only if charlie_meal zone is also clear AND eating_mode is off
+              # Turn off island only if meal zone is clear and eating_mode is off.
               - if:
                   - condition: state
                     entity_id: binary_sensor.charlie_meal

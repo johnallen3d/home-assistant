@@ -1,9 +1,9 @@
 # Living Room Presence Lighting
 # Turns living room lights on/off based on FP2 presence sensor living room zone
 #
-# On entry: Uses adaptive lighting on lamp only (overhead excluded from presence control)
+# On entry: Uses adaptive lighting on lamp only (no overhead presence control)
 # On exit: Turns lights off immediately (no delay)
-# Lights Out Mode: When input_boolean.lights_out_mode is ON, lights are NOT turned on.
+# Lights Out Mode: When input_boolean.lights_out_mode is ON, lights stay off.
 
 id: '1765490534742'
 alias: "Living Room Presence Lighting"
@@ -22,7 +22,7 @@ triggers:
 
 actions:
   - choose:
-      # Presence detected - turn on with adaptive lighting (but not if TV is on or eating mode active)
+      # Presence detected - adaptive lighting unless TV/eating mode active
       - conditions:
           - condition: trigger
             id: presence_on
@@ -34,15 +34,10 @@ actions:
           - condition: state
             entity_id: input_boolean.dad_eating_mode
             state: "off"
-          # Check Apple TV, LG TV, and SuperBOX - skip if any is in use
-          # Apple TV: playing/paused/idle = in use; off/unavailable = not in use
-          # LG TV: on/playing = in use; off/unavailable = not in use
-          # SuperBOX: on = in use; off/unavailable = not in use
-          - condition: template
-            value_template: >-
-              {{ states('media_player.living_room') in ['off', 'unavailable']
-                 and states('media_player.lg_webos_tv_oled65c3aua') in ['off', 'unavailable']
-                 and states('media_player.superbox') in ['off', 'unavailable'] }}
+          # tv_mode on means presence must not fight TV lighting.
+          - condition: state
+            entity_id: input_boolean.tv_mode
+            state: "off"
         sequence:
           - choose:
               # Alarm enabled: dim pink on lamp only, no overhead (match bathroom night mode)
@@ -101,13 +96,10 @@ actions:
           - condition: state
             entity_id: input_boolean.dad_eating_mode
             state: "off"
-          # Skip if TV is in use (tv_time script handles lighting)
-          # Check Apple TV, LG TV, and SuperBOX
-          - condition: template
-            value_template: >-
-              {{ states('media_player.living_room') in ['off', 'unavailable']
-                 and states('media_player.lg_webos_tv_oled65c3aua') in ['off', 'unavailable']
-                 and states('media_player.superbox') in ['off', 'unavailable'] }}
+          # tv_mode on means presence must not fight TV lighting.
+          - condition: state
+            entity_id: input_boolean.tv_mode
+            state: "off"
           - action: light.turn_off
             target:
               entity_id: light.living_room_light
