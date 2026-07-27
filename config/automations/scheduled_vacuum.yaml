@@ -9,7 +9,8 @@
 #   - Friday: Non-Charlie rooms
 #   - Saturday: No cleaning
 #
-# Triggers when John leaves home, with a 6am fallback if already away.
+# Triggers when John leaves, then retries every 15 minutes while away.
+# Retry handles a temporarily unavailable vacuum after departure.
 # Only runs during the schedule window and when vacuum isn't already cleaning.
 
 id: "1767454229654"
@@ -21,8 +22,8 @@ trigger:
   - platform: state
     entity_id: person.john_allen
     to: "not_home"
-  - platform: time
-    at: "06:00:00"
+  - platform: time_pattern
+    minutes: "/15"
 
 condition:
   # Only run between 6am and 6pm
