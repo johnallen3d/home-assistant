@@ -1,50 +1,52 @@
 #!/usr/bin/env python3
-"""Count Matter nodes stuck in failed state for >30 minutes.
-
-Reads Matter Server logs from stdin (piped from supervisor API).
-Tracks subscription failure/success events per node. Only counts
-nodes whose last event is a failure older than the threshold,
-indicating they haven't self-recovered and likely need a server restart.
-
-Normal Thread mesh jitter (fail then recover in <5 min) is ignored.
-"""
+"""Count Matter peers whose connectivity probe failed for over 30 minutes."""
 
 import re
 import sys
 from datetime import datetime, timedelta
 
 THRESHOLD = timedelta(minutes=30)
-
-# ANSI escape code pattern for stripping color codes from log output
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 EVENT_RE = re.compile(
-    r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\.\d+.*<Node:(\d+)>"
+    r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\.\d+.*(@\d+:[0-9a-f]+)", re.I
 )
 
-nodes: dict[str, tuple[str, datetime]] = {}
-last_ts = None
 
-for line in sys.stdin:
-    line = ANSI_RE.sub("", line)
-    m = EVENT_RE.search(line)
-    if not m:
-        continue
+def count_stuck(lines, now=None):
+    nodes = {}
+    last_ts = None
+    for line in lines:
+        line = ANSI_RE.sub("", line)
+        match = EVENT_RE.search(line)
+        if not match:
+            continue
+        timestamp = datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
+        peer = match.group(2).lower()
+        last_ts = timestamp
+        message = line.lower()
+        if "all probes failed" in message or (
+            "subscription" in message
+            and ("subscription failed" in message or "unable to subscribe" in message)
+        ):
+            nodes.setdefault(peer, ("failed", timestamp))
+        elif "subscription successful" in message or "subscription succeeded" in message:
+            nodes[peer] = ("ok", timestamp)
 
-    ts = datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S")
-    node = m.group(2)
-    last_ts = ts
+    now = now or last_ts or datetime.now()
+    return sum(
+        status == "failed" and now - failed_at > THRESHOLD
+        for status, failed_at in nodes.values()
+    )
 
-    if "Subscription failed" in line or "Unable to subscribe" in line:
-        # Only record the first failure timestamp (don't update on retries)
-        if node not in nodes or nodes[node][0] != "failed":
-            nodes[node] = ("failed", ts)
-    elif "Subscription succeeded" in line or "Re-Subscription succeeded" in line:
-        nodes[node] = ("ok", ts)
 
-now = last_ts or datetime.now()
-stuck = sum(
-    1
-    for status, fail_ts in nodes.values()
-    if status == "failed" and (now - fail_ts) > THRESHOLD
-)
-print(stuck)
+if __name__ == "__main__":
+    if "--self-test" in sys.argv:
+        sample = [
+            "2026-08-05 10:00:00.000 INFO Peer @1:6 All probes failed",
+            "2026-08-05 10:40:01.000 INFO Subscription successful @1:7",
+        ]
+        assert count_stuck(sample, datetime(2026, 8, 5, 10, 40, 1)) == 1
+        sample.append("2026-08-05 10:40:02.000 INFO Subscription successful @1:6")
+        assert count_stuck(sample, datetime(2026, 8, 5, 11, 11)) == 0
+    else:
+        print(count_stuck(sys.stdin))
