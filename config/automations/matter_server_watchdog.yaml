@@ -9,19 +9,22 @@ description: >-
   10 minutes, re-checks and auto-restarts only if nodes are still stuck.
 triggers:
   - trigger: numeric_state
-    entity_id: sensor.matter_subscription_failures
+    entity_id: sensor.matter_subscription_failures_2
     above: 0
 conditions: []
 actions:
   - variables:
-      stuck_count: "{{ states('sensor.matter_subscription_failures') }}"
+      stuck_count: "{{ states('sensor.matter_subscription_failures_2') }}"
+      stuck_node: "{{ state_attr('sensor.matter_subscription_failures_2', 'first_node') }}"
+      stuck_age: "{{ state_attr('sensor.matter_subscription_failures_2', 'oldest_age_minutes') }}"
       action_restart: "{{ 'MATTER_RESTART_' ~ context.id }}"
   - action: notify.mobile_app_john_allens_iphone
     data:
       title: "Matter Node Stuck"
       message: >-
-        {{ stuck_count }} Matter node(s) stuck — failed subscription with
-        no recovery. Will auto-restart in 10 minutes if still stuck.
+        {{ stuck_count }} Matter node(s) stuck{% if stuck_node %}: {{ stuck_node }}
+        for {{ stuck_age }} minutes{% endif %}. Will auto-restart in 10 minutes
+        if still stuck.
       data:
         push:
           sound:
@@ -54,8 +57,10 @@ actions:
               message: "Restarted Matter Server (manual)."
     default:
       - condition: numeric_state
-        entity_id: sensor.matter_subscription_failures
+        entity_id: sensor.matter_subscription_failures_2
         above: 0
+      - variables:
+          current_count: "{{ states('sensor.matter_subscription_failures_2') }}"
       - action: hassio.addon_restart
         data:
           addon: core_matter_server
@@ -65,6 +70,6 @@ actions:
         data:
           title: "Matter Server Restarted"
           message: >-
-            Auto-restarted Matter Server — {{ stuck_count }} node(s)
+            Auto-restarted Matter Server — {{ current_count }} node(s)
             still stuck after 10 minutes.
 mode: single

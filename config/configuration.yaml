@@ -157,8 +157,8 @@ input_datetime:
 # See: config/scripts/matter_stuck_nodes.py
 command_line:
   - sensor:
-      name: "Matter Subscription Failures"
-      unique_id: matter_subscription_failures
+      name: "Matter Log Subscription Failures"
+      unique_id: matter_log_subscription_failures
       command: >-
         curl -sSf
         -H "Authorization: Bearer ${SUPERVISOR_TOKEN}"
@@ -166,5 +166,43 @@ command_line:
         2>/dev/null
         | python3 /config/scripts/matter_stuck_nodes.py
       scan_interval: 600
-      value_template: "{{ value | int(0) }}"
+      value_template: "{{ value_json.count | int(0) }}"
+      json_attributes:
+        - nodes
+        - first_node
+        - oldest_age_minutes
+
+template:
+  - sensor:
+      - name: "Matter Subscription Failures"
+        unique_id: matter_subscription_failures
+        state: >-
+          {% set bathroom_down = states('binary_sensor.bathroom_presence_sensor_occupancy') in ['unavailable', 'unknown'] %}
+          {{ states('sensor.matter_log_subscription_failures') | int(0) + (1 if bathroom_down else 0) }}
+        attributes:
+          nodes: >-
+            {% set nodes = state_attr('sensor.matter_log_subscription_failures', 'nodes') or [] %}
+            {% if states('binary_sensor.bathroom_presence_sensor_occupancy') in ['unavailable', 'unknown'] %}
+              {{ nodes + [{
+                'peer': 'binary_sensor.bathroom_presence_sensor_occupancy',
+                'name': 'Bathroom Presence Sensor',
+                'source': 'ha_unavailable',
+                'failed_at': states.binary_sensor.bathroom_presence_sensor_occupancy.last_changed.isoformat(),
+                'age_minutes': ((as_timestamp(now()) - as_timestamp(states.binary_sensor.bathroom_presence_sensor_occupancy.last_changed)) / 60) | int
+              }] }}
+            {% else %}
+              {{ nodes }}
+            {% endif %}
+          first_node: >-
+            {% if states('binary_sensor.bathroom_presence_sensor_occupancy') in ['unavailable', 'unknown'] %}
+              Bathroom Presence Sensor
+            {% else %}
+              {{ state_attr('sensor.matter_log_subscription_failures', 'first_node') or '' }}
+            {% endif %}
+          oldest_age_minutes: >-
+            {% if states('binary_sensor.bathroom_presence_sensor_occupancy') in ['unavailable', 'unknown'] %}
+              {{ ((as_timestamp(now()) - as_timestamp(states.binary_sensor.bathroom_presence_sensor_occupancy.last_changed)) / 60) | int }}
+            {% else %}
+              {{ state_attr('sensor.matter_log_subscription_failures', 'oldest_age_minutes') or 0 }}
+            {% endif %}
 
