@@ -1,75 +1,45 @@
 id: "1771251368598"
 alias: "Matter Server Watchdog"
 description: >-
-  Monitors Matter Server for nodes stuck in a failed state for >30 minutes
-  without self-recovering. Normal Thread mesh jitter (nodes that fail and
-  recover within minutes) is filtered out by the sensor. Only triggers when
-  a node is genuinely stuck and likely needs a server restart. Sends an
-  actionable notification with a Restart Now button. If not tapped within
-  10 minutes, re-checks and auto-restarts only if nodes are still stuck.
+  Restarts Matter Server when the bathroom FP300 is unavailable for one minute,
+  or another Matter node has a failed subscription for over 30 minutes. Saves
+  pre-restart logs and sends one notification after restart.
 triggers:
+  - trigger: state
+    entity_id: binary_sensor.bathroom_presence_sensor_occupancy
+    to: unavailable
+    for:
+      minutes: 1
+    id: bathroom
+  - trigger: state
+    entity_id: binary_sensor.bathroom_presence_sensor_occupancy
+    to: unknown
+    for:
+      minutes: 1
+    id: bathroom
   - trigger: numeric_state
-    entity_id: sensor.matter_subscription_failures_2
+    entity_id: sensor.matter_log_subscription_failures
     above: 0
+    id: matter_log
 conditions: []
 actions:
   - variables:
-      stuck_count: "{{ states('sensor.matter_subscription_failures_2') }}"
-      stuck_node: "{{ state_attr('sensor.matter_subscription_failures_2', 'first_node') }}"
-      stuck_age: "{{ state_attr('sensor.matter_subscription_failures_2', 'oldest_age_minutes') }}"
-      action_restart: "{{ 'MATTER_RESTART_' ~ context.id }}"
+      failure: >-
+        {% if trigger.id == 'bathroom' %}
+          Bathroom Presence Sensor unavailable for one minute
+        {% else %}
+          {{ state_attr('sensor.matter_log_subscription_failures', 'first_node')
+             or 'Matter node subscription failed' }}
+        {% endif %}
+  - action: shell_command.capture_matter_server_logs
+  - action: hassio.addon_restart
+    data:
+      addon: core_matter_server
+  - delay:
+      seconds: 30
   - action: notify.mobile_app_john_allens_iphone
     data:
-      title: "Matter Node Stuck"
+      title: "Matter Server Restarted"
       message: >-
-        {{ stuck_count }} Matter node(s) stuck{% if stuck_node %}: {{ stuck_node }}
-        for {{ stuck_age }} minutes{% endif %}. Will auto-restart in 10 minutes
-        if still stuck.
-      data:
-        push:
-          sound:
-            name: default
-            critical: 0
-            volume: 0.5
-        actions:
-          - action: "{{ action_restart }}"
-            title: "Restart Now"
-            destructive: true
-            icon: "sfsymbols:arrow.clockwise"
-  - wait_for_trigger:
-      - trigger: event
-        event_type: mobile_app_notification_action
-        event_data:
-          action: "{{ action_restart }}"
-    timeout:
-      minutes: 10
-  - choose:
-      - conditions: "{{ wait.trigger is not none }}"
-        sequence:
-          - action: hassio.addon_restart
-            data:
-              addon: core_matter_server
-          - delay:
-              seconds: 30
-          - action: notify.mobile_app_john_allens_iphone
-            data:
-              title: "Matter Server Restarted"
-              message: "Restarted Matter Server (manual)."
-    default:
-      - condition: numeric_state
-        entity_id: sensor.matter_subscription_failures_2
-        above: 0
-      - variables:
-          current_count: "{{ states('sensor.matter_subscription_failures_2') }}"
-      - action: hassio.addon_restart
-        data:
-          addon: core_matter_server
-      - delay:
-          seconds: 30
-      - action: notify.mobile_app_john_allens_iphone
-        data:
-          title: "Matter Server Restarted"
-          message: >-
-            Auto-restarted Matter Server — {{ current_count }} node(s)
-            still stuck after 10 minutes.
+        {{ failure }}. Restarted Matter Server. Pre-restart logs saved for diagnosis.
 mode: single

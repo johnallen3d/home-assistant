@@ -155,6 +155,13 @@ input_datetime:
 # and self-recover within minutes) is ignored. Only reports nodes that
 # likely need a Matter Server restart to recover.
 # See: config/scripts/matter_stuck_nodes.py
+shell_command:
+  capture_matter_server_logs: >-
+    sh -c '{ date -Iseconds; curl -sS
+    -H "Authorization: Bearer ${SUPERVISOR_TOKEN}"
+    http://supervisor/addons/core_matter_server/logs; }
+    > /config/matter-server-pre-restart.log'
+
 command_line:
   - sensor:
       name: "Matter Log Subscription Failures"

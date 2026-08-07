@@ -26,3 +26,4 @@
 {"id":"int-30df8990b97914fa3fb3f19df70a509a","kind":"field_change","created_at":"2026-08-07T00:03:40.141587Z","actor":"John Allen","issue_id":"beads-s8v","extra":{"field":"status","new_value":"closed","old_value":"in_progress","reason":"Completed"}}
 {"id":"int-d60d40006d36f4c2cb72b75653f83091","kind":"field_change","created_at":"2026-08-07T00:06:31.202771Z","actor":"John Allen","issue_id":"beads-s8v","extra":{"field":"status","new_value":"in_progress","old_value":"closed"}}
 {"id":"int-b198e8586c5edc006d9edbf800749edc","kind":"field_change","created_at":"2026-08-07T00:15:10.500528Z","actor":"John Allen","issue_id":"beads-s8v","extra":{"field":"status","new_value":"closed","old_value":"in_progress","reason":"Completed"}}
+{"id":"int-3ed44c7edd621c112f2368c65c1897c2","kind":"field_change","created_at":"2026-08-07T17:53:02.405609Z","actor":"John Allen","issue_id":"beads-08m","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Completed"}}
