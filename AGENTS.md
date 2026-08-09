@@ -85,6 +85,7 @@ Use for:
 ## Known Issues
 - `mise run automation-update` updates existing automations only. New automation must exist in HA first so local YAML can include server `id`.
 - Some integrations need nonstandard service syntax. Example: `music_assistant.play_media` uses `data: entity_id:`, not `target:`.
+- Airversa AP2 1120 air purifier has never worked; its unavailable state is not a new incident.
 
 ## Renaming Checklist
 When renaming script, scene, or entity:
