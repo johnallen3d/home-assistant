@@ -31,6 +31,11 @@ dolt-server.pid
 dolt-server.log
 dolt-server.lock
 dolt-server.port
+dolt-server-config.yaml
+
+# Concurrency gate locks (local-only)
+.beads.gate.lock
+dolt.gate.lock
 
 # Backup data (auto-exported JSONL, local-only)
 backup/

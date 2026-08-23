@@ -33,3 +33,6 @@ CLAUDE.md
 .dolt/
 *.db
 .beads/export-state.json
+
+# bd concurrency gate lock (local-only)
+.beads.gate.lock
