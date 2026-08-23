@@ -769,9 +769,6 @@ eating:
         is_daytime: "{{ sun_elevation > 5 }}"
         # Late night: after 11pm or before 6am
         is_late_night: "{{ hour >= 23 or hour < 6 }}"
-        # Evening brightness based on sun position (dimmer as sun sets further)
-        evening_brightness: >
-          {% if sun_elevation > 0 %}35 {% elif sun_elevation > -5 %}30 {% elif sun_elevation > -10 %}25 {% else %}20{% endif %}
         # Very warm for dining ambiance
         color_temp: 2200
 
@@ -805,7 +802,7 @@ eating:
               target:
                 entity_id: light.living_room_light
               data:
-                brightness_pct: 15
+                brightness_pct: 40
                 color_temp_kelvin: 2700
 
         # Late night: very dim
@@ -815,7 +812,7 @@ eating:
               target:
                 entity_id: light.living_room_light
               data:
-                brightness_pct: 10
+                brightness_pct: 40
                 color_temp_kelvin: 2200
 
       # Evening: warm ambient based on sun position
@@ -824,7 +821,7 @@ eating:
           target:
             entity_id: light.living_room_light
           data:
-            brightness_pct: "{{ evening_brightness }}"
+            brightness_pct: 40
             color_temp_kelvin: "{{ color_temp }}"
 
 
