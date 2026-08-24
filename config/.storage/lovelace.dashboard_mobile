@@ -1205,6 +1205,11 @@
                       "icon": "mdi:motion-sensor"
                     },
                     {
+                      "entity": "sensor.xiao_soil_moisture_monitor_a160e4_battery_measurement",
+                      "name": "Snake Plant Monitor",
+                      "icon": "mdi:sprout"
+                    },
+                    {
                       "entity": "sensor.bathroom_presence_sensor_battery",
                       "name": "Bathroom Sensor",
                       "icon": "mdi:motion-sensor"
