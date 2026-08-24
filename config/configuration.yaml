@@ -68,6 +68,9 @@ input_boolean:
   coffee_ready_notified:
     name: "Coffee Ready Notified"
     icon: mdi:coffee-outline
+  living_room_snake_plant_dry_alerted:
+    name: "Living Room Snake Plant Dry Alerted"
+    icon: mdi:snake
   cooking_mode:
     name: "Cooking Mode"
     icon: mdi:chef-hat

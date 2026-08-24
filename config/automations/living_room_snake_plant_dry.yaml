@@ -1,0 +1,40 @@
+id: "e50e2344-43d6-4411-965a-afad357202ec"
+alias: "Living Room Snake Plant Dry Alert"
+description: >-
+  Notify once when the living room snake plant is dry. The sensor briefly
+  publishes an empty state before each reading, so the helper prevents
+  duplicate alerts. Reset after the plant returns to normal moisture.
+triggers:
+  - trigger: state
+    entity_id: sensor.xiao_soil_moisture_monitor_a160e4_soil_moisture_status
+    to: "Dry"
+    id: dry
+  - trigger: state
+    entity_id: sensor.xiao_soil_moisture_monitor_a160e4_soil_moisture_status
+    to: "Normal Moisture"
+    id: recovered
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: dry
+          - condition: state
+            entity_id: input_boolean.living_room_snake_plant_dry_alerted
+            state: "off"
+        sequence:
+          - action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.living_room_snake_plant_dry_alerted
+          - action: notify.mobile_app_john_allens_iphone
+            data:
+              title: "🪴 Living Room Snake Plant"
+              message: "Soil is dry. Water when convenient."
+      - conditions:
+          - condition: trigger
+            id: recovered
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.living_room_snake_plant_dry_alerted
+mode: single
