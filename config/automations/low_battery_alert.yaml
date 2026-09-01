@@ -1,9 +1,10 @@
 id: "1742054400000"
 alias: "Low Battery Alert"
 description: >-
-  Send push notification when any device battery drops below 20%.
-  Uses device_class battery sensors. Excludes phones, laptops, and
-  rechargeable devices (vacuum, ember mugs) since those recharge.
+  Send push notification when device batteries drop below 20%.
+  The snake plant monitor alerts below 5% after a 5-minute debounce because
+  its hourly wake cycle starts with noisy readings. Excludes rechargeable
+  devices (phones, laptops, vacuum, and Ember mugs).
 triggers:
   - trigger: numeric_state
     entity_id:
@@ -14,8 +15,11 @@ triggers:
       - sensor.laundry_room_switch_battery
       - sensor.bathroom_presence_sensor_battery
       - sensor.laundry_room_sensor_battery
-      - sensor.xiao_soil_moisture_monitor_a160e4_battery_measurement
     below: 20
+  - trigger: numeric_state
+    entity_id: sensor.xiao_soil_moisture_monitor_a160e4_battery_measurement
+    below: 5
+    for: "00:05:00"
 conditions:
   - condition: template
     value_template: >-
@@ -25,7 +29,8 @@ actions:
     data:
       title: "Low Battery"
       message: >-
-        {{ trigger.to_state.attributes.friendly_name }} is at {{ trigger.to_state.state }}%
+        {{ state_attr(trigger.entity_id, 'friendly_name') }} is at
+        {{ states(trigger.entity_id) | float | round(0) | int }}%
       data:
         push:
           sound:
