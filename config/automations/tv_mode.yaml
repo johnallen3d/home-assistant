@@ -1,13 +1,13 @@
 # TV Mode Auto Handler
-# Automatically sets tv_mode from the LG WebOS TV state.
+# Automatically sets tv_mode from the Living Room AppleTV state.
 #
 # The boolean (input_boolean.tv_mode) tracks whether the TV is in active use:
 # - Visible on dashboards as a toggle (for manual override)
 # - Used by other automations to check if TV is active
 #
-# This automation handles state sync on any LG TV state change:
-# - LG TV becomes active: Set tv_mode ON
-# - LG TV becomes off / unavailable: Set tv_mode OFF
+# This automation handles state sync on Apple TV state changes:
+# - Apple TV becomes active (including paused / idle): Set tv_mode ON
+# - Apple TV becomes off / standby / unavailable: Set tv_mode OFF
 #
 # Lighting is handled by automation.tv_time, which triggers from tv_mode.
 # This keeps input_boolean.tv_mode authoritative, including manual toggles.
@@ -26,12 +26,14 @@
 
 id: 'tv_mode_auto'
 alias: "TV Mode Auto"
-description: "Sets tv_mode based on LG WebOS TV state"
+description: "Sets tv_mode based on Living Room AppleTV state"
 mode: restart
 
 triggers:
   - trigger: state
-    entity_id: media_player.lg_webos_tv_oled65c3aua
+    entity_id: media_player.living_room_appletv
+    # Ignore attribute-only updates so metadata changes do not override manual toggles.
+    to: null
     id: tv_state_changed
 
 actions:
@@ -41,7 +43,7 @@ actions:
             value_template: >-
               {{ trigger.to_state is not none and
                  trigger.to_state.state in
-                 ['on', 'playing', 'paused', 'idle', 'standby', 'buffering'] }}
+                 ['on', 'playing', 'paused', 'idle', 'buffering'] }}
         sequence:
           - action: input_boolean.turn_on
             target:
@@ -66,7 +68,7 @@ actions:
           - condition: template
             value_template: >-
               {{ trigger.to_state is not none and
-                 trigger.to_state.state in ['off', 'unavailable'] }}
+                 trigger.to_state.state in ['off', 'standby', 'unavailable'] }}
         sequence:
           - action: input_boolean.turn_off
             target:
