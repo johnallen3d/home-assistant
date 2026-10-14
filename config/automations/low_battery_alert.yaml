@@ -1,8 +1,8 @@
 id: "1742054400000"
 alias: "Low Battery Alert"
 description: >-
-  Send push notification when device batteries drop below 20%.
-  The snake plant monitor alerts below 5% after a 5-minute debounce because
+  Send push notification when device batteries drop below 5%.
+  The snake plant monitor alerts after a 5-minute debounce because
   its hourly wake cycle starts with noisy readings. Excludes rechargeable
   devices (phones, laptops, vacuum, and Ember mugs).
 triggers:
@@ -15,7 +15,7 @@ triggers:
       - sensor.laundry_room_switch_battery
       - sensor.bathroom_presence_sensor_battery
       - sensor.laundry_room_sensor_battery
-    below: 20
+    below: 5
   - trigger: numeric_state
     entity_id: sensor.xiao_soil_moisture_monitor_a160e4_battery_measurement
     below: 5

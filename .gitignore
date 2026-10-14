@@ -1,6 +1,9 @@
 .env
 .envrc
 
+# Local linked worktrees
+.worktrees/
+
 # Audible sync data
 scripts/audible_library.json
 
