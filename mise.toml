@@ -2,3 +2,4 @@
 uv = "latest"
 doppler = "latest"
 yq = "latest"
+"github:basecamp/fizzy-cli" = "latest"

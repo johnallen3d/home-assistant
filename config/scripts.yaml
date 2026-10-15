@@ -1265,7 +1265,7 @@ lock_down:
         - action: media_player.turn_off
           target:
             entity_id:
-              - media_player.lg_webos_tv_oled65c3aua
+              - media_player.living_room_appletv
               - media_player.living_room
         - action: input_boolean.turn_on
           target:
