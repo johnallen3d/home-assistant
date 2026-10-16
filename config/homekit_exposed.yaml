@@ -19,6 +19,8 @@ include_entities:
   - scene.lights_out
   - scene.shaving
   # Scripts (one-shot actions without mode helpers)
+  # Use Departing Home for departure automations; Lights Out is unguarded/manual.
+  - script.departing_home
   - script.arriving_home
   - script.good_morning
   - script.kitchen_chill

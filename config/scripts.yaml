@@ -1170,6 +1170,28 @@ charlies_away:
 
 
 # =============================================================================
+# Departing Home - Guarded HomeKit departure action
+# =============================================================================
+# Apple Home departure automations must call this script, not scene.lights_out.
+# Conditions live inside the script so callers cannot bypass the mode guards.
+departing_home:
+  alias: "Departing Home"
+  description: "Turn off lights and reset modes when leaving, unless cleaning or babysitter mode is active"
+  icon: mdi:home-export-outline
+  mode: single
+  sequence:
+    - condition: state
+      entity_id: input_boolean.cleaning_mode
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.babysitter_mode
+      state: "off"
+    - action: script.reset_all_modes
+    - action: scene.turn_on
+      target:
+        entity_id: scene.lights_out
+
+# =============================================================================
 # Reset All Modes - Clear all mode booleans with automation sandwich
 # =============================================================================
 # Turns off all 9 mode booleans using the 3-step sandwich pattern:
@@ -1177,7 +1199,7 @@ charlies_away:
 #   2. Turn off all mode booleans
 #   3. Re-enable all mode automations
 #
-# Called by: lock_down, departing, lights_out (Atom S3 long press)
+# Called by: lock_down, departing, departing_home, lights_out (Atom S3 long press)
 # This ensures no stale mode state lingers after bulk lights-off events.
 
 reset_all_modes:
