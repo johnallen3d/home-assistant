@@ -175,17 +175,42 @@ Lighting context:
 - Light groups may need `homeassistant.exposed_entities`
 
 ## HomeKit Exposure
-- Config: `config/homekit_exposed.yaml`
-- Apply: `mise run exposure-homekit`
-- HA must be **stopped** before editing `core.config_entries`
-- Dry run: `mise run exposure-homekit --dry-run`
-- Inspect server filter: `mise run config list-homekit-server`
+- Config: `config/homekit_exposed.yaml`; apply: `mise run exposure-homekit`.
+- Read-only plan: `mise run exposure-homekit --dry-run`; tests: `mise run test-homekit`.
+- Top-level include/exclude lists manage the existing bridge (HASS Bridge, 21064).
+  `camera_accessories` manages standalone camera entries on stable names/ports.
+  Cameras must not also match the bridge filter. Missing accessories are created;
+  matching ones retain entry IDs and pairing state. Unlisted entries are not deleted.
+- Charlie Cam: `camera.charlie_cam_2`, port 21065, linked to
+  `binary_sensor.charlie_cam_person_occupancy`. Entry Nest: `camera.entry_nest`,
+  port 21066, linked to `binary_sensor.entry_nest_person_occupancy`.
+  Both copy H.264 without transcoding; audio is off. HomeKit Secure Video is unsupported.
+- `frigate_rtsp` configures the Frigate RTSP URL template through its options API.
+  Credentials are read at runtime from Doppler `pi-cielo/prod`, secret names
+  `FRIGATE_RTSP_USER` / `FRIGATE_RTSP_PASSWORD`; never commit or print values.
+  Streams use authenticated `192.168.5.20:8554/{{ name }}`. Never use the
+  ONVIF/direct-Wyze entity: the camera must retain one RTSP client (Frigate).
+- HomeKit options flows cannot express linked motion sensors or stable names/ports.
+  The task holds `/config/.home-assistant-deploy.lock`, stops HA itself, re-reads
+  flushed storage, creates a timestamped 0600 backup, atomically replaces
+  `core.config_entries`, and starts HA even if writing fails. No manual stop needed.
+  It skips stop/start for an unchanged plan and records source/hashes in
+  `/config/.homekit-exposure-deployment.json` after checking integrations loaded.
+  Other activation entry points must honor the same lock; never bypass its owner.
+- Inspect bridge filter: `mise run config list-homekit-server`. Pair each new
+  accessory separately using HA persistent notifications; enable camera activity
+  notifications in the iPhone Home app. Verify live view, Apple TV PiP, and a real
+  person-triggered snapshot notification before closing the camera task.
 
-Config shape:
+Camera config shape (alongside the existing bridge lists):
 ```yaml
-include_domains: [light, lock]
-include_entities: [scene.x, script.y]
-exclude_entities: [light.atom_echo_led]
+camera_accessories:
+  - name: Charlie Cam
+    port: 21065
+    entity_id: camera.charlie_cam_2
+    linked_motion_sensor: binary_sensor.charlie_cam_person_occupancy
+    video_codec: copy
+    support_audio: false
 ```
 
 ## Adaptive Lighting

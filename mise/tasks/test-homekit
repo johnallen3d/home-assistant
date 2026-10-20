@@ -1,0 +1,230 @@
+#!/usr/bin/env -S uv run --script
+#MISE description="Test HomeKit reconciliation and safe deployment (no network)"
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["pyyaml"]
+# ///
+import contextlib
+from copy import deepcopy
+import io
+import json
+import os
+from pathlib import Path
+import runpy
+import subprocess
+import sys
+import unittest
+from unittest.mock import Mock, patch
+
+module = runpy.run_path(str(Path(__file__).with_name("exposure-homekit")))
+# Functions retain the run_path module globals, not its returned copy.
+namespace = module["main"].__globals__
+
+
+def fixture():
+    config = {
+        "include_domains": ["light"], "include_entities": ["scene.lights_out"],
+        "exclude_domains": [], "exclude_entities": ["light.atom_echo_led"],
+        "frigate_rtsp": None,
+        "camera_accessories": [{
+            "name": "Charlie Cam", "port": 21065, "entity_id": "camera.charlie_cam_2",
+            "linked_motion_sensor": "binary_sensor.charlie_cam_person_occupancy",
+            "video_codec": "copy", "support_audio": False,
+        }],
+    }
+    bridge = {
+        "entry_id": "existing-bridge", "domain": "homekit", "source": "user",
+        "title": "HASS Bridge:21064", "data": {"name": "HASS Bridge", "port": 21064},
+        "options": {"mode": "bridge", "filter": {k: config[k] for k in namespace["FILTER_KEYS"]},
+                    "entity_config": {"camera.old": {"support_audio": True}}, "devices": ["keep"]},
+    }
+    other = {"domain": "unrelated", "entry_id": "keep", "options": {"secret": "must-retain"}}
+    storage = {"version": 1, "minor_version": 5, "key": "core.config_entries", "data": {"entries": [bridge, other]}}
+    return config, storage
+
+
+class ReconciliationTests(unittest.TestCase):
+    def setUp(self):
+        self.config, self.storage = fixture()
+
+    def reconcile(self):
+        return namespace["reconcile_entries"](self.storage, self.config)
+
+    def test_create_preserves_entire_bridge_and_other_entries(self):
+        original = deepcopy(self.storage)
+        updated, changes = self.reconcile()
+        self.assertEqual(self.storage, original)
+        self.assertEqual(updated["data"]["entries"][:2], original["data"]["entries"])
+        self.assertEqual(len(changes), 1)
+        camera = updated["data"]["entries"][2]
+        self.assertEqual(camera["options"]["mode"], "accessory")
+        self.assertEqual(camera["options"]["entity_config"]["camera.charlie_cam_2"]["video_codec"], "copy")
+        self.assertEqual(camera["data"]["port"], 21065)
+
+    def test_idempotent_and_pairing_id_retained(self):
+        first, _ = self.reconcile()
+        second, changes = namespace["reconcile_entries"](first, self.config)
+        self.assertEqual(first, second)
+        self.assertEqual(changes, [])
+
+    def test_updates_existing_without_replacing_unknown_options(self):
+        self.storage, _ = self.reconcile()
+        camera = self.storage["data"]["entries"][2]
+        camera["options"]["unknown"] = "keep"
+        camera["options"]["entity_config"]["camera.charlie_cam_2"]["manufacturer"] = "keep"
+        original_id = camera["entry_id"]
+        self.config["camera_accessories"][0]["video_codec"] = "libx264"
+        updated, changes = self.reconcile()
+        actual = updated["data"]["entries"][2]
+        self.assertEqual(actual["entry_id"], original_id)
+        self.assertEqual(actual["options"]["unknown"], "keep")
+        self.assertEqual(actual["options"]["entity_config"]["camera.charlie_cam_2"]["manufacturer"], "keep")
+        self.assertEqual(len(changes), 1)
+
+    def test_unlisted_accessory_not_deleted(self):
+        self.storage, _ = self.reconcile()
+        self.config["camera_accessories"] = []
+        updated, changes = self.reconcile()
+        self.assertEqual(updated, self.storage)
+        self.assertFalse(changes)
+
+    def test_bridge_filter_update_retains_other_options(self):
+        self.config["include_entities"].append("script.good_morning")
+        updated, _ = self.reconcile()
+        options = updated["data"]["entries"][0]["options"]
+        self.assertEqual(options["devices"], ["keep"])
+        self.assertEqual(options["entity_config"], self.storage["data"]["entries"][0]["options"]["entity_config"])
+
+    def test_rejects_name_and_port_collisions(self):
+        for field, value in (("name", "HASS Bridge"), ("port", 21064)):
+            with self.subTest(field=field):
+                config = deepcopy(self.config)
+                config["camera_accessories"][0][field] = value
+                with self.assertRaises(ValueError):
+                    namespace["reconcile_entries"](self.storage, config)
+
+    def test_rejects_ambiguous_bridge_and_camera(self):
+        self.storage["data"]["entries"].append(deepcopy(self.storage["data"]["entries"][0]))
+        with self.assertRaises(ValueError):
+            self.reconcile()
+        self.storage["data"]["entries"].pop()
+        self.storage, _ = self.reconcile()
+        self.storage["data"]["entries"].append(deepcopy(self.storage["data"]["entries"][-1]))
+        with self.assertRaises(ValueError):
+            self.reconcile()
+
+    def test_refuses_adoption_of_differently_named_accessory(self):
+        self.storage, _ = self.reconcile()
+        self.storage["data"]["entries"][-1]["data"]["name"] = "Another task"
+        with self.assertRaises(ValueError):
+            self.reconcile()
+
+    def test_validation_rejects_duplicate_identity_and_bad_types(self):
+        for key, value in (("port", True), ("port", 22), ("port", 70000), ("entity_id", "light.x"),
+                           ("linked_motion_sensor", "sensor.x"), ("video_codec", "h265"), ("support_audio", "false")):
+            with self.subTest(key=key, value=value):
+                config = deepcopy(self.config)
+                config["camera_accessories"][0][key] = value
+                with self.assertRaises(ValueError):
+                    namespace["validate_accessories"](config)
+        self.config["camera_accessories"] *= 2
+        with self.assertRaises(ValueError):
+            namespace["validate_accessories"](self.config)
+
+    def test_validation_rejects_bridge_double_exposure(self):
+        for domains, entities in ((["camera"], []), (["light"], ["camera.charlie_cam_2"]), ([], [])):
+            self.config["include_domains"] = domains
+            self.config["include_entities"] = entities
+            with self.assertRaises(ValueError):
+                namespace["validate_accessories"](self.config)
+
+    def test_explicit_camera_exclusion_allowed(self):
+        self.config["include_domains"].append("camera")
+        self.config["exclude_entities"].append("camera.charlie_cam_2")
+        namespace["validate_accessories"](self.config)
+
+
+class DeploymentTests(unittest.TestCase):
+    def setUp(self):
+        self.config, self.storage = fixture()
+
+    def test_dry_run_never_writes_or_stops_ha(self):
+        lock, upload, apply = Mock(), Mock(), Mock()
+        with patch.dict(namespace, {
+            "load_homekit_config": Mock(return_value=self.config),
+            "download_config_entries": Mock(return_value=self.storage),
+            "HAApi": Mock(), "frigate_plan": Mock(return_value=(None, None)),
+            "deployment_lock": lock, "upload_json": upload, "apply_frigate": apply,
+        }), patch.dict(os.environ, {"HA_SERVER": "root@test"}), patch.object(sys, "argv", ["exposure-homekit", "--dry-run"]), contextlib.redirect_stdout(io.StringIO()):
+            namespace["main"]()
+        lock.assert_not_called()
+        upload.assert_not_called()
+        apply.assert_not_called()
+
+    def test_frigate_template_encodes_credentials_and_preserves_options(self):
+        self.config["frigate_rtsp"] = {
+            "integration_url": "http://192.168.5.20:8971", "host": "192.168.5.20",
+            "username_secret": "USER", "password_secret": "PASSWORD",
+            "doppler_project": "pi-cielo", "doppler_config": "prod",
+        }
+        entry = {"domain": "frigate", "data": {"url": "http://192.168.5.20:8971"},
+                 "options": {"enable_webrtc": False, "media_browser_enable": False}}
+        self.storage["data"]["entries"].append(entry)
+        secret_output = json.dumps({"USER": {"computed": "user@part"}, "PASSWORD": {"computed": "p:/@?#"}})
+        with patch.dict(namespace, {"subprocess": Mock(check_output=Mock(return_value=secret_output))}):
+            original, options = namespace["frigate_plan"](self.storage, self.config)
+        self.assertEqual(original, entry)
+        self.assertEqual(options["rtsp_url_template"], "rtsp://user%40part:p%3A%2F%40%3F%23@192.168.5.20:8554/{{ name }}")
+        self.assertFalse(options["media_browser_enable"])
+        self.assertNotIn("rtsp_url_template", entry["options"])
+
+    def test_missing_frigate_config_never_fetches_secrets(self):
+        secret_tool = Mock()
+        with patch.dict(namespace, {"subprocess": secret_tool}):
+            self.assertEqual(namespace["frigate_plan"](self.storage, self.config), (None, None))
+        secret_tool.check_output.assert_not_called()
+
+    def test_ambiguous_frigate_fails_before_secret_lookup(self):
+        self.config["frigate_rtsp"] = {"integration_url": "http://missing"}
+        secret_tool = Mock()
+        with patch.dict(namespace, {"subprocess": secret_tool}), self.assertRaises(ValueError):
+            namespace["frigate_plan"](self.storage, self.config)
+        secret_tool.check_output.assert_not_called()
+
+    def test_frigate_api_does_not_echo_secret_response(self):
+        api = Mock()
+        api.request.side_effect = [{"type": "form", "step_id": "init", "flow_id": "test"},
+                                   {"type": "form", "errors": {"secret": "do-not-echo"}}]
+        with self.assertRaises(RuntimeError) as caught:
+            namespace["apply_frigate"](api, {"entry_id": "frigate"}, {"rtsp_url_template": "secret"})
+        self.assertNotIn("do-not-echo", str(caught.exception))
+
+    def test_stop_failure_still_attempts_start_no_storage_write(self):
+        run = Mock(side_effect=[subprocess.CalledProcessError(1, "stop"), Mock()])
+        download = Mock()
+        with patch.dict(namespace, {"subprocess": Mock(run=run), "download_config_entries": download}), contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(subprocess.CalledProcessError):
+                namespace["write_storage"]("root@test", self.config)
+        download.assert_not_called()
+        self.assertIn("ha core start", run.call_args_list[-1].args[0])
+
+    def test_upload_failure_still_starts_ha(self):
+        run, upload = Mock(), Mock(side_effect=RuntimeError("write failed"))
+        download = Mock(return_value=self.storage)
+        with patch.dict(namespace, {"subprocess": Mock(run=run), "download_config_entries": download, "upload_json": upload}), contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(RuntimeError):
+                namespace["write_storage"]("root@test", self.config)
+        self.assertIn("ha core start", run.call_args_list[-1].args[0])
+        self.assertEqual(download.call_count, 1)
+
+    def test_noop_after_stop_uses_flushed_snapshot_and_does_not_upload(self):
+        flushed, _ = namespace["reconcile_entries"](self.storage, self.config)
+        run, upload = Mock(), Mock()
+        with patch.dict(namespace, {"subprocess": Mock(run=run), "download_config_entries": Mock(return_value=flushed), "upload_json": upload}), contextlib.redirect_stdout(io.StringIO()):
+            namespace["write_storage"]("root@test", self.config)
+        upload.assert_not_called()
+        self.assertEqual([c.args[0][2] for c in run.call_args_list], ["ha core stop", "ha core start"])
+
+
+if __name__ == "__main__":
+    unittest.main()

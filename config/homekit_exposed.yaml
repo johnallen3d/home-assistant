@@ -5,8 +5,9 @@
 # and then refines with include_entities and exclude_entities.
 #
 # Usage:
-#   just config::deploy-homekit   - Apply settings and restart HA
-#   just config::check-homekit    - Dry run, show what would change
+#   mise run exposure-homekit --dry-run   - Read-only plan
+#   mise run exposure-homekit             - Apply; stop/start HA only for storage changes
+# Cameras below are standalone accessories, never part of the existing bridge.
 
 # Domains to include (all entities in these domains are exposed)
 # Note: lock domain removed - Nuki lock is exposed directly via Matter fabric sharing
@@ -47,3 +48,30 @@ exclude_entities:
   # Individual bulbs (use light.living_room_overhead_light group instead)
   - light.living_room_overhead_thread
   - light.living_room_overhead_wifi
+
+# Integration options are applied via the HA options-flow API. Only secret NAMES
+# belong here. Values stay in Doppler and HA storage, never in Git or task output.
+frigate_rtsp:
+  integration_url: http://192.168.5.20:8971
+  host: 192.168.5.20
+  doppler_project: pi-cielo
+  doppler_config: prod
+  username_secret: FRIGATE_RTSP_USER
+  password_secret: FRIGATE_RTSP_PASSWORD
+
+# One stable HomeKit accessory per Frigate camera. Do not use ONVIF/direct-Wyze
+# entities. Person occupancy drives HomeKit motion notifications with snapshots;
+# this is not HomeKit Secure Video. Audio is deliberately disabled on both.
+camera_accessories:
+  - name: Charlie Cam
+    port: 21065
+    entity_id: camera.charlie_cam_2
+    linked_motion_sensor: binary_sensor.charlie_cam_person_occupancy
+    video_codec: copy
+    support_audio: false
+  - name: Entry Nest
+    port: 21066
+    entity_id: camera.entry_nest
+    linked_motion_sensor: binary_sensor.entry_nest_person_occupancy
+    video_codec: copy
+    support_audio: false
