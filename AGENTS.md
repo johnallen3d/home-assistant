@@ -240,16 +240,17 @@ Use outage logs to correlate HA device unavailability.
 
 Related repo: `~/dev/src/playground/pi-cielo/`
 
-## Git / Beads Rules
-- Track work with `bd`, not markdown TODOs.
-- Prefer JSON output: `bd ... --json`.
+## Git / Issue Tracking Rules
+- Track work with **Fizzy**, not markdown TODOs. `.fizzy.yaml` selects the `home-assistant` board.
+- Run via Doppler for `FIZZY_TOKEN`: `mise exec -- doppler run -- fizzy ...`.
+- Cards use their **number**, not ID. Prefer `--jq` for compact output.
 - Typical flow:
-  1. `bd ready --json`
-  2. `bd update <id> --claim --json`
-  3. work
-  4. `bd close <id> --reason "Completed" --json`
-- Link discovered work with `discovered-from:<parent-id>`.
-- `bd sync` pushes. **Do not run without user approval.**
+  1. `fizzy card list`
+  2. `fizzy card show <number>`
+  3. work; comment progress with `fizzy comment create --card <number> --body "..."`
+  4. `fizzy card close <number>`
+- Reference related cards by number (e.g. "pi-cielo #843") in descriptions/comments.
+- `.beads/` is a historical archive of the old tracker. Do not create or update Beads issues.
 - Never commit or push without user approval.
 - Approval can be explicit short forms: "yes", "do it", "commit it", "push it", etc.
 
@@ -269,12 +270,12 @@ Co-author trailer if needed:
 
 ## Common Commands
 ```bash
-bd ready --json
-bd list --status=open --json
-bd show <id>
-bd create "Issue title" --description="..." -t task -p 2 --json
-bd update <id> --claim --json
-bd close <id> --reason "Completed" --json
+mise exec -- doppler run -- fizzy card list
+mise exec -- doppler run -- fizzy card show <number>
+mise exec -- doppler run -- fizzy card create --title "Title" --description "Context"
+mise exec -- doppler run -- fizzy comment create --card <number> --body "Progress"
+mise exec -- doppler run -- fizzy card close <number>
+mise exec -- doppler run -- fizzy search "query"
 ```
 
 SSH patterns:
