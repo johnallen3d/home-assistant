@@ -1,0 +1,47 @@
+id: '1770580843422'
+alias: Living Room Air Quality Recovery
+description: >-
+  After a measured CO2 or PM2.5 warning threshold is sustained, wait for
+  CO2 below 1000 ppm and PM2.5 below 15 µg/m³ together for 15 minutes
+  before sending an all-clear. Uses the same warning triggers as the
+  separate CO2 and PM2.5 alerts, never the device's air-quality label.
+  A new warning restarts the recovery wait; give up after 4 hours.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
+    above: 1200
+    below: 1800
+    for:
+      minutes: 5
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
+    above: 1800
+    for:
+      minutes: 2
+  - trigger: numeric_state
+    entity_id: sensor.alpstuga_air_quality_monitor_pm2_5
+    above: 50
+    for:
+      minutes: 5
+actions:
+  - wait_for_trigger:
+      - trigger: template
+        value_template: >-
+          {% set co2 = states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') %}
+          {% set pm25 = states('sensor.alpstuga_air_quality_monitor_pm2_5') %}
+          {{ is_number(co2) and is_number(pm25)
+             and 0 <= co2 | float < 1000 and 0 <= pm25 | float < 15 }}
+        for:
+          minutes: 15
+    timeout:
+      hours: 4
+    continue_on_timeout: false
+  - action: notify.mobile_app_john_allens_iphone
+    data:
+      title: "\u2705 Living Room Air Cleared"
+      message: >-
+        Living-room CO2 has stayed below 1000 ppm and PM2.5 below
+        15 µg/m³ for 15 minutes. Current readings — CO2:
+        {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide') | round(0) }} ppm,
+        PM2.5: {{ states('sensor.alpstuga_air_quality_monitor_pm2_5') | round(0) }} µg/m³.
+mode: restart

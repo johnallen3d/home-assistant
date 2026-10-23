@@ -1,9 +1,9 @@
 id: '1770580838432'
-alias: Kitchen High CO2 Alert
+alias: Living Room High CO2 Alert
 description: >-
-  Notify when kitchen CO2 levels are unhealthy. 1200ppm = stuffy/drowsy,
-  1800ppm = poor ventilation. Thresholds raised to reduce alert fatigue
-  during normal cooking. Sustained for 5 minutes to avoid false alarms.
+  Notify when living-room CO2 indicates ventilation is needed: between
+  1200 and 1800 ppm for 5 minutes, or above 1800 ppm for 2 minutes.
+  These are ventilation reminders, not emergency exposure limits.
 triggers:
   - trigger: numeric_state
     entity_id: sensor.alpstuga_air_quality_monitor_carbon_dioxide
@@ -26,7 +26,7 @@ actions:
         sequence:
           - action: notify.mobile_app_john_allens_iphone
             data:
-              title: "\U0001FAC1 High CO2 in Kitchen"
+              title: "\U0001FAC1 High CO2 in Living Room"
               message: >-
                 CO2 is {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide')
                 | round(0) }} ppm — open windows now
@@ -36,7 +36,7 @@ actions:
         sequence:
           - action: notify.mobile_app_john_allens_iphone
             data:
-              title: "\U0001F32C\uFE0F Kitchen CO2 Elevated"
+              title: "\U0001F32C\uFE0F Living Room CO2 Elevated"
               message: >-
                 CO2 is {{ states('sensor.alpstuga_air_quality_monitor_carbon_dioxide')
                 | round(0) }} ppm — consider opening a window
