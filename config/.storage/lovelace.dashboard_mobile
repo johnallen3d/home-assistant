@@ -764,6 +764,21 @@
                   "icon": "mdi:tune",
                   "button_type": "state",
                   "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Plants",
+                  "icon": "mdi:sprout"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.xiao_soil_moisture_monitor_a160e4_soil_moisture_status",
+                  "name": "Snake Plant",
+                  "icon": "mdi:watering-can",
+                  "button_type": "state",
+                  "show_state": true
                 }
               ]
             }
