@@ -43,13 +43,11 @@ light:
     name: Living Room Overhead Light
     entities:
       - light.living_room_overhead_thread
-      - light.living_room_overhead_wifi
   - platform: group
     name: Living Room Lights
     entities:
       - light.living_room_light
       - light.living_room_overhead_thread
-      - light.living_room_overhead_wifi
 
 # Mixed entity groups (lights + switches)
 group:

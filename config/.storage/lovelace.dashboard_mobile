@@ -801,6 +801,13 @@
                   "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
                   "sub_button": [
                     {
+                      "entity": "light.charlie_s_overhead_light",
+                      "icon": "mdi:ceiling-light",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
                       "entity": "light.charlie_s_shapes",
                       "icon": "mdi:triangle-outline",
                       "tap_action": {
@@ -824,6 +831,16 @@
                   "name": "Sound Machine",
                   "icon": "mdi:speaker",
                   "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.charlie_s_overhead_light",
+                  "name": "Overhead Light",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
                 },
                 {
                   "type": "custom:bubble-card",

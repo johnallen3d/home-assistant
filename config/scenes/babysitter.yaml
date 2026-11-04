@@ -21,9 +21,5 @@ entities:
     state: 'on'
     brightness: 64
     color_temp_kelvin: 2700
-  light.living_room_overhead_wifi:
-    state: 'on'
-    brightness: 64
-    color_temp_kelvin: 2700
 icon: mdi:account-child
 metadata: {}

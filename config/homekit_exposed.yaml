@@ -47,7 +47,8 @@ exclude_entities:
   - light.bedroom_plug_dnd
   # Individual bulbs (use light.living_room_overhead_light group instead)
   - light.living_room_overhead_thread
-  - light.living_room_overhead_wifi
+  # Charlie's overhead bulb (moved from living room; stays off the bridge)
+  - light.charlie_s_overhead_light
 
 # Integration options are applied via the HA options-flow API. Only secret NAMES
 # belong here. Values stay in Doppler and HA storage, never in Git or task output.

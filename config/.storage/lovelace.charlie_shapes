@@ -35,346 +35,201 @@
               "type": "grid",
               "cards": [
                 {
-                  "type": "tile",
-                  "entity": "light.charlie_s_shapes",
-                  "name": "Shapes",
-                  "vertical": false,
-                  "features": [
+                  "type": "heading",
+                  "heading": "Charlie's Light",
+                  "heading_style": "title"
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
                     {
-                      "type": "light-brightness"
+                      "type": "tile",
+                      "entity": "light.charlie_s_overhead_light",
+                      "name": "Overhead Light",
+                      "vertical": false,
+                      "features": [
+                        {
+                          "type": "light-brightness"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
+                      "name": "Colors",
+                      "icon": "mdi:palette",
+                      "tap_action": {
+                        "action": "more-info",
+                        "entity": "light.charlie_s_overhead_light"
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "button",
-                  "name": "Power",
-                  "icon": "mdi:power",
-                  "tap_action": {
-                    "action": "call-service",
-                    "service": "light.toggle",
-                    "target": {
-                      "entity_id": "light.charlie_s_shapes"
+                  "type": "custom:mushroom-chips-card",
+                  "chips": [
+                    {
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "orange",
+                      "content": "Warm",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_overhead_light"
+                        },
+                        "data": {
+                          "color_temp_kelvin": 2700,
+                          "brightness_pct": 75
+                        }
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "light-blue",
+                      "content": "Cool",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_overhead_light"
+                        },
+                        "data": {
+                          "color_temp_kelvin": 5000,
+                          "brightness_pct": 75
+                        }
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "red",
+                      "content": "Red",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_overhead_light"
+                        },
+                        "data": {
+                          "rgb_color": [
+                            255,
+                            0,
+                            0
+                          ],
+                          "brightness_pct": 75
+                        }
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "blue",
+                      "content": "Blue",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_overhead_light"
+                        },
+                        "data": {
+                          "rgb_color": [
+                            0,
+                            100,
+                            255
+                          ],
+                          "brightness_pct": 75
+                        }
+                      }
                     }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "Effects",
-                  "heading_style": "title"
+                  ]
                 },
                 {
-                  "type": "grid",
-                  "columns": 3,
-                  "cards": [
+                  "type": "custom:mushroom-chips-card",
+                  "chips": [
                     {
-                      "type": "button",
-                      "name": "Beatdrop",
-                      "icon": "mdi:music",
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "green",
+                      "content": "Green",
                       "tap_action": {
                         "action": "call-service",
                         "service": "light.turn_on",
                         "target": {
-                          "entity_id": "light.charlie_s_shapes"
+                          "entity_id": "light.charlie_s_overhead_light"
                         },
                         "data": {
-                          "effect": "Beatdrop"
+                          "rgb_color": [
+                            0,
+                            255,
+                            0
+                          ],
+                          "brightness_pct": 75
                         }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Beatdrop' %}background: var(--primary-color) !important;{% endif %} }"
                       }
                     },
                     {
-                      "type": "button",
-                      "name": "Blaze",
-                      "icon": "mdi:fire",
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "deep-purple",
+                      "content": "Purple",
                       "tap_action": {
                         "action": "call-service",
                         "service": "light.turn_on",
                         "target": {
-                          "entity_id": "light.charlie_s_shapes"
+                          "entity_id": "light.charlie_s_overhead_light"
                         },
                         "data": {
-                          "effect": "Blaze"
+                          "rgb_color": [
+                            148,
+                            0,
+                            211
+                          ],
+                          "brightness_pct": 75
                         }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Blaze' %}background: var(--primary-color) !important;{% endif %} }"
                       }
                     },
                     {
-                      "type": "button",
-                      "name": "Cocoa Beach",
-                      "icon": "mdi:beach",
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "deep-orange",
+                      "content": "Orange",
                       "tap_action": {
                         "action": "call-service",
                         "service": "light.turn_on",
                         "target": {
-                          "entity_id": "light.charlie_s_shapes"
+                          "entity_id": "light.charlie_s_overhead_light"
                         },
                         "data": {
-                          "effect": "Cocoa Beach"
+                          "rgb_color": [
+                            255,
+                            165,
+                            0
+                          ],
+                          "brightness_pct": 75
                         }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Cocoa Beach' %}background: var(--primary-color) !important;{% endif %} }"
                       }
                     },
                     {
-                      "type": "button",
-                      "name": "Cotton Candy",
-                      "icon": "mdi:candy",
+                      "type": "template",
+                      "icon": "mdi:circle",
+                      "icon_color": "pink",
+                      "content": "Pink",
                       "tap_action": {
                         "action": "call-service",
                         "service": "light.turn_on",
                         "target": {
-                          "entity_id": "light.charlie_s_shapes"
+                          "entity_id": "light.charlie_s_overhead_light"
                         },
                         "data": {
-                          "effect": "Cotton Candy"
+                          "rgb_color": [
+                            255,
+                            105,
+                            180
+                          ],
+                          "brightness_pct": 75
                         }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Cotton Candy' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Date Night",
-                      "icon": "mdi:heart",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Date Night"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Date Night' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Hip Hop",
-                      "icon": "mdi:music-note",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Hip Hop"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Hip Hop' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Hot Sauce",
-                      "icon": "mdi:chili-hot",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Hot Sauce"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Hot Sauce' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Jungle",
-                      "icon": "mdi:tree",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Jungle"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Jungle' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Lightscape",
-                      "icon": "mdi:image-filter-hdr",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Lightscape"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Lightscape' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Morning Sky",
-                      "icon": "mdi:weather-sunset-up",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Morning Sky"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Morning Sky' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Northern Lights",
-                      "icon": "mdi:aurora",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Northern Lights"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Northern Lights' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Pop Rocks",
-                      "icon": "mdi:star-shooting",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Pop Rocks"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Pop Rocks' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Prism",
-                      "icon": "mdi:triangle",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Prism"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Prism' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Sonic Sunset",
-                      "icon": "mdi:weather-sunset",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Sonic Sunset"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Sonic Sunset' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Starlight",
-                      "icon": "mdi:star",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Starlight"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Starlight' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Sundown",
-                      "icon": "mdi:weather-sunset-down",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Sundown"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Sundown' %}background: var(--primary-color) !important;{% endif %} }"
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "name": "Waterfall",
-                      "icon": "mdi:waterfall",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_shapes"
-                        },
-                        "data": {
-                          "effect": "Waterfall"
-                        }
-                      },
-                      "card_mod": {
-                        "style": "ha-card { {% if state_attr('light.charlie_s_shapes', 'effect') == 'Waterfall' %}background: var(--primary-color) !important;{% endif %} }"
                       }
                     }
                   ]
@@ -463,7 +318,11 @@
                           "entity_id": "light.bedroom_lights"
                         },
                         "data": {
-                          "rgb_color": [255, 0, 0],
+                          "rgb_color": [
+                            255,
+                            0,
+                            0
+                          ],
                           "brightness_pct": 75
                         }
                       }
@@ -480,7 +339,11 @@
                           "entity_id": "light.bedroom_lights"
                         },
                         "data": {
-                          "rgb_color": [0, 100, 255],
+                          "rgb_color": [
+                            0,
+                            100,
+                            255
+                          ],
                           "brightness_pct": 75
                         }
                       }
@@ -502,7 +365,11 @@
                           "entity_id": "light.bedroom_lights"
                         },
                         "data": {
-                          "rgb_color": [0, 255, 0],
+                          "rgb_color": [
+                            0,
+                            255,
+                            0
+                          ],
                           "brightness_pct": 75
                         }
                       }
@@ -519,7 +386,11 @@
                           "entity_id": "light.bedroom_lights"
                         },
                         "data": {
-                          "rgb_color": [148, 0, 211],
+                          "rgb_color": [
+                            148,
+                            0,
+                            211
+                          ],
                           "brightness_pct": 75
                         }
                       }
@@ -536,7 +407,11 @@
                           "entity_id": "light.bedroom_lights"
                         },
                         "data": {
-                          "rgb_color": [255, 165, 0],
+                          "rgb_color": [
+                            255,
+                            165,
+                            0
+                          ],
                           "brightness_pct": 75
                         }
                       }
@@ -553,7 +428,11 @@
                           "entity_id": "light.bedroom_lights"
                         },
                         "data": {
-                          "rgb_color": [255, 105, 180],
+                          "rgb_color": [
+                            255,
+                            105,
+                            180
+                          ],
                           "brightness_pct": 75
                         }
                       }
