@@ -1,0 +1,13 @@
+id: "1795253400000"
+alias: "NAS Backup Mount Reload"
+description: >-
+  Reloads the nas_backups NFS mount before the automatic backup window
+  (04:45-05:45). The NAS auto-reboots at 04:30 after updates, which leaves
+  the mergerfs-backed mount stale and fails the nightly backup.
+triggers:
+  - trigger: time
+    at: "04:40:00"
+conditions: []
+actions:
+  - action: shell_command.reload_nas_backups_mount
+mode: single

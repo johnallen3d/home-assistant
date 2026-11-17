@@ -162,6 +162,12 @@ shell_command:
     -H "Authorization: Bearer ${SUPERVISOR_TOKEN}"
     http://supervisor/addons/core_matter_server/logs; }
     > /config/matter-server-pre-restart.log'
+  # The NAS exports a mergerfs (FUSE) pool, so its NFS handles go stale
+  # whenever it reboots (unattended-upgrades, 04:30). See Fizzy #1227.
+  reload_nas_backups_mount: >-
+    curl -sSf -X POST
+    -H "Authorization: Bearer ${SUPERVISOR_TOKEN}"
+    http://supervisor/mounts/nas_backups/reload
 
 command_line:
   - sensor:
