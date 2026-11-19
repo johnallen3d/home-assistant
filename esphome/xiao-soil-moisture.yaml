@@ -1,0 +1,432 @@
+# XIAO Soil Moisture Monitor (a160e4), low-power config.
+# Based on Seeed's stock firmware:
+# https://github.com/Seeed-Studio/xiao-esphome-projects/tree/main/projects/xiao-soil-moisture-monitor
+#
+# Changes from stock, to reduce the AA drain:
+# - Fixed 6 h sleep. Stock sleeps 15 min when dry, and stays awake 120 s
+#   on WiFi each time.
+# - On a timer wake, sleep as soon as Home Assistant has the readings.
+#   A button or reset wake stays up for the 120 s run_duration, as stock,
+#   so single-press checks and triple-press calibration still work.
+# - input_boolean.xiao_soil_prevent_sleep keeps it awake for OTA/debugging.
+#   If HA is unreachable, the 120 s run_duration still puts it to sleep.
+# - Battery voltage reported in V; % entity kept for low_battery_alert.
+# - No fallback AP/captive portal: stock's "unconfigured" path blocked sleep.
+#
+# Calibration (dry_value/wet_value) is restored from flash by global ID, so
+# keep those IDs and types unchanged. Keep entity names unchanged too: HA
+# unique IDs are built from them.
+
+substitutions:
+  name: "xiao-soil-moisture"
+  friendly_name: "XIAO Soil Moisture Monitor"
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  name_add_mac_suffix: true
+  project:
+    name: "xiao.soil-moisture-monitor"
+    version: "1.0-lowpower"
+  on_boot:
+    then:
+      - output.turn_off: gpio_3_output
+      - output.turn_on: gpio_14_output
+      - light.turn_on:
+          id: pwm_led
+          brightness: 68%  # Set 68% duty cycle
+      - delay: 1s
+      - script.execute: check_moisture_once
+      - script.wait: check_moisture_once
+      - component.update: battery_voltage
+      - lambda: |-
+          id(cal_dry).publish_state(id(dry_value));
+          id(cal_wet).publish_state(id(wet_value));
+      - wait_until:
+          condition: api.connected
+          timeout: 60s
+      - component.update: wifi_rssi
+      # Give HA time to send the prevent-sleep state and take the readings.
+      - wait_until:
+          condition:
+            lambda: 'return id(prevent_sleep).has_state();'
+          timeout: 5s
+      - delay: 1s
+      - globals.set:
+          id: boot_done
+          value: 'true'
+      - if:
+          condition:
+            lambda: 'return esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_TIMER;'
+          then:
+            - script.execute: sleep_if_allowed
+
+esp32:
+  board: esp32-c6-devkitc-1
+  framework:
+    type: esp-idf
+
+# LED Yellow	D10 18
+# LED RED	D9  20
+# LED Green	D8 19
+# button	D2  2
+
+# Battery	D0 0
+# PWM out	D3 21
+# Soil sensor	D1  1
+
+
+output:
+  - platform: gpio
+    pin: GPIO18
+    id: yellow_led_output
+
+  - platform: gpio
+    pin: GPIO19
+    id: green_led_output
+
+  - platform: gpio
+    pin: GPIO20
+    id: red_led_output
+
+  - platform: ledc
+    pin: GPIO21
+    id: pwm_output
+    frequency: 200kHz  # Set the frequency to 200kHz
+
+  - platform: gpio
+    pin: GPIO3
+    id: gpio_3_output
+
+  - platform: gpio
+    pin: GPIO14
+    id: gpio_14_output
+
+light:
+  - platform: binary
+    id: yellow_led
+    output: yellow_led_output
+
+  - platform: binary
+    id: green_led
+    output: green_led_output
+
+  - platform: binary
+    id: red_led
+    output: red_led_output
+
+  - platform: monochromatic
+    output: pwm_output
+    id: pwm_led
+    name: "200kHz PWM"
+    internal: true
+    default_transition_length: 0s
+
+
+script:
+  - id: red_led_blink
+    mode: restart
+    then:
+      - repeat:
+          count: 10
+          then:
+            - light.turn_on: red_led
+            - delay: 500ms
+            - light.turn_off: red_led
+            - delay: 500ms
+
+  - id: green_led_blink
+    mode: restart
+    then:
+      - repeat:
+          count: 10
+          then:
+            - light.turn_on: green_led
+            - delay: 500ms
+            - light.turn_off: green_led
+            - delay: 500ms
+
+  - id: fast_blink_green
+    then:
+      - repeat:
+          count: 5
+          then:
+            - light.turn_on: green_led
+            - delay: 200ms
+            - light.turn_off: green_led
+            - delay: 200ms
+
+  - id: fast_blink_red
+    then:
+      - repeat:
+          count: 5
+          then:
+            - light.turn_on: red_led
+            - delay: 200ms
+            - light.turn_off: red_led
+            - delay: 200ms
+
+  - id: red_led_blink_3_times
+    then:
+      - light.turn_on: red_led
+      - delay: 1000ms
+      - light.turn_off: red_led
+
+  - id: yellow_led_blink_3_times
+    then:
+      - light.turn_on: yellow_led
+      - delay: 1000ms
+      - light.turn_off: yellow_led
+
+  - id: green_led_blink_3_times
+    then:
+      - light.turn_on: green_led
+      - delay: 1000ms
+      - light.turn_off: green_led
+
+  - id: do_calibration
+    then:
+      - deep_sleep.prevent: deep_sleep_control
+      - logger.log: "Starting calibration"
+      - script.execute: red_led_blink
+      - delay: 10s
+      - script.stop: red_led_blink
+      - lambda: |-
+          float sum = 0;
+          for (int i = 0; i < 10; i++) {
+            id(soil_sensor).update();
+            sum += id(soil_sensor).state;
+            delay(200);
+          }
+          id(dry_value) = sum / 10.0;
+          ESP_LOGI("calibration", "Dry value: %f", id(dry_value));
+
+      - delay: 3s
+
+      - script.execute: green_led_blink
+      - delay: 10s
+      - script.stop: green_led_blink
+      - lambda: |-
+          float sum = 0;
+          for (int i = 0; i < 10; i++) {
+            id(soil_sensor).update();
+            sum += id(soil_sensor).state;
+            delay(200);
+          }
+          id(wet_value) = sum / 10.0;
+          ESP_LOGI("calibration", "Wet value: %f", id(wet_value));
+          id(cal_dry).publish_state(id(dry_value));
+          id(cal_wet).publish_state(id(wet_value));
+
+      - delay: 3s
+
+      - lambda: |-
+          if (id(dry_value) > id(wet_value)) {
+            ESP_LOGI("calibration", "Calibration success");
+            id(fast_blink_green).execute();
+          } else {
+            ESP_LOGW("calibration", "Calibration failed");
+            id(fast_blink_red).execute();
+          }
+
+      - delay: 3s
+      - script.execute: check_moisture_once
+      - script.wait: check_moisture_once
+      - delay: 3s
+      - if:
+          condition:
+            lambda: 'return !id(prevent_sleep).state;'
+          then:
+            - deep_sleep.allow: deep_sleep_control
+            - deep_sleep.enter: deep_sleep_control
+
+  # Read the probe and publish the status. Blinks the band LED unless this
+  # is a routine timer wake, so a button press still gives feedback.
+  - id: check_moisture_once
+    then:
+      - lambda: |-
+          for(int i = 0; i < 10; i++){
+            id(soil_sensor).update();
+            delay(200);
+          }
+          float moisture = id(soil_sensor).state;
+          ESP_LOGI("moisture_check", "Moisture reading: %f", moisture);
+          float Diff = id(dry_value) - id(wet_value);
+          bool blink = esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_TIMER || id(boot_done);
+          if (moisture >= (id(dry_value) - Diff * id(ref_dry))) {  // The drier -> the higher the voltage
+            id(soil_status).publish_state("Dry");
+            if (blink) id(red_led_blink_3_times).execute();
+          } else if(moisture >  (id(dry_value) - Diff * id(ref_wet)) && moisture < (id(dry_value) - Diff * id(ref_dry))){
+            id(soil_status).publish_state("Almost Dry");
+            if (blink) id(yellow_led_blink_3_times).execute();
+          }else{
+            id(soil_status).publish_state("Normal Moisture");
+            if (blink) id(green_led_blink_3_times).execute();
+          }
+
+  # deep_sleep.enter ignores deep_sleep.prevent, so check the guards here.
+  - id: sleep_if_allowed
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(prevent_sleep).state && !id(do_calibration).is_running();'
+          then:
+            - logger.log: "Readings sent, sleeping"
+            - deep_sleep.enter: deep_sleep_control
+
+globals:
+  - id: button_press_count
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: dry_value
+    type: float
+    restore_value: yes
+    initial_value: '2.75'
+  - id: wet_value
+    type: float
+    restore_value: yes
+    initial_value: '1.2'
+  - id: ref_dry
+    type: float
+    restore_value: no
+    initial_value: "0.23"
+  - id: ref_wet
+    type: float
+    restore_value: no
+    initial_value: "0.58"
+  - id: boot_done
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO2
+      mode: INPUT_PULLUP
+      allow_other_uses: true
+    id: my_button
+    on_press:
+      - lambda: |-
+          id(button_press_count)++;
+      - delay: 1s  # Delay 1 second to see if the button is pressed 3 times in a row
+      - lambda: |-
+          if (id(button_press_count) == 3) {
+            id(button_press_count) = 0;
+            id(do_calibration).execute();  // Trigger calibration process
+          } else if (id(button_press_count) == 1) {
+            id(button_press_count) = 0;
+            id(check_moisture_once).execute();  // Perform an ADC decision
+          } else {
+            id(button_press_count) = 0;
+          }
+
+  - platform: homeassistant
+    id: prevent_sleep
+    entity_id: input_boolean.xiao_soil_prevent_sleep
+    on_state:
+      - if:
+          condition:
+            lambda: 'return x;'
+          then:
+            - logger.log: "Sleep prevented from Home Assistant"
+            - deep_sleep.prevent: deep_sleep_control
+          else:
+            - deep_sleep.allow: deep_sleep_control
+            # Turning the toggle off sleeps now, not at the next run_duration.
+            - if:
+                condition:
+                  lambda: 'return id(boot_done);'
+                then:
+                  - delay: 2s
+                  - script.execute: sleep_if_allowed
+
+# Deep sleep configuration
+deep_sleep:
+  id: deep_sleep_control
+  run_duration: 120s  # Fallback if HA never connects or on a button wake
+  sleep_duration: 360min
+  wakeup_pin:
+    number: GPIO2
+    inverted: true
+    allow_other_uses: true
+    mode: INPUT_PULLUP
+
+sensor:
+  - platform: adc
+    id: soil_sensor
+    pin: GPIO1
+    name: "Soil moisture measurement"
+    update_interval: never
+    internal: true
+    attenuation: 12db
+
+  - platform: adc
+    id: battery_voltage
+    pin: GPIO0
+    name: "Battery voltage"
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
+    attenuation: 12db
+    update_interval: never
+    force_update: true
+
+  - platform: copy
+    source_id: battery_voltage
+    name: "Battery measurement"
+    device_class: battery
+    state_class: measurement
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    filters:                     # When the battery drops below 1V, it is dead.
+      - lambda: |-
+          if (x < 1.2) {
+            return 0.0;
+          }else if(x > 1.5){
+            return 1.0 * 100.0;
+          }else {
+            return ((x - 1.2) / (1.5 - 1.2)) * 100.0;
+          }
+    force_update: true
+
+  - platform: wifi_signal
+    id: wifi_rssi
+    name: "wifi singnal strength"
+    update_interval: never
+
+  - platform: template
+    id: cal_dry
+    name: "Calibration dry value"
+    entity_category: diagnostic
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
+    update_interval: never
+
+  - platform: template
+    id: cal_wet
+    name: "Calibration wet value"
+    entity_category: diagnostic
+    unit_of_measurement: "V"
+    accuracy_decimals: 3
+    update_interval: never
+
+text_sensor:
+  - platform: template
+    name: "Soil Moisture Status"
+    id: soil_status
+    update_interval: never
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true

@@ -111,6 +111,10 @@ input_boolean:
   door_lock:
     name: "Door Lock"
     icon: mdi:lock
+  # Keeps the XIAO soil monitor awake for OTA/debugging (esphome/xiao-soil-moisture.yaml)
+  xiao_soil_prevent_sleep:
+    name: "XIAO Soil Monitor Prevent Sleep"
+    icon: mdi:sleep-off
 
 # Helpers
 input_number:
@@ -187,6 +191,34 @@ command_line:
         - oldest_age_minutes
 
 template:
+  # Today's minimum of the XIAO soil monitor's AA voltage, reset at midnight.
+  # The cell voltage swings with temperature, so the minimum shows the
+  # discharge trend.
+  - trigger:
+      - trigger: state
+        entity_id: sensor.xiao_soil_moisture_monitor_a160e4_battery_voltage
+        not_to:
+          - unavailable
+          - unknown
+      - trigger: time
+        at: "00:00:00"
+        id: reset
+    sensor:
+      - name: "XIAO Soil Monitor Battery Voltage Daily Min"
+        unique_id: xiao_soil_battery_voltage_daily_min
+        unit_of_measurement: "V"
+        device_class: voltage
+        state_class: measurement
+        state: >-
+          {% set v = states('sensor.xiao_soil_moisture_monitor_a160e4_battery_voltage') | float(none) %}
+          {% set cur = this.state | float(none) %}
+          {% if trigger.id == 'reset' or cur is none %}
+            {{ v }}
+          {% elif v is none %}
+            {{ cur }}
+          {% else %}
+            {{ [v, cur] | min }}
+          {% endif %}
   - sensor:
       - name: "Matter Subscription Failures"
         unique_id: matter_subscription_failures
