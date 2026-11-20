@@ -1,0 +1,70 @@
+# OLED Neon -- Mobile Lab style prototype (view /mobile-lab/neon).
+# Pure black, no card surfaces, thin tracked type. Only lit/active things get
+# colour: the light's own rgb_color (or electric cyan) as crisp text + a glow.
+# Vars are top-level (no `modes:`) so the look is identical in light-mode browsers.
+# The glow, hairlines and thin slider line need shadow-DOM CSS and live in each
+# Bubble card's `styles:` on the view; this theme supplies the black canvas,
+# type and chrome.
+lab-neon:
+  # Canvas
+  lovelace-background: "#000000"
+  primary-background-color: "#000000"
+  secondary-background-color: "#0a0a0a"
+  card-background-color: "#000000"
+  divider-color: rgba(255, 255, 255, 0.08)
+  ha-card-background: transparent
+  ha-card-border-width: "0px"
+  ha-card-border-color: transparent
+  ha-card-border-radius: "0px"
+  ha-card-box-shadow: none
+
+  # One electric accent: cyan
+  primary-color: "#2ef2ff"
+  accent-color: "#2ef2ff"
+  dark-primary-color: "#00b8c8"
+  light-primary-color: "#9ff9ff"
+  state-icon-color: "#5c5c5c"
+  state-active-color: "#2ef2ff"
+  state-light-active-color: "#2ef2ff"
+  state-switch-on-color: "#2ef2ff"
+  state-input_boolean-on-color: "#2ef2ff"
+
+  # Type: Roboto (bundled with HA) at light weights
+  primary-text-color: "#e6e6e6"
+  secondary-text-color: "#7c7c7c"
+  text-primary-color: "#000000"
+  disabled-text-color: "#4a4a4a"
+  ha-font-family-body: 'Roboto, "SF Pro Display", -apple-system, system-ui, sans-serif'
+  ha-font-weight-normal: "300"
+
+  # Chrome (only reaches the header when used as the profile theme)
+  app-header-background-color: "#000000"
+  app-header-text-color: "#8a8a8a"
+  app-header-selection-bar-color: "#2ef2ff"
+  app-header-border-bottom: 1px solid rgba(255, 255, 255, 0.08)
+  sidebar-background-color: "#000000"
+  sidebar-text-color: "#9a9a9a"
+  sidebar-icon-color: "#5c5c5c"
+  sidebar-selected-icon-color: "#2ef2ff"
+  sidebar-selected-text-color: "#e6e6e6"
+
+  # Dialogs (more-info)
+  ha-dialog-surface-background: "#050505"
+  mdc-theme-surface: "#050505"
+  ha-dialog-border-radius: "20px"
+  mdc-dialog-scrim-color: rgba(0, 0, 0, 0.8)
+
+  # Bubble Card: strip every surface
+  bubble-border-radius: "0px"
+  bubble-main-background-color: transparent
+  bubble-secondary-background-color: transparent
+  bubble-icon-background-color: transparent
+  bubble-sub-button-background-color: transparent
+  bubble-sub-button-border-radius: "999px"
+  bubble-accent-color: rgba(46, 242, 255, 0.5)
+  bubble-sub-button-light-background-color: rgba(46, 242, 255, 0.5)
+  bubble-border: none
+  bubble-box-shadow: none
+  bubble-backdrop-filter: none
+  bubble-line-background-color: rgba(255, 255, 255, 0.08)
+  bubble-pop-up-background-color: "#000000"

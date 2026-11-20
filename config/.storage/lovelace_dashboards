@@ -22,33 +22,51 @@
         "mode": "storage",
         "url_path": "dashboard-mobile"
       },
-       {
-         "id": "dashboard_desktop",
-         "show_in_sidebar": true,
-         "icon": "mdi:monitor",
-         "title": "Desktop",
-         "require_admin": false,
-         "mode": "storage",
-         "url_path": "dashboard-desktop"
-       },
-       {
-         "id": "media_controls",
-         "url_path": "media-controls",
-         "title": "Media",
-         "require_admin": false,
-         "show_in_sidebar": true,
-         "icon": "mdi:remote-tv",
-         "mode": "storage"
-       },
-       {
-         "id": "charlie_shapes",
-         "show_in_sidebar": true,
-         "icon": "mdi:triangle",
-         "title": "Charlie",
-         "require_admin": false,
-         "mode": "storage",
-         "url_path": "charlie-shapes"
-       }
+      {
+        "id": "dashboard_desktop",
+        "show_in_sidebar": true,
+        "icon": "mdi:monitor",
+        "title": "Desktop",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-desktop"
+      },
+      {
+        "id": "media_controls",
+        "url_path": "media-controls",
+        "title": "Media",
+        "require_admin": false,
+        "show_in_sidebar": true,
+        "icon": "mdi:remote-tv",
+        "mode": "storage"
+      },
+      {
+        "id": "charlie_shapes",
+        "url_path": "charlie-shapes",
+        "title": "Charlie",
+        "require_admin": false,
+        "show_in_sidebar": true,
+        "icon": "mdi:triangle",
+        "mode": "storage"
+      },
+      {
+        "id": "dashboard_mobile_lab",
+        "show_in_sidebar": true,
+        "icon": "mdi:flask-outline",
+        "title": "Mobile Lab",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "mobile-lab"
+      },
+      {
+        "id": "dashboard_next",
+        "url_path": "dashboard-next",
+        "title": "Next",
+        "icon": "mdi:new-box",
+        "show_in_sidebar": true,
+        "require_admin": false,
+        "mode": "storage"
+      }
     ]
   }
 }

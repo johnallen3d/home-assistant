@@ -1,0 +1,1268 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_mobile_old",
+  "data": {
+    "config": {
+      "views": [
+        {
+          "type": "panel",
+          "title": "Lights",
+          "path": "mobile",
+          "icon": "mdi:lightbulb-group",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "icon": "mdi:palette",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
+                  "sub_button": [
+                    {
+                      "entity": "scene.lights_out",
+                      "icon": "mdi:power-sleep",
+                      "name": "Off",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "scene.turn_on",
+                        "target": {
+                          "entity_id": "scene.lights_out"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.lights_out_mode",
+                      "icon": "mdi:lightbulb-off",
+                      "name": "Dark",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.cleaning_mode",
+                      "icon": "mdi:broom",
+                      "name": "Clean",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.babysitter_mode",
+                      "icon": "mdi:account-child",
+                      "name": "Sitter",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Living Room",
+                  "icon": "mdi:sofa",
+                  "sub_button": [
+                    {
+                      "entity": "light.living_room_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.dad_eating_mode",
+                      "icon": "mdi:food",
+                      "name": "Eat",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.hobby_mode",
+                      "icon": "mdi:palette",
+                      "name": "Hobby",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.tv_mode",
+                      "icon": "mdi:television",
+                      "name": "TV",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.living_room_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.living_room_light",
+                  "name": "Floor Lamp",
+                  "icon": "mdi:floor-lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.living_room_overhead_light",
+                  "name": "Overhead",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Kitchen",
+                  "icon": "mdi:stove",
+                  "sub_button": [
+                    {
+                      "entity": "light.kitchen_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.charlie_eating_mode",
+                      "icon": "mdi:baby-face-outline",
+                      "name": "Charlie",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.cooking_mode",
+                      "icon": "mdi:pot-steam",
+                      "name": "Cook",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.kitchen_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.island_lights",
+                  "name": "Island Lights",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.island_bulb",
+                  "name": "Island Bulb",
+                  "icon": "mdi:lightbulb",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.sink_bulb",
+                  "name": "Sink Bulb",
+                  "icon": "mdi:lightbulb",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.hue_lightstrip_plus_1",
+                  "name": "Kitchen Strip",
+                  "icon": "mdi:led-strip-variant",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.kitchen_counter_switch",
+                  "name": "Counter",
+                  "icon": "mdi:light-switch",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Dad's Bedroom",
+                  "icon": "mdi:bed",
+                  "sub_button": [
+                    {
+                      "entity": "light.bedroom_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.working_mode",
+                      "icon": "mdi:laptop",
+                      "name": "Working",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.alarm_enabled",
+                      "icon": "mdi:shield-lock",
+                      "name": "Alarm",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bedroom_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bedroom_lamp",
+                  "name": "Bedroom Lamp",
+                  "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.dad_s_overhead_lights",
+                  "name": "Overhead Lights",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Bathroom",
+                  "icon": "mdi:shower",
+                  "sub_button": [
+                    {
+                      "entity": "light.bathroom_lights",
+                      "icon": "mdi:lightbulb-group",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "script.done_shaving",
+                      "icon": "mdi:face-man-shimmer",
+                      "name": "Shave",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "target": {
+                          "entity_id": "script.done_shaving"
+                        }
+                      }
+                    },
+                    {
+                      "entity": "input_boolean.bathing_mode",
+                      "icon": "mdi:bathtub",
+                      "name": "Bath",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom_lights",
+                  "name": "All",
+                  "icon": "mdi:lightbulb-group",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom",
+                  "name": "Bathroom Strip",
+                  "icon": "mdi:led-strip-variant",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.bathroom_lamp",
+                  "name": "Bathroom Lamp",
+                  "icon": "mdi:lamp",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Laundry Room",
+                  "icon": "mdi:washing-machine",
+                  "sub_button": [
+                    {
+                      "entity": "switch.laundry_room_switch",
+                      "icon": "mdi:power-socket-us",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.laundry_room_switch",
+                  "name": "All",
+                  "icon": "mdi:power-socket-us",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Ember Mug 2",
+                  "icon": "mdi:coffee"
+                },
+                {
+                  "type": "custom:ember-mug-card",
+                  "entity": "sensor.ember_mug_2_state",
+                  "layout": "minimal",
+                  "mug_scale": 0.5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "title": "Air Quality",
+          "path": "air-quality",
+          "icon": "mdi:air-filter",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "icon": "mdi:motion-sensor",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
+                  "sub_button": [
+                    {
+                      "entity": "binary_sensor.kitchen_presence_kitchen",
+                      "icon": "mdi:stove",
+                      "name": "Kit",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "binary_sensor.kitchen_presence_living_room",
+                      "icon": "mdi:sofa",
+                      "name": "Liv",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "binary_sensor.bathroom_presence_sensor_occupancy",
+                      "icon": "mdi:shower",
+                      "name": "Bath",
+                      "show_name": true
+                    },
+                    {
+                      "entity": "binary_sensor.laundry_room_sensor_motion",
+                      "icon": "mdi:washing-machine",
+                      "name": "Lndy",
+                      "show_name": true
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Kitchen Air Quality",
+                  "icon": "mdi:air-filter",
+                  "sub_button": [
+                    {
+                      "entity": "input_boolean.cooking_mode",
+                      "icon": "mdi:pot-steam",
+                      "name": "Cook",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_air_quality",
+                  "name": "Overall",
+                  "icon": "mdi:leaf",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_pm2_5",
+                  "name": "PM2.5",
+                  "icon": "mdi:blur",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_carbon_dioxide",
+                  "name": "CO2",
+                  "icon": "mdi:molecule-co2",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_temperature",
+                  "name": "Temperature",
+                  "icon": "mdi:thermometer",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.alpstuga_air_quality_monitor_humidity",
+                  "name": "Humidity",
+                  "icon": "mdi:water-percent",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "PM2.5 (24h)",
+                  "icon": "mdi:blur"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "graph_span": "24h",
+                  "header": {
+                    "show": false
+                  },
+                  "yaxis": [
+                    {
+                      "min": 0,
+                      "max": "auto",
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_pm2_5",
+                      "name": "PM2.5",
+                      "color": "#4CAF50",
+                      "stroke_width": 2,
+                      "fill_raw": "last"
+                    }
+                  ],
+                  "apex_config": {
+                    "annotations": {
+                      "yaxis": [
+                        {
+                          "y": 0,
+                          "y2": 12,
+                          "fillColor": "#4CAF50",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Good",
+                            "style": {
+                              "color": "#4CAF50",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 12,
+                          "y2": 25,
+                          "fillColor": "#FF9800",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Fair",
+                            "style": {
+                              "color": "#FF9800",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 25,
+                          "y2": 50,
+                          "fillColor": "#F44336",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Poor",
+                            "style": {
+                              "color": "#F44336",
+                              "fontSize": "11px"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "CO2 (24h)",
+                  "icon": "mdi:molecule-co2"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "graph_span": "24h",
+                  "header": {
+                    "show": false
+                  },
+                  "yaxis": [
+                    {
+                      "min": 400,
+                      "max": "auto",
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_carbon_dioxide",
+                      "name": "CO2",
+                      "color": "#2196F3",
+                      "stroke_width": 2,
+                      "fill_raw": "last"
+                    }
+                  ],
+                  "apex_config": {
+                    "annotations": {
+                      "yaxis": [
+                        {
+                          "y": 400,
+                          "y2": 800,
+                          "fillColor": "#4CAF50",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Good",
+                            "style": {
+                              "color": "#4CAF50",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 800,
+                          "y2": 1000,
+                          "fillColor": "#FF9800",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Fair",
+                            "style": {
+                              "color": "#FF9800",
+                              "fontSize": "11px"
+                            }
+                          }
+                        },
+                        {
+                          "y": 1000,
+                          "y2": 2000,
+                          "fillColor": "#F44336",
+                          "opacity": 0.1,
+                          "label": {
+                            "text": "Poor",
+                            "style": {
+                              "color": "#F44336",
+                              "fontSize": "11px"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Temp & Humidity (24h)",
+                  "icon": "mdi:thermometer"
+                },
+                {
+                  "type": "custom:apexcharts-card",
+                  "graph_span": "24h",
+                  "header": {
+                    "show": false
+                  },
+                  "yaxis": [
+                    {
+                      "id": "temp",
+                      "min": "auto",
+                      "max": "auto",
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    },
+                    {
+                      "id": "humidity",
+                      "opposite": true,
+                      "min": 0,
+                      "max": 100,
+                      "apex_config": {
+                        "tickAmount": 4
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_temperature",
+                      "name": "Kitchen",
+                      "color": "#FF5722",
+                      "stroke_width": 2,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last"
+                    },
+                    {
+                      "entity": "sensor.bathroom_presence_sensor_temperature",
+                      "name": "Bathroom",
+                      "color": "#E91E63",
+                      "stroke_width": 2,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last"
+                    },
+                    {
+                      "entity": "sensor.laundry_room_sensor_temperature",
+                      "name": "Laundry",
+                      "color": "#9C27B0",
+                      "stroke_width": 2,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last"
+                    },
+                    {
+                      "entity": "weather.forecast_home",
+                      "name": "Outside",
+                      "color": "#607D8B",
+                      "stroke_width": 2,
+                      "stroke_dash": 4,
+                      "yaxis_id": "temp",
+                      "fill_raw": "last",
+                      "attribute": "temperature"
+                    },
+                    {
+                      "entity": "sensor.alpstuga_air_quality_monitor_humidity",
+                      "name": "Humidity",
+                      "color": "#03A9F4",
+                      "stroke_width": 2,
+                      "yaxis_id": "humidity",
+                      "fill_raw": "last"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Air Purifier",
+                  "icon": "mdi:air-purifier",
+                  "sub_button": [
+                    {
+                      "entity": "fan.airversa_ap2_1120_airpurifier",
+                      "show_name": false,
+                      "show_state": true
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "fan.airversa_ap2_1120_airpurifier",
+                  "name": "Purifier",
+                  "icon": "mdi:air-purifier",
+                  "button_type": "switch",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.airversa_ap2_1120_filter_lifetime",
+                  "name": "Filter Life",
+                  "icon": "mdi:air-filter",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "select.airversa_ap2_1120_air_purifier_mode",
+                  "name": "Mode",
+                  "icon": "mdi:tune",
+                  "button_type": "state",
+                  "show_state": true
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Plants",
+                  "icon": "mdi:sprout"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "sensor.xiao_soil_moisture_monitor_a160e4_soil_moisture_status",
+                  "name": "Snake Plant",
+                  "icon": "mdi:watering-can",
+                  "button_type": "state",
+                  "show_state": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "title": "Charlie",
+          "path": "charlie",
+          "icon": "mdi:baby-face-outline",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Quick Controls",
+                  "icon": "mdi:baby-face-outline",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }",
+                  "sub_button": [
+                    {
+                      "entity": "light.charlie_s_overhead_light",
+                      "icon": "mdi:ceiling-light",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    },
+                    {
+                      "entity": "light.charlie_s_shapes",
+                      "icon": "mdi:triangle-outline",
+                      "tap_action": {
+                        "action": "toggle"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "input_boolean.charlie_presence",
+                  "name": "Presence",
+                  "icon": "mdi:account-check",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "switch.sound_machine_outlet",
+                  "name": "Sound Machine",
+                  "icon": "mdi:speaker",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.charlie_s_overhead_light",
+                  "name": "Overhead Light",
+                  "icon": "mdi:ceiling-light",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "light.charlie_s_shapes",
+                  "name": "Shapes",
+                  "icon": "mdi:triangle-outline",
+                  "button_type": "slider",
+                  "show_state": true,
+                  "show_attribute": "brightness"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "script.clean_charlies_room",
+                  "name": "Clean Room",
+                  "icon": "mdi:robot-vacuum",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Shape Effects",
+                  "icon": "mdi:auto-fix"
+                },
+                {
+                  "type": "grid",
+                  "columns": 2,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "button",
+                      "name": "Beatdrop",
+                      "icon": "mdi:music",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Beatdrop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Blaze",
+                      "icon": "mdi:fire",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Blaze"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Cocoa Beach",
+                      "icon": "mdi:beach",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Cocoa Beach"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Cotton Candy",
+                      "icon": "mdi:candy",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Cotton Candy"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Date Night",
+                      "icon": "mdi:heart",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Date Night"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Hip Hop",
+                      "icon": "mdi:music-note",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Hip Hop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Hot Sauce",
+                      "icon": "mdi:chili-hot",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Hot Sauce"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Jungle",
+                      "icon": "mdi:tree",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Jungle"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Lightscape",
+                      "icon": "mdi:image-filter-hdr",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Lightscape"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Morning Sky",
+                      "icon": "mdi:weather-sunset-up",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Morning Sky"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Northern Lights",
+                      "icon": "mdi:aurora",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Northern Lights"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Pop Rocks",
+                      "icon": "mdi:star-shooting",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Pop Rocks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Prism",
+                      "icon": "mdi:triangle",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Prism"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Sonic Sunset",
+                      "icon": "mdi:weather-sunset",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Sonic Sunset"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Starlight",
+                      "icon": "mdi:star",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Starlight"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Sundown",
+                      "icon": "mdi:weather-sunset-down",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Sundown"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Waterfall",
+                      "icon": "mdi:waterfall",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "light.turn_on",
+                        "target": {
+                          "entity_id": "light.charlie_s_shapes"
+                        },
+                        "data": {
+                          "effect": "Waterfall"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "title": "Sports",
+          "path": "sports",
+          "icon": "mdi:hockey-sticks",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Sports",
+                  "icon": "mdi:hockey-sticks",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }"
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_bruins",
+                  "home_side": "right",
+                  "show_league": false,
+                  "show_timeouts": true,
+                  "outline": true
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.new_england_patriots",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_red_sox",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:teamtracker-card",
+                  "entity": "sensor.boston_celtics",
+                  "show_timeouts": false
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Bruins Lights",
+                  "icon": "mdi:hockey-puck"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "scene.bruins",
+                  "name": "Bruins Scene",
+                  "icon": "mdi:hockey-puck",
+                  "button_type": "switch"
+                },
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "entity": "script.bruins_animation",
+                  "name": "Bruins Animation",
+                  "icon": "mdi:rotate-3d-variant",
+                  "button_type": "switch"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "title": "Batteries",
+          "path": "batteries",
+          "icon": "mdi:battery",
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:bubble-card",
+                  "card_type": "separator",
+                  "name": "Device Batteries",
+                  "icon": "mdi:battery",
+                  "styles": "ha-card { margin-top: 8px; margin-bottom: 4px; }"
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.nuki_smart_lock_battery",
+                      "name": "Front Door Lock",
+                      "icon": "mdi:door-closed-lock"
+                    },
+                    {
+                      "entity": "sensor.kitchen_counter_switch_battery",
+                      "name": "Kitchen Counter Switch",
+                      "icon": "mdi:light-switch"
+                    },
+                    {
+                      "entity": "sensor.laundry_room_switch_battery",
+                      "name": "Laundry Room Switch",
+                      "icon": "mdi:power-socket-us"
+                    },
+                    {
+                      "entity": "sensor.laundry_room_sensor_battery",
+                      "name": "Laundry Room Sensor",
+                      "icon": "mdi:motion-sensor"
+                    },
+                    {
+                      "entity": "sensor.xiao_soil_moisture_monitor_a160e4_battery_measurement",
+                      "name": "Snake Plant Monitor",
+                      "icon": "mdi:sprout"
+                    },
+                    {
+                      "entity": "sensor.bathroom_presence_sensor_battery",
+                      "name": "Bathroom Sensor",
+                      "icon": "mdi:motion-sensor"
+                    },
+                    {
+                      "entity": "sensor.kitchen_button_battery",
+                      "name": "Kitchen Button",
+                      "icon": "mdi:gesture-tap-button"
+                    },
+                    {
+                      "entity": "sensor.bedside_button_battery",
+                      "name": "Bedside Button",
+                      "icon": "mdi:gesture-tap-button"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
