@@ -146,6 +146,12 @@ Lighting context:
 ## Connection Info
 - HA server: `root@homeassistant` (`.local` fails auth)
 - HA config path: `/config/`
+- REST API: `http://homeassistant:8123/api/`, bearer token from Doppler
+  `HOME_ASSISTANT_API_KEY`. Never guess names like `HA_TOKEN`/`HA_URL`; a bad
+  or empty token triggers a "Login attempt failed" notification in HA.
+  ```bash
+  mise exec -- doppler run -- bash -c 'curl -s -H "Authorization: Bearer $HOME_ASSISTANT_API_KEY" http://homeassistant:8123/api/states'
+  ```
 
 ## ESPHome: M5Stack Atom S3 (`tiny-button`)
 - IP: `192.168.0.87`
