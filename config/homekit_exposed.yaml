@@ -29,6 +29,9 @@ include_entities:
   - switch.kitchen_counter_switch
   - switch.laundry_room_switch
   - switch.sound_machine_outlet
+  # Airversa purifier: HA owns the HomeKit pairing, so Apple Home gets it via the bridge
+  - fan.airversa_ap2_1120_airpurifier
+  - sensor.airversa_ap2_1120_pm2_5_density
   # Helpers (booleans show as switches with ON/OFF state)
   - input_boolean.charlie_eating_mode
   - input_boolean.charlie_presence

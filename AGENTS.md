@@ -85,7 +85,12 @@ Use for:
 ## Known Issues
 - `mise run automation-update` updates existing automations only. New automation must exist in HA first so local YAML can include server `id`.
 - Some integrations need nonstandard service syntax. Example: `music_assistant.play_media` uses `data: entity_id:`, not `target:`.
-- Airversa AP2 1120 air purifier has never worked; its unavailable state is not a new incident.
+- Airversa AP2 1120 purifier: HA owns its HomeKit pairing over Thread (`homekit_controller`);
+  Apple Home sees it only through HASS Bridge. Never re-add it in Apple Home or reset it:
+  a reset gives it a new HomeKit ID and orphans HA's pairing (cause of the Dec 2025–Nov 2026
+  outage). If unavailable, compare `_hap._udp` `id=` with the config entry's pairing ID.
+  Re-pair: hold power until 3 beeps, pair the Bluetooth discovery in HA, wait ~10 min, press
+  `button.airversa_ap2_1120_provision_preferred_thread_credentials`. Fan speed steps are 20%.
 
 ## Renaming Checklist
 When renaming script, scene, or entity:

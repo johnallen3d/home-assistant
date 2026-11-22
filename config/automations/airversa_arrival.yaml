@@ -29,7 +29,8 @@ actions:
           {% if last_purge in ['unknown', 'unavailable', 'None'] %}
             true
           {% else %}
-            {% set last_dt = as_datetime(last_purge) %}
+            {# input_datetime state is naive local time; as_local avoids naive/aware TypeError #}
+            {% set last_dt = as_datetime(last_purge) | as_local %}
             {% set hours_since = (now() - last_dt).total_seconds() / 3600 %}
             {{ hours_since > 12 }}
           {% endif %}
