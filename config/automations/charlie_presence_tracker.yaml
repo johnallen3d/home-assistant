@@ -1,0 +1,56 @@
+# Charlie Presence Tracker
+# Drives input_boolean.charlie_presence from Charlie's Talker (HA companion
+# app with location sharing). Charlie Arrival / Departure and the shapes
+# automations key off the input_boolean, not the tracker directly.
+#
+# Not person.charlie: it also includes device_tracker.charlies_iphone_2,
+# which stays home when Charlie is at his mom's.
+#
+# Away waits 10 minutes to ride out GPS jitter at the home zone edge.
+# unknown/unavailable never count as away. The charlies_home /
+# charlies_away scripts remain as manual overrides.
+
+id: '1795382623931'
+alias: "Charlie Presence Tracker"
+description: "Set Charlie's presence from the Talker device tracker"
+mode: queued
+
+triggers:
+  - trigger: state
+    entity_id: device_tracker.talker
+    to: "home"
+    id: arrived
+  - trigger: state
+    entity_id: device_tracker.talker
+    from: "home"
+    not_to:
+      - unknown
+      - unavailable
+    for:
+      minutes: 10
+    id: departed
+
+conditions: []
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: arrived
+          - condition: state
+            entity_id: input_boolean.charlie_presence
+            state: "off"
+        sequence:
+          - action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.charlie_presence
+      - conditions:
+          - condition: trigger
+            id: departed
+          - condition: state
+            entity_id: input_boolean.charlie_presence
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.charlie_presence
