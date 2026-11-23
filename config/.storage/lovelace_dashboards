@@ -59,13 +59,22 @@
         "url_path": "mobile-lab"
       },
       {
-        "id": "dashboard_next",
-        "url_path": "dashboard-next",
-        "title": "Next",
-        "icon": "mdi:new-box",
+        "id": "dashboard_mobile_old",
+        "url_path": "dashboard-mobile-old",
+        "title": "Mobile Old",
+        "icon": "mdi:cellphone-arrow-down",
         "show_in_sidebar": true,
         "require_admin": false,
         "mode": "storage"
+      },
+      {
+        "id": "dashboard_kitchen",
+        "show_in_sidebar": true,
+        "icon": "mdi:silverware-variant",
+        "title": "Kitchen",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-kitchen"
       }
     ]
   }

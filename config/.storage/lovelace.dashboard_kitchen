@@ -1,0 +1,361 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_kitchen",
+  "data": {
+    "config": {
+      "title": "Kitchen",
+      "kiosk_mode": {
+        "kiosk": true
+      },
+      "views": [
+        {
+          "type": "panel",
+          "title": "Kitchen",
+          "path": "home",
+          "icon": "mdi:silverware-variant",
+          "theme": "kitchen-dim",
+          "cards": [
+            {
+              "type": "custom:mod-card",
+              "card": {
+                "type": "horizontal-stack",
+                "cards": [
+                  {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "markdown",
+                        "text_only": true,
+                        "content": "<h1>{{ now().strftime('%-I:%M') }}</h1>\n<h3>{{ now().strftime('%A, %B %-d') }}</h3>",
+                        "card_mod": {
+                          "style": {
+                            "ha-markdown$": "ha-markdown-element, :host { text-align: center; } h1 { font-size: 80px; font-weight: 300; line-height: 1; margin: 0 0 2px; letter-spacing: -2px; text-align: center; } h3 { font-size: 20px; font-weight: 400; margin: 0; color: var(--secondary-text-color); text-align: center; }"
+                          }
+                        }
+                      },
+                      {
+                        "type": "weather-forecast",
+                        "entity": "weather.forecast_home",
+                        "show_current": true,
+                        "show_forecast": true,
+                        "forecast_type": "daily"
+                      },
+                      {
+                        "type": "weather-forecast",
+                        "entity": "weather.forecast_home",
+                        "show_current": false,
+                        "show_forecast": true,
+                        "forecast_type": "hourly",
+                        "forecast_slots": 5
+                      },
+                      {
+                        "type": "heading",
+                        "heading": "Charlie",
+                        "icon": "mdi:cctv",
+                        "heading_style": "title",
+                        "badges": [
+                          {
+                            "type": "entity",
+                            "entity": "person.charlie",
+                            "show_state": true,
+                            "show_icon": true,
+                            "show_name": false
+                          }
+                        ]
+                      },
+                      {
+                        "type": "picture-entity",
+                        "entity": "camera.charlie_cam_2",
+                        "camera_view": "auto",
+                        "show_name": false,
+                        "show_state": false
+                      }
+                    ]
+                  },
+                  {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "heading",
+                        "heading": "Kitchen",
+                        "icon": "mdi:countertop",
+                        "heading_style": "title",
+                        "badges": [
+                          {
+                            "type": "entity",
+                            "entity": "sensor.ember_mug_2_current_temperature",
+                            "show_state": true,
+                            "show_icon": true,
+                            "name": "Mug",
+                            "icon": "mdi:coffee"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "tile",
+                        "entity": "light.kitchen_lights",
+                        "name": "All kitchen lights",
+                        "features": [
+                          {
+                            "type": "light-brightness"
+                          }
+                        ],
+                        "features_position": "inline",
+                        "color": "amber"
+                      },
+                      {
+                        "type": "grid",
+                        "columns": 4,
+                        "square": false,
+                        "cards": [
+                          {
+                            "type": "tile",
+                            "entity": "light.island_lights",
+                            "name": "Island",
+                            "color": "amber",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "light.sink_bulb",
+                            "name": "Sink",
+                            "color": "amber",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "light.hue_lightstrip_plus_1",
+                            "name": "Strip",
+                            "color": "amber",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "switch.kitchen_counter_switch",
+                            "name": "Counter",
+                            "color": "amber",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "icon": "mdi:countertop-outline"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "heading",
+                        "heading": "Modes",
+                        "icon": "mdi:tune-variant",
+                        "heading_style": "subtitle"
+                      },
+                      {
+                        "type": "grid",
+                        "columns": 4,
+                        "square": false,
+                        "cards": [
+                          {
+                            "type": "tile",
+                            "entity": "input_boolean.cooking_mode",
+                            "name": "Cooking",
+                            "icon": "mdi:chef-hat",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "color": "amber",
+                            "tap_action": {
+                              "action": "toggle"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "script.kitchen_chill",
+                            "name": "Chill",
+                            "icon": "mdi:candle",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "hide_state": true,
+                            "tap_action": {
+                              "action": "perform-action",
+                              "perform_action": "script.turn_on",
+                              "target": {
+                                "entity_id": "script.kitchen_chill"
+                              }
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "script.eating",
+                            "name": "Eating",
+                            "icon": "mdi:silverware-fork-knife",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "hide_state": true,
+                            "tap_action": {
+                              "action": "perform-action",
+                              "perform_action": "script.turn_on",
+                              "target": {
+                                "entity_id": "script.eating"
+                              }
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "scene.lights_out",
+                            "name": "Lights out",
+                            "icon": "mdi:power-sleep",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "hide_state": true,
+                            "tap_action": {
+                              "action": "perform-action",
+                              "perform_action": "scene.turn_on",
+                              "target": {
+                                "entity_id": "scene.lights_out"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "heading",
+                        "heading": "House",
+                        "icon": "mdi:home",
+                        "heading_style": "title",
+                        "badges": [
+                          {
+                            "type": "entity",
+                            "entity": "sensor.alpstuga_air_quality_monitor_temperature",
+                            "show_state": true,
+                            "show_icon": true,
+                            "name": "Inside",
+                            "icon": "mdi:thermometer"
+                          },
+                          {
+                            "type": "entity",
+                            "entity": "sensor.alpstuga_air_quality_monitor_carbon_dioxide",
+                            "show_state": true,
+                            "show_icon": true,
+                            "name": "CO₂",
+                            "icon": "mdi:molecule-co2"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "grid",
+                        "columns": 4,
+                        "square": false,
+                        "cards": [
+                          {
+                            "type": "tile",
+                            "entity": "light.living_room_lights",
+                            "name": "Living",
+                            "color": "amber",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "input_boolean.tv_mode",
+                            "name": "TV mode",
+                            "icon": "mdi:television",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "color": "amber",
+                            "tap_action": {
+                              "action": "toggle"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "light.dad_s_overhead_lights",
+                            "name": "Dad's room",
+                            "color": "amber",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "fan.airversa_ap2_1120_airpurifier",
+                            "name": "Purifier",
+                            "icon": "mdi:air-purifier",
+                            "vertical": true,
+                            "card_mod": {
+                              "style": "ha-card { min-height: 146px; justify-content: center; }"
+                            },
+                            "color": "amber"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "tile",
+                        "entity": "media_player.living_room_appletv",
+                        "name": "Living room TV",
+                        "color": "amber",
+                        "features": [
+                          {
+                            "type": "media-player-playback"
+                          }
+                        ],
+                        "features_position": "bottom"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "heading",
+                        "heading": "Coming up",
+                        "icon": "mdi:calendar",
+                        "heading_style": "title"
+                      },
+                      {
+                        "type": "calendar",
+                        "initial_view": "listWeek",
+                        "entities": [
+                          "calendar.dad",
+                          "calendar.charlie",
+                          "calendar.birthdays_2",
+                          "calendar.holidays_in_united_states"
+                        ],
+                        "card_mod": {
+                          "style": "ha-card { height: 742px !important; max-height: 742px; overflow: hidden; }"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "card_mod": {
+                "style": "ha-card { padding: 12px 14px; background: none; border: none; box-shadow: none; --ha-card-border-radius: 14px; }"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
