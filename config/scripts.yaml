@@ -469,6 +469,8 @@ tv_time:
         eating_mode_active: "{{ is_state('input_boolean.charlie_eating_mode', 'on') }}"
         # Dad eating mode - protect living room lights when dad_eating_mode is on
         dad_eating_mode_active: "{{ is_state('input_boolean.dad_eating_mode', 'on') }}"
+        # Camera mode - protect living room floor lamp while laptop camera is in use
+        camera_mode_active: "{{ is_state('input_boolean.camera_mode', 'on') }}"
         # Skip kitchen modifications if cooking/eating mode is active.
         # Presence itself does not block TV ambient behavior; kitchen presence
         # automation also applies this same contract while tv_mode is on.
@@ -490,16 +492,17 @@ tv_time:
       target:
         entity_id: automation.hobby_mode_changed
 
-    # Turn off glare-causing lights (skip living room if dad eating mode)
+    # Turn off glare-causing lights (skip living room if dad eating mode;
+    # keep the floor lamp if camera mode is on)
     - if:
         - condition: template
           value_template: "{{ not dad_eating_mode_active }}"
       then:
         - action: light.turn_off
           target:
-            entity_id:
-              - light.living_room_light
-              - light.living_room_overhead_light
+            entity_id: >-
+              {{ ['light.living_room_overhead_light'] if camera_mode_active
+                 else ['light.living_room_light', 'light.living_room_overhead_light'] }}
           data:
             transition: "{{ trans }}"
 
@@ -1223,6 +1226,7 @@ reset_all_modes:
           - automation.babysitter_mode_changed
           - automation.lights_out_mode_changed
           - automation.sexy_time_mode_changed
+          - automation.camera_mode_changed
     # Step 2: Turn off all mode booleans
     - action: input_boolean.turn_off
       target:
@@ -1239,6 +1243,7 @@ reset_all_modes:
           - input_boolean.babysitter_mode
           - input_boolean.lights_out_mode
           - input_boolean.sexy_time_mode
+          - input_boolean.camera_mode
     # Step 3: Re-enable all mode automations
     - action: automation.turn_on
       target:
@@ -1254,6 +1259,7 @@ reset_all_modes:
           - automation.babysitter_mode_changed
           - automation.lights_out_mode_changed
           - automation.sexy_time_mode_changed
+          - automation.camera_mode_changed
 
 
 # =============================================================================

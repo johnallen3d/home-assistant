@@ -101,6 +101,15 @@
                       "tap_action": {
                         "action": "toggle"
                       }
+                    },
+                    {
+                      "entity": "input_boolean.camera_mode",
+                      "icon": "mdi:video",
+                      "name": "Cam",
+                      "show_name": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      }
                     }
                   ],
                   "styles": "ha-card { background: none !important; border: none !important; box-shadow: none !important; margin-left: 14px !important; margin-right: 14px !important; }\n.bubble-container { background: none !important; border: none !important; box-shadow: none !important; }\n.bubble-icon { color: #555 !important; opacity: 1 !important; --mdc-icon-size: 18px; }\n.bubble-name { font-weight: 400 !important; font-size: 11px !important; letter-spacing: .18em !important; text-transform: uppercase; color: #a0a0a0; margin-left: -6px; min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.bubble-sub-button-container { flex-shrink: 0; }\n.bubble-line { height: 1px !important; opacity: 1 !important; background: linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,0)) !important; border-radius: 0 !important; }\n.bubble-sub-button {\n  --neon: 46, 242, 255;\n  background: none !important; border-radius: 999px !important; height: 30px !important;\n  border: 1px solid rgba(255,255,255,0.07) !important; box-shadow: none !important;\n  font-weight: 400 !important; font-size: 10px !important; letter-spacing: .08em; text-transform: uppercase; padding: 0 9px !important; min-width: 30px; justify-content: center;\n  color: #6a6a6a !important; transition: color .4s ease, border-color .4s ease, box-shadow .4s ease;\n}\n.bubble-sub-button::before { display: none !important; }\n.bubble-sub-button ha-icon { color: #555 !important; --mdc-icon-size: 15px; }\n.bubble-sub-button-container { gap: 5px !important; }\n.bubble-sub-button.background-on {\n  color: rgb(var(--neon)) !important; border-color: rgba(var(--neon), .9) !important;\n  text-shadow: 0 0 6px rgba(var(--neon), .7);\n  box-shadow: 0 0 8px rgba(var(--neon), .45), inset 0 0 8px rgba(var(--neon), .18) !important;\n}\n.bubble-sub-button.background-on ha-icon { color: rgb(var(--neon)) !important; filter: drop-shadow(0 0 4px rgba(var(--neon), .9)); }\n.bubble-line { display: none !important; }\n.bubble-sub-button-1 { --neon: ${(() => { const s = hass.states['light.living_room_lights']; const c = s && s.state === 'on' && s.attributes.rgb_color; return c ? c.join(', ') : '46, 242, 255'; })()}; }\n"

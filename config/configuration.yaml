@@ -108,6 +108,9 @@ input_boolean:
   sexy_time_mode:
     name: "Sexy Time Mode"
     icon: mdi:candle
+  camera_mode:
+    name: "Camera Mode"
+    icon: mdi:video
   door_lock:
     name: "Door Lock"
     icon: mdi:lock

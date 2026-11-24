@@ -4,6 +4,7 @@
 # On entry: Uses adaptive lighting on lamp only (no overhead presence control)
 # On exit: Turns lights off immediately (no delay)
 # Lights Out Mode: When input_boolean.lights_out_mode is ON, lights stay off.
+# Camera Mode: When input_boolean.camera_mode is ON, the lamp is left alone.
 
 id: '1765490534742'
 alias: "Living Room Presence Lighting"
@@ -37,6 +38,10 @@ actions:
           # tv_mode on means presence must not fight TV lighting.
           - condition: state
             entity_id: input_boolean.tv_mode
+            state: "off"
+          # Skip if camera mode is on (lamp is at full brightness for the call)
+          - condition: state
+            entity_id: input_boolean.camera_mode
             state: "off"
         sequence:
           - choose:
@@ -79,7 +84,7 @@ actions:
                       brightness_pct: "{{ brightness }}"
                       color_temp_kelvin: "{{ color_temp }}"
 
-      # Presence cleared - turn off (unless hobby mode, eating mode, or TV is on)
+      # Presence cleared - turn off (unless hobby, eating, TV, or camera mode is on)
       - conditions:
           - condition: trigger
             id: presence_off
@@ -99,6 +104,10 @@ actions:
           # tv_mode on means presence must not fight TV lighting.
           - condition: state
             entity_id: input_boolean.tv_mode
+            state: "off"
+          # Skip if camera mode is on (laptop camera in use)
+          - condition: state
+            entity_id: input_boolean.camera_mode
             state: "off"
           - action: light.turn_off
             target:

@@ -1,0 +1,79 @@
+# Camera Mode State Handler
+# Reacts to camera_mode boolean changes to control the living room floor lamp.
+#
+# The boolean (input_boolean.camera_mode) is the user-facing switch:
+# - Turned on/off automatically by Camera Active Lighting (laptop camera in use)
+# - Visible on mobile dashboard as the "Cam" toggle for manual override
+#
+# This automation handles the lighting logic:
+# - ON: Snapshot the lamp, then set it to full brightness
+# - OFF: Restore the snapshot; if nobody is in the living room and no other
+#   living room mode is active, turn the lamp off instead
+#
+# Note: When camera_mode is ON, living room presence and tv_time leave the
+# floor lamp alone. Camera mode does not clear other modes (lamp-only overlay).
+
+id: '1795532596710'
+alias: "Camera Mode Changed"
+description: "Handle camera mode state changes - full-brightness living room lamp while on camera"
+mode: queued
+
+triggers:
+  - trigger: state
+    entity_id: input_boolean.camera_mode
+    from: "off"
+    to: "on"
+    id: camera_on
+  - trigger: state
+    entity_id: input_boolean.camera_mode
+    from: "on"
+    to: "off"
+    id: camera_off
+
+actions:
+  - choose:
+      # Camera mode turned ON - snapshot lamp, then full brightness
+      - conditions:
+          - condition: trigger
+            id: camera_on
+        sequence:
+          - action: scene.create
+            data:
+              scene_id: before_camera_living_room_lamp
+              snapshot_entities:
+                - light.living_room_light
+          - action: light.turn_on
+            target:
+              entity_id: light.living_room_light
+            data:
+              brightness: 255
+
+      # Camera mode turned OFF - restore lamp (skip if lamp was turned off manually)
+      - conditions:
+          - condition: trigger
+            id: camera_off
+          - condition: state
+            entity_id: light.living_room_light
+            state: "on"
+        sequence:
+          # Snapshot is lost on HA restart; don't fail the rest of the sequence
+          - action: scene.turn_on
+            continue_on_error: true
+            target:
+              entity_id: scene.before_camera_living_room_lamp
+          # Nobody in the living room and no mode holding the lamp: turn it off
+          - if:
+              - condition: state
+                entity_id: binary_sensor.kitchen_presence_living_room
+                state: "off"
+              - condition: state
+                entity_id:
+                  - input_boolean.hobby_mode
+                  - input_boolean.charlie_eating_mode
+                  - input_boolean.dad_eating_mode
+                  - input_boolean.tv_mode
+                state: "off"
+            then:
+              - action: light.turn_off
+                target:
+                  entity_id: light.living_room_light

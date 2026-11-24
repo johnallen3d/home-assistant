@@ -71,12 +71,16 @@ actions:
               - condition: state
                 entity_id: input_boolean.dad_eating_mode
                 state: "on"
+              - condition: state
+                entity_id: input_boolean.camera_mode
+                state: "on"
         sequence:
           - action: input_boolean.turn_off
             target:
               entity_id:
                 - input_boolean.hobby_mode
                 - input_boolean.dad_eating_mode
+                - input_boolean.camera_mode
       # Babysitter mode: only clear when BOTH kitchen and living room are off
       - conditions:
           - condition: trigger

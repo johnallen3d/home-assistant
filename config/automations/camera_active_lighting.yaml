@@ -1,6 +1,6 @@
 id: '1765934015096'
 alias: 'Camera Active Lighting'
-description: 'Turn the living room floor lamp to full brightness while the laptop camera is in use, then restore its previous state'
+description: 'Turn camera mode on while the laptop camera is in use and off when it stops (lighting handled by Camera Mode Changed)'
 trigger:
   - platform: state
     entity_id: binary_sensor.m4_macbook_pro_camera_in_use
@@ -18,21 +18,14 @@ action:
           - condition: trigger
             id: camera_on
         sequence:
-          - service: scene.create
-            data:
-              scene_id: before_camera_living_room_lamp
-              snapshot_entities:
-                - light.living_room_light
-          - service: light.turn_on
+          - service: input_boolean.turn_on
             target:
-              entity_id: light.living_room_light
-            data:
-              brightness: 255
+              entity_id: input_boolean.camera_mode
       - conditions:
           - condition: trigger
             id: camera_off
         sequence:
-          - service: scene.turn_on
+          - service: input_boolean.turn_off
             target:
-              entity_id: scene.before_camera_living_room_lamp
+              entity_id: input_boolean.camera_mode
 mode: queued
