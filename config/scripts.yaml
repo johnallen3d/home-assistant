@@ -1405,7 +1405,7 @@ done_shaving:
 # =============================================================================
 # Vacuum All Rooms - Full house clean
 # =============================================================================
-# Cleans all rooms in the apartment. Used by scheduled vacuum automation.
+# Cleans all rooms in the apartment.
 #
 # Roborock room segment mapping:
 #   16: Dad's Closet      20: Charlie's Bathroom   24: Dad's Bathroom
@@ -1440,7 +1440,7 @@ vacuum_all_rooms:
 # Vacuum Non-Charlie Rooms - Clean common areas and Dad's spaces
 # =============================================================================
 # Cleans all rooms except Charlie's bedroom, bathroom, and closet.
-# Used by scheduled vacuum automation on Tue/Wed/Fri.
+# Used by scheduled vacuum automation on Tue/Fri.
 
 vacuum_non_charlie_rooms:
   alias: "Vacuum Non-Charlie Rooms"
@@ -1460,3 +1460,52 @@ vacuum_non_charlie_rooms:
           - 22  # Living Room
           - 23  # Dad's Bedroom
           - 24  # Dad's Bathroom
+
+
+# =============================================================================
+# Vacuum Non-Dad Rooms - Clean common areas and Charlie's spaces
+# =============================================================================
+# Cleans all rooms except Dad's bedroom, bathroom, and closet.
+# Used by scheduled vacuum automation on Mon/Thu.
+
+vacuum_non_dad_rooms:
+  alias: "Vacuum Non-Dad Rooms"
+  description: "Clean common areas and Charlie's spaces (excludes Dad's rooms)"
+  icon: mdi:robot-vacuum
+  mode: single
+  sequence:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_q5_max
+      data:
+        command: app_segment_clean
+        params:
+          - 17  # Laundry
+          - 18  # Charlie's Closet
+          - 19  # Kitchen
+          - 20  # Charlie's Bathroom
+          - 21  # Charlie's Bedroom
+          - 22  # Living Room
+
+
+# =============================================================================
+# Vacuum Common Areas - Clean shared living spaces only
+# =============================================================================
+# Cleans common areas (excludes Charlie's and Dad's rooms).
+# Used by scheduled vacuum automation on Wed.
+
+vacuum_common_areas:
+  alias: "Vacuum Common Areas"
+  description: "Clean common areas only (kitchen, living room, laundry)"
+  icon: mdi:robot-vacuum
+  mode: single
+  sequence:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_q5_max
+      data:
+        command: app_segment_clean
+        params:
+          - 17  # Laundry
+          - 19  # Kitchen
+          - 22  # Living Room

@@ -2,11 +2,11 @@
 # =============================================================================
 # Runs the vacuum on a schedule based on day of week:
 #   - Sunday: No cleaning
-#   - Monday: All rooms
-#   - Tuesday: Non-Charlie rooms
-#   - Wednesday: Non-Charlie rooms
-#   - Thursday: All rooms
-#   - Friday: Non-Charlie rooms
+#   - Monday: Non-Dad rooms (common areas + Charlie's rooms)
+#   - Tuesday: Non-Charlie rooms (common areas + Dad's rooms)
+#   - Wednesday: Common areas only
+#   - Thursday: Non-Dad rooms (common areas + Charlie's rooms)
+#   - Friday: Non-Charlie rooms (common areas + Dad's rooms)
 #   - Saturday: No cleaning
 #
 # Triggers when John leaves, then retries every 15 minutes while away.
@@ -58,25 +58,35 @@ action:
       title: "Vacuum Starting"
       message: >-
         {% if now().weekday() in [0, 3] %}
-        Starting full house clean (all rooms)
+        Starting partial clean (common areas and Charlie's rooms)
+        {% elif now().weekday() in [1, 4] %}
+        Starting partial clean (common areas and Dad's rooms)
         {% else %}
-        Starting partial clean (non-Charlie rooms)
+        Starting partial clean (common areas only)
         {% endif %}
   # Run appropriate script based on day
   - choose:
-      # Monday (0) or Thursday (3) - All rooms
+      # Monday (0) or Thursday (3) - Non-Dad rooms (common areas + Charlie's rooms)
       - conditions:
           - condition: template
             value_template: "{{ now().weekday() in [0, 3] }}"
         sequence:
           - action: script.turn_on
             target:
-              entity_id: script.vacuum_all_rooms
-      # Tuesday (1), Wednesday (2), Friday (4) - Non-Charlie rooms
+              entity_id: script.vacuum_non_dad_rooms
+      # Tuesday (1) or Friday (4) - Non-Charlie rooms (common areas + Dad's rooms)
       - conditions:
           - condition: template
-            value_template: "{{ now().weekday() in [1, 2, 4] }}"
+            value_template: "{{ now().weekday() in [1, 4] }}"
         sequence:
           - action: script.turn_on
             target:
               entity_id: script.vacuum_non_charlie_rooms
+      # Wednesday (2) - Common areas only
+      - conditions:
+          - condition: template
+            value_template: "{{ now().weekday() == 2 }}"
+        sequence:
+          - action: script.turn_on
+            target:
+              entity_id: script.vacuum_common_areas
