@@ -1,25 +1,45 @@
 # Charlie Presence Tracker
-# Drives input_boolean.charlie_presence from Charlie's Talker (HA companion
-# app with location sharing). Charlie Arrival / Departure and the shapes
-# automations key off the input_boolean, not the tracker directly.
+# Drives input_boolean.charlie_presence from Charlie's Talker (iPad mini 5,
+# Wi-Fi-only). Charlie Arrival / Departure and the shapes automations key off
+# the input_boolean, not the trackers directly.
 #
-# Not person.charlie: it also includes device_tracker.charlies_iphone_2,
-# which stays home when Charlie is at his mom's.
+# Primary tracker: device_tracker.talker_wifi (Eero router presence on
+# beltalowda-net, MAC e2:84:16:97:3e:f7). Because the Talker is Wi-Fi-only and
+# does not join Wi-Fi away from home, the HA Companion App tracker
+# (device_tracker.talker) stays stuck at "home" when Charlie leaves.
 #
-# Away waits 10 minutes to ride out GPS jitter at the home zone edge.
-# unknown/unavailable never count as away. The charlies_home /
-# charlies_away scripts remain as manual overrides.
+# Away waits 45 minutes on Wi-Fi disconnect to ride out iPad sleep on battery
+# and brief router blips; unknown/unavailable never count as away (Eero has
+# brief ~2 AM cloud timeouts). The companion app tracker remains as a secondary
+# arrival/departure trigger if Talker ever connects to Wi-Fi elsewhere.
+# The charlies_home / charlies_away scripts remain as manual overrides.
 
 id: '1795382623931'
 alias: "Charlie Presence Tracker"
-description: "Set Charlie's presence from the Talker device tracker"
+description: "Set Charlie's presence from the Talker Wi-Fi and companion app trackers"
 mode: queued
 
 triggers:
   - trigger: state
+    entity_id: device_tracker.talker_wifi
+    to: "home"
+    not_from:
+      - unknown
+      - unavailable
+    id: arrived
+  - trigger: state
     entity_id: device_tracker.talker
     to: "home"
+    not_from:
+      - unknown
+      - unavailable
     id: arrived
+  - trigger: state
+    entity_id: device_tracker.talker_wifi
+    to: "not_home"
+    for:
+      minutes: 45
+    id: departed
   - trigger: state
     entity_id: device_tracker.talker
     from: "home"
