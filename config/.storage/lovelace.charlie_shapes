@@ -10,434 +10,859 @@
           "hide_header": true
         }
       },
+      "button_card_templates": {
+        "eating_banner": {
+          "show_icon": true,
+          "show_name": true,
+          "show_state": true,
+          "tap_action": {
+            "action": "toggle"
+          },
+          "styles": {
+            "card": [
+              {
+                "height": "104px"
+              },
+              {
+                "border-radius": "16px"
+              },
+              {
+                "padding": "0 24px"
+              },
+              {
+                "border": "1.5px solid rgba(255, 255, 255, 0.12)"
+              },
+              {
+                "transition": "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease"
+              }
+            ],
+            "grid": [
+              {
+                "grid-template-areas": "\"i n s\""
+              },
+              {
+                "grid-template-columns": "auto auto auto"
+              },
+              {
+                "grid-template-rows": "1fr"
+              },
+              {
+                "justify-content": "center"
+              },
+              {
+                "align-items": "center"
+              },
+              {
+                "column-gap": "18px"
+              }
+            ],
+            "img_cell": [
+              {
+                "width": "48px"
+              },
+              {
+                "height": "48px"
+              }
+            ],
+            "icon": [
+              {
+                "width": "44px"
+              },
+              {
+                "height": "44px"
+              },
+              {
+                "color": "#4FC3F7"
+              }
+            ],
+            "name": [
+              {
+                "font-size": "28px"
+              },
+              {
+                "font-weight": "700"
+              },
+              {
+                "letter-spacing": "-0.01em"
+              },
+              {
+                "justify-self": "center"
+              }
+            ],
+            "state": [
+              {
+                "font-size": "15px"
+              },
+              {
+                "font-weight": "700"
+              },
+              {
+                "text-transform": "uppercase"
+              },
+              {
+                "letter-spacing": "0.08em"
+              },
+              {
+                "padding": "6px 16px"
+              },
+              {
+                "border-radius": "999px"
+              },
+              {
+                "background": "rgba(255, 255, 255, 0.08)"
+              },
+              {
+                "color": "var(--secondary-text-color)"
+              }
+            ]
+          },
+          "state": [
+            {
+              "value": "on",
+              "styles": {
+                "card": [
+                  {
+                    "background": "rgba(255, 167, 38, 0.22)"
+                  },
+                  {
+                    "border": "2px solid #FFA726"
+                  },
+                  {
+                    "box-shadow": "0 0 24px rgba(255, 167, 38, 0.25)"
+                  }
+                ],
+                "icon": [
+                  {
+                    "color": "#FFB74D"
+                  }
+                ],
+                "state": [
+                  {
+                    "background": "#FFA726"
+                  },
+                  {
+                    "color": "#111111"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "colors_picker": {
+          "show_icon": true,
+          "show_name": true,
+          "show_state": false,
+          "icon": "mdi:palette",
+          "name": "Colors",
+          "tap_action": {
+            "action": "more-info"
+          },
+          "styles": {
+            "card": [
+              {
+                "height": "120px"
+              },
+              {
+                "border-radius": "var(--ha-card-border-radius, 12px)"
+              },
+              {
+                "padding": "12px 6px"
+              }
+            ],
+            "grid": [
+              {
+                "grid-template-areas": "\"i\" \"n\""
+              },
+              {
+                "grid-template-rows": "1fr auto"
+              },
+              {
+                "row-gap": "6px"
+              },
+              {
+                "align-items": "center"
+              },
+              {
+                "justify-items": "center"
+              }
+            ],
+            "img_cell": [
+              {
+                "width": "48px"
+              },
+              {
+                "height": "48px"
+              },
+              {
+                "overflow": "visible"
+              }
+            ],
+            "icon": [
+              {
+                "width": "44px"
+              },
+              {
+                "height": "44px"
+              },
+              {
+                "color": "#4FC3F7"
+              }
+            ],
+            "name": [
+              {
+                "font-size": "15px"
+              },
+              {
+                "font-weight": "600"
+              },
+              {
+                "color": "var(--primary-text-color)"
+              }
+            ]
+          },
+          "state": [
+            {
+              "operator": "default",
+              "styles": {
+                "card": [
+                  {
+                    "opacity": "1"
+                  }
+                ],
+                "icon": [
+                  {
+                    "color": "#4FC3F7"
+                  }
+                ],
+                "name": [
+                  {
+                    "color": "var(--primary-text-color)"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "color_preset": {
+          "show_icon": true,
+          "show_name": true,
+          "show_state": false,
+          "icon": "mdi:circle",
+          "styles": {
+            "card": [
+              {
+                "height": "160px"
+              },
+              {
+                "border-radius": "16px"
+              },
+              {
+                "padding": "16px 8px"
+              },
+              {
+                "background": "[[[ return variables.bg ]]]"
+              },
+              {
+                "border": "[[[ return '1.5px solid ' + variables.border ]]]"
+              }
+            ],
+            "grid": [
+              {
+                "grid-template-areas": "\"i\" \"n\""
+              },
+              {
+                "grid-template-rows": "1fr auto"
+              },
+              {
+                "row-gap": "10px"
+              },
+              {
+                "align-items": "center"
+              },
+              {
+                "justify-items": "center"
+              }
+            ],
+            "img_cell": [
+              {
+                "width": "64px"
+              },
+              {
+                "height": "64px"
+              },
+              {
+                "overflow": "visible"
+              }
+            ],
+            "icon": [
+              {
+                "width": "56px"
+              },
+              {
+                "height": "56px"
+              },
+              {
+                "color": "[[[ return variables.swatch ]]]"
+              },
+              {
+                "filter": "[[[ return 'drop-shadow(0 0 12px ' + variables.border + ')' ]]]"
+              }
+            ],
+            "name": [
+              {
+                "font-size": "17px"
+              },
+              {
+                "font-weight": "600"
+              },
+              {
+                "color": "var(--primary-text-color)"
+              }
+            ]
+          }
+        }
+      },
       "views": [
         {
           "title": "Shapes",
           "path": "shapes",
           "type": "sections",
+          "max_columns": 2,
           "sections": [
             {
               "type": "grid",
+              "column_span": 2,
               "cards": [
                 {
-                  "type": "button",
+                  "type": "custom:button-card",
+                  "template": "eating_banner",
                   "entity": "input_boolean.charlie_eating_mode",
                   "name": "I'm Eating",
                   "icon": "mdi:silverware-fork-knife",
-                  "show_state": true,
-                  "tap_action": {
-                    "action": "toggle"
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
                   }
                 }
               ]
             },
             {
               "type": "grid",
+              "column_span": 1,
               "cards": [
                 {
                   "type": "heading",
                   "heading": "Charlie's Light",
+                  "icon": "mdi:lightbulb",
                   "heading_style": "title"
                 },
                 {
-                  "type": "horizontal-stack",
-                  "cards": [
+                  "type": "tile",
+                  "entity": "light.charlie_s_overhead_light",
+                  "name": "Overhead Light",
+                  "vertical": false,
+                  "features": [
                     {
-                      "type": "tile",
-                      "entity": "light.charlie_s_overhead_light",
-                      "name": "Overhead Light",
-                      "vertical": false,
-                      "features": [
-                        {
-                          "type": "light-brightness"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "Colors",
-                      "icon": "mdi:palette",
-                      "tap_action": {
-                        "action": "more-info",
-                        "entity": "light.charlie_s_overhead_light"
-                      }
+                      "type": "light-brightness"
                     }
-                  ]
+                  ],
+                  "grid_options": {
+                    "columns": 9,
+                    "rows": 2
+                  }
                 },
                 {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "orange",
-                      "content": "Warm",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "color_temp_kelvin": 2700,
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "light-blue",
-                      "content": "Cool",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "color_temp_kelvin": 5000,
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "red",
-                      "content": "Red",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            255,
-                            0,
-                            0
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "blue",
-                      "content": "Blue",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            0,
-                            100,
-                            255
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    }
-                  ]
+                  "type": "custom:button-card",
+                  "template": "colors_picker",
+                  "entity": "light.charlie_s_overhead_light",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  }
                 },
                 {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "green",
-                      "content": "Green",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            0,
-                            255,
-                            0
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Warm",
+                  "variables": {
+                    "swatch": "#FFE082",
+                    "bg": "rgba(255, 224, 130, 0.14)",
+                    "border": "rgba(255, 224, 130, 0.44)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
                     },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "deep-purple",
-                      "content": "Purple",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            148,
-                            0,
-                            211
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "deep-orange",
-                      "content": "Orange",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            255,
-                            165,
-                            0
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "pink",
-                      "content": "Pink",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.charlie_s_overhead_light"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            255,
-                            105,
-                            180
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
+                    "data": {
+                      "color_temp_kelvin": 2700,
+                      "brightness_pct": 75
                     }
-                  ]
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Cool",
+                  "variables": {
+                    "swatch": "#B3E5FC",
+                    "bg": "rgba(179, 229, 252, 0.14)",
+                    "border": "rgba(179, 229, 252, 0.44)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "color_temp_kelvin": 5000,
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Red",
+                  "variables": {
+                    "swatch": "#F44336",
+                    "bg": "rgba(244, 67, 54, 0.16)",
+                    "border": "rgba(244, 67, 54, 0.48)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        255,
+                        0,
+                        0
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Blue",
+                  "variables": {
+                    "swatch": "#2979FF",
+                    "bg": "rgba(41, 121, 255, 0.18)",
+                    "border": "rgba(41, 121, 255, 0.50)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        0,
+                        100,
+                        255
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Green",
+                  "variables": {
+                    "swatch": "#4CAF50",
+                    "bg": "rgba(76, 175, 80, 0.16)",
+                    "border": "rgba(76, 175, 80, 0.48)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        0,
+                        255,
+                        0
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Purple",
+                  "variables": {
+                    "swatch": "#AB47BC",
+                    "bg": "rgba(171, 71, 188, 0.18)",
+                    "border": "rgba(171, 71, 188, 0.50)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        148,
+                        0,
+                        211
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Orange",
+                  "variables": {
+                    "swatch": "#FF6D00",
+                    "bg": "rgba(255, 109, 0, 0.18)",
+                    "border": "rgba(255, 109, 0, 0.52)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        255,
+                        165,
+                        0
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Pink",
+                  "variables": {
+                    "swatch": "#FF4081",
+                    "bg": "rgba(255, 64, 129, 0.16)",
+                    "border": "rgba(255, 64, 129, 0.48)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.charlie_s_overhead_light"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        255,
+                        105,
+                        180
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
                 }
               ]
             },
             {
               "type": "grid",
+              "column_span": 1,
               "cards": [
                 {
                   "type": "heading",
                   "heading": "Dad's Lights",
+                  "icon": "mdi:lightbulb-group",
                   "heading_style": "title"
                 },
                 {
-                  "type": "horizontal-stack",
-                  "cards": [
+                  "type": "tile",
+                  "entity": "light.bedroom_lights",
+                  "name": "All Lights",
+                  "vertical": false,
+                  "features": [
                     {
-                      "type": "tile",
-                      "entity": "light.bedroom_lights",
-                      "name": "All Lights",
-                      "vertical": false,
-                      "features": [
-                        {
-                          "type": "light-brightness"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "Colors",
-                      "icon": "mdi:palette",
-                      "tap_action": {
-                        "action": "more-info",
-                        "entity": "light.bedroom_lights"
-                      }
+                      "type": "light-brightness"
                     }
-                  ]
+                  ],
+                  "grid_options": {
+                    "columns": 9,
+                    "rows": 2
+                  }
                 },
                 {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "orange",
-                      "content": "Warm",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "color_temp_kelvin": 2700,
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "light-blue",
-                      "content": "Cool",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "color_temp_kelvin": 5000,
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "red",
-                      "content": "Red",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            255,
-                            0,
-                            0
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "blue",
-                      "content": "Blue",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            0,
-                            100,
-                            255
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    }
-                  ]
+                  "type": "custom:button-card",
+                  "template": "colors_picker",
+                  "entity": "light.bedroom_lights",
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": 2
+                  }
                 },
                 {
-                  "type": "custom:mushroom-chips-card",
-                  "chips": [
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "green",
-                      "content": "Green",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            0,
-                            255,
-                            0
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Warm",
+                  "variables": {
+                    "swatch": "#FFE082",
+                    "bg": "rgba(255, 224, 130, 0.14)",
+                    "border": "rgba(255, 224, 130, 0.44)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
                     },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "deep-purple",
-                      "content": "Purple",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            148,
-                            0,
-                            211
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "deep-orange",
-                      "content": "Orange",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            255,
-                            165,
-                            0
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
-                    },
-                    {
-                      "type": "template",
-                      "icon": "mdi:circle",
-                      "icon_color": "pink",
-                      "content": "Pink",
-                      "tap_action": {
-                        "action": "call-service",
-                        "service": "light.turn_on",
-                        "target": {
-                          "entity_id": "light.bedroom_lights"
-                        },
-                        "data": {
-                          "rgb_color": [
-                            255,
-                            105,
-                            180
-                          ],
-                          "brightness_pct": 75
-                        }
-                      }
+                    "data": {
+                      "color_temp_kelvin": 2700,
+                      "brightness_pct": 75
                     }
-                  ]
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Cool",
+                  "variables": {
+                    "swatch": "#B3E5FC",
+                    "bg": "rgba(179, 229, 252, 0.14)",
+                    "border": "rgba(179, 229, 252, 0.44)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "color_temp_kelvin": 5000,
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Red",
+                  "variables": {
+                    "swatch": "#F44336",
+                    "bg": "rgba(244, 67, 54, 0.16)",
+                    "border": "rgba(244, 67, 54, 0.48)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        255,
+                        0,
+                        0
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Blue",
+                  "variables": {
+                    "swatch": "#2979FF",
+                    "bg": "rgba(41, 121, 255, 0.18)",
+                    "border": "rgba(41, 121, 255, 0.50)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        0,
+                        100,
+                        255
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Green",
+                  "variables": {
+                    "swatch": "#4CAF50",
+                    "bg": "rgba(76, 175, 80, 0.16)",
+                    "border": "rgba(76, 175, 80, 0.48)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        0,
+                        255,
+                        0
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Purple",
+                  "variables": {
+                    "swatch": "#AB47BC",
+                    "bg": "rgba(171, 71, 188, 0.18)",
+                    "border": "rgba(171, 71, 188, 0.50)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        148,
+                        0,
+                        211
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Orange",
+                  "variables": {
+                    "swatch": "#FF6D00",
+                    "bg": "rgba(255, 109, 0, 0.18)",
+                    "border": "rgba(255, 109, 0, 0.52)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        255,
+                        165,
+                        0
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
+                },
+                {
+                  "type": "custom:button-card",
+                  "template": "color_preset",
+                  "name": "Pink",
+                  "variables": {
+                    "swatch": "#FF4081",
+                    "bg": "rgba(255, 64, 129, 0.16)",
+                    "border": "rgba(255, 64, 129, 0.48)"
+                  },
+                  "tap_action": {
+                    "action": "perform-action",
+                    "perform_action": "light.turn_on",
+                    "target": {
+                      "entity_id": "light.bedroom_lights"
+                    },
+                    "data": {
+                      "rgb_color": [
+                        255,
+                        105,
+                        180
+                      ],
+                      "brightness_pct": 75
+                    }
+                  },
+                  "grid_options": {
+                    "columns": 3,
+                    "rows": "auto"
+                  }
                 }
               ]
             }
